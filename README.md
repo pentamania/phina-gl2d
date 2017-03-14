@@ -1,11 +1,10 @@
 # phina-gl2d
-SpriteクラスをwebGLを使って描画するphina.js用簡易プラグインです。  
-条件次第ですが、既定のCanvas2Dと比較して２～２．５倍程度パフォーマンスが良くなります。
+SpriteクラスをwebGL描画するphina.js用簡易プラグインです。  
+環境・条件次第ですが、既定のCanvas2Dと比較して2~2.5倍程度パフォーマンスが良くなります。
 
 ## How to use
 phina.gl2d.GLLayerクラスのインスタンスを生成し、そこにSpriteインスタンスを追加するだけでOKです。  
 GLLayerクラスはSpriteクラス以外描画されないことを除けば、通常のLayerクラスと使い方はほぼ変わりません。  
-親子構造も考慮されます。
 
 ```html
 <!DOCTYPE html>
@@ -48,22 +47,22 @@ GLLayerクラスはSpriteクラス以外描画されないことを除けば、�
 なので画像を一枚にまとめ（スプライトシート化）、スプライトが全て同じテクスチャ由来となるよう調整すると、最もパフォーマンスがよくなります。
 
 逆に全てのスプライトが別テクスチャ由来だと通常のCanvas2Dよりもパフォーマンスが劣ってしまう場合があります。  
-（この辺はそのうち軽減できるようにしたい…）
+（この辺は最適化して影響を最小限にしたい…）
 
-### Examples
-*TODO*
+## Example
+- [パフォーマンステスト](https://pentamania.github.io/phina-gl2d/examples/benchmark/)
 
 ## TODO
 - マルチテクスチャ対応
 - tint機能のようなもの
 - パフォーマンスをpixi.js並にしたい
 
-## Inspired by
+## インスパイア元
 [pixi.js](http://www.pixijs.com/)
 
 ## Licence
 当プラグインのライセンスはMITです。  
-また以下のライブラリを使用しています。
+また、以下のライブラリを使用しています。
 
 - [phigl.js (MIT)](https://github.com/daishihmr/phigl.js)
 - [min.matrix.js (License Free)](https://github.com/doxas/minMatrix.js)
