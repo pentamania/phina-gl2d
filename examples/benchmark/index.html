@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <title>phina-gl2d performance test</title>
+</head>
+<body>
+  <h1>Performance test (unique texture)</h1>
+  <p>下エリアをタップでスプライト生成</p>
+  <p>Zキーでクリア</p>
+
+  <script src='http://cdn.rawgit.com/phi-jp/phina.js/v0.2.0/build/phina.js'></script>
+  <script type="text/javascript" src="../../build/phina-gl2d.js"></script>
+  <!-- <script type="text/javascript" src="../../build/phina-gl2d.min.js"></script> -->
+  <script type="text/javascript">
+    phina.globalize();
+
+    var useWebGL = true;
+    // useWebGL = false;
+
+    var assetPath = "../../assets/";
+    var ASSETS = {
+      image: {
+        "tomapiko": assetPath + "tomapiyo.png",
+      },
+    };
+
+    phina.main(function() {
+      var app = GameApp({
+        width: 512,
+        height: 512,
+        assets: ASSETS,
+        backgroundColor: 'skyblue',
+        startLabel: 'main',
+        fit: false,
+        fps: 60,
+      });
+
+      app.enableStats();
+      app.run();
+    });
+
+    /**
+     * メインシーン
+     */
+    phina.define("MainScene", {
+      superClass: "DisplayScene",
+
+      init: function(param) {
+        this.superInit(param);
+        var self = this;
+
+        // レイヤー
+        this.glLayer = GLLayer(param).addChildTo(this); // webGL
+        this.c2dLayer = DisplayElement(param).addChildTo(this); // canvas2D
+
+        // スプライト数 表示
+        Label({
+          stroke: "white",
+          fontSize: 30,
+        })
+        .setOrigin(0, 0)
+        .addChildTo(this)
+        .on('enterframe', function(e) {
+          this.text = (useWebGL) ? ("GL Sprites: "+self.glLayer.children.length) : ("2D Sprites: "+self.c2dLayer.children.length);
+        });
+      },
+
+      clearLayer: function() {
+        this.glLayer.children = [];
+        this.c2dLayer.children = [];
+      },
+
+      update: function(app) {
+        var p = app.pointer;
+        var kb = app.keyboard;
+        var fr = app.frame;
+        var self = this;
+        var layer = (useWebGL) ? this.glLayer : this.c2dLayer;
+        var imgSize = 64;
+
+        if (kb.getKey('z')) {
+          this.clearLayer();
+        }
+
+        // タップで増える
+        if (p.getPointing()) {
+          for (var i = 0; i < 18; i++) {
+            var instance = Sprite("tomapiko", imgSize, imgSize);
+            instance.frameIndex = 2;
+
+            instance.setPosition(p.x, p.y)
+            .addChildTo(layer);
+            instance.vec = Vector2(Math.randint(1, 8), 4);
+          }
+        }
+
+        layer.children.each(function(c){
+          if (!c.vec) return;
+          c.position.add(c.vec);
+          c.rotation += 2;
+          // if (fr%60 === 0) c.frameIndex += 1;
+
+          if (c.x < 10 || self.width-10 < c.x) c.vec.x *= -1;
+          if (c.y < 10 || self.height-10 < c.y) c.vec.y *= -1;
+        });
+      }
+
+    });
+
+  </script>
+</body>
+</html>
