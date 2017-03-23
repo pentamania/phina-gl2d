@@ -100,7 +100,6 @@ phina.namespace(function() {
       }
 
       if (this.indices) this.indices.bind();
-      // console.log(this);
     },
 
     // 頂点情報をセットする
@@ -112,7 +111,8 @@ phina.namespace(function() {
       var wm = sprite._worldMatrix;
       var wa = sprite._worldAlpha;
 
-      // frameサイズ: TODO 毎回やる必要はない frameIndex変更時に再計算する
+      // frameサイズ
+      // TODO: 毎回やる必要はない frameIndex変更時に再計算する
       var f = {
         x: srcRect.x / rW,
         y: srcRect.y / rH,
@@ -127,10 +127,10 @@ phina.namespace(function() {
       var data = this.buffer.float32View;
       // var uint32View = this.buffer.uint32View;
 
-      // 4隅分
       // TODO: Transformはシェーダ側で計算する？
-      var px = - og.x * sprite.width;
-      var py = (1 - og.y) * sprite.height;
+      // left down
+      var px = - og.x * sprite._width;
+      var py = (1 - og.y) * sprite._height;
       data[startIndex + subIndex] = px * wm.m00 + py * wm.m01 + wm.m02;
       data[startIndex + subIndex + 1] = px*wm.m10 + py * wm.m11 + wm.m12;
       // uint32View[startIndex + subIndex + 2] = uvs[0];
@@ -141,9 +141,10 @@ phina.namespace(function() {
       data[startIndex + subIndex + 6] = 1.0;
       data[startIndex + subIndex + 7] = wa;
 
+      // right down
       subIndex += unit;
-      px = (1 - og.x) * sprite.width;
-      py = (1 - og.y) * sprite.height;
+      px = (1 - og.x) * sprite._width;
+      py = (1 - og.y) * sprite._height;
       data[startIndex + subIndex] = px * wm.m00 + py * wm.m01 + wm.m02;
       data[startIndex + subIndex + 1] = px * wm.m10 + py * wm.m11 + wm.m12;
       // uint32View[startIndex + subIndex + 2] = uvs[1];
@@ -154,9 +155,10 @@ phina.namespace(function() {
       data[startIndex + subIndex + 6] = 1.0;
       data[startIndex + subIndex + 7] = wa;
 
+      // left up
       subIndex += unit;
-      px = -og.x * sprite.width;
-      py = -og.y * sprite.height;
+      px = -og.x * sprite._width;
+      py = -og.y * sprite._height;
       data[startIndex + subIndex] = px * wm.m00 + py * wm.m01 + wm.m02;
       data[startIndex + subIndex + 1] = px * wm.m10 + py * wm.m11 + wm.m12;
       // uint32View[startIndex + subIndex + 2] = uvs[2];
@@ -167,9 +169,10 @@ phina.namespace(function() {
       data[startIndex + subIndex + 6] = 1.0;
       data[startIndex + subIndex + 7] = wa;
 
+      // right up
       subIndex += unit;
-      px = (1 - og.x) * sprite.width;
-      py = - og.y * sprite.height;
+      px = (1 - og.x) * sprite._width;
+      py = - og.y * sprite._height;
       data[startIndex + subIndex] = px * wm.m00 + py * wm.m01 + wm.m02;
       data[startIndex + subIndex + 1] = px * wm.m10 + py * wm.m11 + wm.m12;
       // uint32View[startIndex + subIndex + 2] = uvs[3];
@@ -322,7 +325,7 @@ phina.namespace(function() {
     _static: {
 
       vertexShaderSource: [
-        "precision highp float;", // 一部GPU向け？
+        "precision highp float;", // 一部のGPU向け？
         "attribute vec2 position;",
         "attribute vec2 uv;",
         "attribute vec4 color;",
