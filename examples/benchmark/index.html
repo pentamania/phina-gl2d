@@ -14,17 +14,19 @@
   <script type="text/javascript">
     phina.globalize();
 
-    var useWebGL = true;
-    // useWebGL = false;
-
     var assetPath = "../../assets/";
     var ASSETS = {
       image: {
         "tomapiko": assetPath + "tomapiyo.png",
       },
     };
+    var USE_WEBGL;
 
     phina.main(function() {
+      var qsParams = phina.util.QueryString.parse();
+      USE_WEBGL = (qsParams.webgl != null) ? JSON.parse(qsParams.webgl) : true;
+      console.log("webGL: ", USE_WEBGL);
+
       var app = GameApp({
         width: 512,
         height: 512,
@@ -50,8 +52,8 @@
         var self = this;
 
         // レイヤー
-        this.glLayer = GLLayer(param).addChildTo(this); // webGL
-        this.c2dLayer = DisplayElement(param).addChildTo(this); // canvas2D
+        var layer = this.layer = (USE_WEBGL) ? GLLayer(param) : DisplayElement(param);
+        layer.addChildTo(this);
 
         // スプライト数 表示
         Label({
@@ -61,13 +63,13 @@
         .setOrigin(0, 0)
         .addChildTo(this)
         .on('enterframe', function(e) {
-          this.text = (useWebGL) ? ("GL Sprites: "+self.glLayer.children.length) : ("2D Sprites: "+self.c2dLayer.children.length);
+          var label = (USE_WEBGL) ? "GL Sprites: " : "2D Sprites: ";
+          this.text = label + layer.children.length;
         });
       },
 
       clearLayer: function() {
-        this.glLayer.children = [];
-        this.c2dLayer.children = [];
+        this.layer.children = [];
       },
 
       update: function(app) {
@@ -75,7 +77,7 @@
         var kb = app.keyboard;
         var fr = app.frame;
         var self = this;
-        var layer = (useWebGL) ? this.glLayer : this.c2dLayer;
+        var layer = this.layer;
         var imgSize = 64;
 
         if (kb.getKey('z')) {
@@ -98,8 +100,8 @@
           if (!c.vec) return;
           c.position.add(c.vec);
           c.rotation += 2;
-          // if (fr%60 === 0) c.frameIndex += 1;
 
+          // if (fr%60 === 0) c.frameIndex += 1;
           if (c.x < 10 || self.width-10 < c.x) c.vec.x *= -1;
           if (c.y < 10 || self.height-10 < c.y) c.vec.y *= -1;
         });
