@@ -51,6 +51,7 @@ GLLayerクラスはSpriteクラス以外描画されないことを除けば、�
 
 ## Example
 - [パフォーマンステスト](https://pentamania.github.io/phina-gl2d/examples/benchmark/)
+（参考：[Canvas2Dの場合](https://pentamania.github.io/phina-gl2d/examples/benchmark/index.html?webgl=false)）
 
 ## TODO
 - マルチテクスチャ対応
