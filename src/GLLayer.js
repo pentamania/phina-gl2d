@@ -1,9 +1,10 @@
-
-/**
- * 表示用Layer
- */
 phina.namespace(function() {
 
+  /**
+   * @class phina.gl2d.GLLayer
+   * 表示用Layerクラス
+   * 基本的にはこれしか使わない
+   */
   phina.define("phina.gl2d.GLLayer", {
     superClass: "phina.display.Layer",
 
@@ -16,14 +17,13 @@ phina.namespace(function() {
     init: function(param) {
       this.superInit(param);
 
-      var canvas = document.createElement("canvas");
-      var gl = this.gl = canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
+      var gl = this.gl = phina.gl2d.GLContext.getContext();
       if (!gl) {
         console.error("お使いのブラウザはWebGLに対応していません");
         return;
       }
 
-      this.domElement = canvas;
+      this.domElement = phina.gl2d.GLContext.getView();
       var w = this.width;
       var h = this.height;
       var sw = this.domElement.width = this.width * this.resolution | 0;
