@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <title>Sample shooting game</title>
+  <style type="text/css">
+    body {
+      background: limegreen;
+    }
+  </style>
+</head>
+<body>
+  <script src='http://cdn.rawgit.com/phi-jp/phina.js/v0.2.0/build/phina.js'></script>
+  <script type="text/javascript" src="../../build/phina-gl2d.js"></script>
+
+  <script type="text/javascript">
+    phina.globalize();
+  </script>
+
+  <script src="config.js"></script>
+  <script src="assets.js"></script>
+  <script src="components.js"></script>
+  <script src="enemy.js"></script>
+  <script src="UILayer.js"></script>
+  <script src="mainscene.js"></script>
+
+  <script type="text/javascript">
+    phina.main(function() {
+      var app = GameApp({
+        width: SCREEN_WIDTH,
+        height: SCREEN_HEIGHT,
+        assets: ASSETS,
+        backgroundColor: 'gray',
+        startLabel: 'main',
+        fps: 60,
+      });
+
+      app.enableStats();
+      app.run();
+    });
+
+  </script>
+</body>
+</html>
