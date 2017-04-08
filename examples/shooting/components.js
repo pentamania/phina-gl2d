@@ -1,76 +1,5 @@
 
 /**
- * プール
- */
-phina.define('ObjectPool', {
-  superClass: "phina.util.EventDispatcher",
-
-  init: function() {
-    this.superInit();
-    this.objects = [];
-    this._pointer = 0;
-  },
-
-  add: function(obj) {
-    obj.isReady = true;
-    this.objects.push(obj);
-  },
-
-  pick: function(cb) {
-    var obj = null;
-    this.objects.some(function(o){
-      if (o.isReady) {
-        o.isReady = false;
-        obj = o;
-        return true;
-      }
-    });
-
-    if (obj && cb) cb(obj);
-  },
-
-  // いる？
-  // recover: function(obj) {
-  //   obj.isReady = true;
-  // }
-
-});
-
-/**
- * ゲームオブジェクトの抽象クラス
- * ageの加算、 remove時の動作追加
- */
-phina.define('AbstractObjClass', {
-  superClass: "phina.display.Sprite",
-
-  init: function(image, width, height) {
-    this.superInit(image, width, height);
-    this.setBoundingType('circle');
-    this.targetLayer = null;
-    this.isReady = true;
-    this.age = 0;
-
-    this.on('removed', function(){
-      this.isReady = true;
-    });
-
-    this.on('enterframe', function(){
-      this.age++;
-    })
-  },
-
-  isOutOfScreen: function() {
-    return (
-      this.x < -10 ||
-      SCREEN_WIDTH+10 < this.x ||
-      this.y < -10 ||
-      SCREEN_HEIGHT+10 < this.y
-    );
-  },
-
-});
-
-/**
  * Player
  */
 phina.define('Player', {
@@ -84,17 +13,14 @@ phina.define('Player', {
   init: function(x, y) {
     this.superInit("tomapiyo");
     this.setPosition(x, y);
-
-    // this.invinsible = 0;
     this.setScale(0.5, 0.5);
+    this.moveSpeed = PLAYER_SPEED;
 
     this.setBoundingType('rect');
     this.radius = 16;
-    this.moveSpeed = PLAYER_SPEED;
 
-    var anim = this.anim = FrameAnimation('tomapiyo').attachTo(this);
-    // anim.gotoAndPlay('fly');
-    anim.gotoAndPlay('wait');
+    this.anim = FrameAnimation('tomapiyo').attachTo(this)
+    .gotoAndPlay('wait');
   },
 
   destroyed: function(cb) {
@@ -182,7 +108,7 @@ phina.define('Bullet', {
   superClass: 'AbstractObjClass',
 
   init: function(x, y, angle, speed) {
-    this.superInit('greenbullet');
+    this.superInit('enemyNormalbullet');
     this.setPosition(x, y);
 
     // this.setBoundingType('rect');
@@ -452,6 +378,7 @@ phina.define("BombGauge", {
 
   init: function() {
     var height = 12;
+    var fontSize = 12;
 
     this.superInit({
       value: BOMB_MAX_VALUE,
@@ -465,16 +392,14 @@ phina.define("BombGauge", {
       maxValue: BOMB_MAX_VALUE,
     });
 
-    this.animationTime = 1500;
-
-    // Label: "BOM"
-    var fontSize = 12;
     Label({
       // text: "C.A.S.",
       text: "BOMBER GAUGE",
       textAlign: 'left',
       fontSize: fontSize,
     }).setOrigin(0, 0.5).setPosition(-this.width * 0.5, -height * 1.1).addChildTo(this);
+
+    this.animationTime = 1500;
 
     // Label: "ready"
     var duration = 350;
@@ -492,7 +417,6 @@ phina.define("BombGauge", {
       alpha: 1.0,
     }, duration);
 
-    //
     this.on('enterframe', function() {
       if (this.value < this.maxValue) {
         noticeLabel.text = "RECHARGING..."
@@ -507,5 +431,6 @@ phina.define("BombGauge", {
     });
 
   },
+
 });
 

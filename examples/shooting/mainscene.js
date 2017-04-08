@@ -146,6 +146,7 @@ phina.define('MainScene', {
       this.UILayer.remainLifeLabel.text = " x " + Math.max(0, this.remainLife);
     })
 
+    // イベント管理用
     this.tweener = Tweener().attachTo(this);
 
     // debug
@@ -170,19 +171,6 @@ phina.define('MainScene', {
 
   },
 
-  // タイトル画面へ
-  // reset: function() {
-  //   this.isStarted = false;
-  //   this.age = 0;
-  //   this._score = 0;
-  //   this.remainLife = PLAYER_INITIAL_LIFE;
-  //   this.player.setVisible(true);
-  //   this.titleLayer.setPosition(0, 0).setVisible(true);
-  //   this.UILayer.setVisible(false);
-  //   this.resultLayer.setVisible(false);
-  //   this.scrollSpeed = 0;
-  // },
-
   update: function(app) {
     var self = this;
     var frame = app.frame;
@@ -190,6 +178,7 @@ phina.define('MainScene', {
     var p = app.pointer;
     var player = this.player;
     var sctw = this.tweener;
+    var currentPattern = TIME_TABLE.pattern[this._enemyPointer];
 
     this.age++;
 
@@ -223,14 +212,12 @@ phina.define('MainScene', {
       }
     }
 
-    // debug
-    if (kb.getKeyDown('q')) {
+    if (DEBUG_MODE && kb.getKeyDown('q')) {
       // this.exit("main");
     }
 
     // 敵出現
     this.enemyLauncher.tick();
-    var currentPattern = TIME_TABLE.pattern[this._enemyPointer];
     if (currentPattern && TIME_TABLE.frameSum + currentPattern[0] < this.age) {
       TIME_TABLE.frameSum += currentPattern[0];
       var name = currentPattern[1];
@@ -269,7 +256,7 @@ phina.define('MainScene', {
       if (enemy.life <= 0) {
         if (enemy.isAnimating) return;
 
-        // Boss破壊
+        // Boss撃破
         if (enemy.isBoss) {
           sctw.clear()
           .call(function() {
@@ -282,6 +269,7 @@ phina.define('MainScene', {
             self.generateBlast(enemy.x, enemy.y, 32, "redRect");
             enemy.destroyAnimation(2800);
           })
+          // 爆発エフェクト
           .wait(500)
           .call(function(){ self.generateBlast(enemy.x, enemy.y+10, 32, "redRect"); })
           .wait(500)
@@ -409,10 +397,17 @@ phina.define('MainScene', {
     this.isStarted = false;
   },
 
-  // gameover: function() {
-  //   this.UILayer.showGameover();
-  //   this.player.setVisible(false);
+  // タイトル画面へ
+  // reset: function() {
   //   this.isStarted = false;
+  //   this.age = 0;
+  //   this._score = 0;
+  //   this.remainLife = PLAYER_INITIAL_LIFE;
+  //   this.player.setVisible(true);
+  //   this.titleLayer.setPosition(0, 0).setVisible(true);
+  //   this.UILayer.setVisible(false);
+  //   this.resultLayer.setVisible(false);
+  //   this.scrollSpeed = 0;
   // },
 
   // ボム （C.A.S.）
@@ -433,14 +428,17 @@ phina.define('MainScene', {
 
     // 敵ダメージ
     this.enemyLayer.children.each(function(enemy) {
+      if (enemy.isAnimating) return;
       this.generateBlast(enemy.x, enemy.y, 8, "yellowRect");
-      enemy.life -= 100;
+      enemy.life -= BOMB_POWER;
     }.bind(this));
 
     // 弾消し: 消した分だけスコア足す？
     // var tempChildren = self.bulletLayer.children.slice()
     for (var i = 0, len = self.bulletLayer.children.length; i < len; i++) {
       var child = self.bulletLayer.children[0];
+      // TODO: 点アイテム
+      // this._score += 10;
       if (child != null) child.remove();
     }
 

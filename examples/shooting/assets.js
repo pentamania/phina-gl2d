@@ -17,7 +17,7 @@
   img.lineWidth = lw;
   img.fillCircle(r, r, r-lw)
   .strokeCircle(r, r, r-lw);
-  am.set('image', 'greenbullet', img);
+  am.set('image', 'enemyNormalbullet', img);
 
   // 自弾
   r = 6;
@@ -52,7 +52,7 @@
   .strokeStar(r, r, r-lw, 6);
   am.set('image', 'meteorStar', img);
 
-  // effect
+  // effect ==============================
   r = 8;
   lw = r/4;
   img = phina.graphics.Canvas().setSize(r*2, r*2);
@@ -172,7 +172,7 @@ var ENEMY_PATTERNS = {
     }
   },
 
-  "baqula": {
+  "mutekiSingle": {
     count: 1,
     interval: 1,
     action: function(y) {
@@ -192,20 +192,13 @@ var ENEMY_PATTERNS = {
     }
   },
 
-  // "naname": function() {
-  //   var interval = 40;
-  //   var type = "passby";
-  //   for (var i = 0; i < 4; i++) {
-  //     Enemy(SCREEN_WIDTH*1.2 + i*interval, 20 + i*interval, type).addChildTo(this.targetLayer);
-  //   }
-  // },
-
 };
 
 /**
- * 敵出現タイムライン
+ * 敵出現タイムテーブル
  */
 var TIME_TABLE = {
+
   frameSum: 0,
   pattern: [
     // [直前パターンからの待機フレーム, "編隊タイプ", 引数配列]
@@ -226,22 +219,22 @@ var TIME_TABLE = {
     // [45, "meteors", [SCREEN_HEIGHT*0.7 | 0]],
 
     // // 魚群
-    // // [40, "sinMoves", [10, true]],
-    // // [0, "sinMoves", [40]],
-    // // [0, "sinMoves", [70]],
-    // // [0, "sinMoves", [100]],
-    // // [0, "sinMoves", [130]],
-    // // [0, "sinMoves", [160]],
+    [40, "sinMoves", [10, true]],
+    [0, "sinMoves", [40]],
+    [0, "sinMoves", [70]],
+    [0, "sinMoves", [100]],
+    [0, "sinMoves", [130]],
+    [0, "sinMoves", [160]],
 
     // [40, "sinMoves", [10]],
     // [30, "sinMoves", [60]],
 
     // // V-atttack
     // [130, "verticals", [60]],
-    // [15, "verticals", [SCREEN_HEIGHT*0.7 | 0, true]],
+    [15, "verticals", [SCREEN_HEIGHT*0.7 | 0, true]],
 
     // // ボス前　壁
-    // [400, "baqula", 120],
+    // [400, "mutekiSingle", 120],
     // [30, "baqula", 120],
     // [0, "kabe"],
     // [120, "kabe"],

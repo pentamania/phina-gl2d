@@ -12,11 +12,13 @@ var PLAYER_INITIAL_LIFE = 1;
 var BOMB_MAX_VALUE = 1000;
 var RAD_UNIT = 0.01745;
 
-var qsParams = phina.util.QueryString.parse();
-var USE_WEBGL = (qsParams.webgl != null) ? JSON.parse(qsParams.webgl) : true;
-console.log("webgl: ", USE_WEBGL);
-var DEBUG_MODE = (qsParams.debug != null) ? JSON.parse(qsParams.debug) : false;
-// DEBUG_MODE = false;
+var USE_WEBGL;
+var DEBUG_MODE;
+(function(){
+  var qsParams = phina.util.QueryString.parse();
+  USE_WEBGL = (qsParams.webgl != null) ? JSON.parse(qsParams.webgl) : true;
+  DEBUG_MODE = (qsParams.debug != null) ? JSON.parse(qsParams.debug) : false;
+}());
 
 var Log = function() {
   if (DEBUG_MODE) {
@@ -40,7 +42,6 @@ var ASSETS = {
     "nasupiyo": assetPath+"nasupiyo.png",
     "boss": assetPath+"karasu_ss.png",
     "bg": assetPath+"background.png",
-    // "bg": assetPath+"space-repX.jpg",
   },
 
   // sound: {
@@ -69,6 +70,7 @@ var ASSETS = {
         }
       }
     },
+
     "boss": {
       "frame": {
         "width": 64,
@@ -91,6 +93,7 @@ var ASSETS = {
 };
 
 var SHOT_POWER = 8;
+var BOMB_POWER = 100;
 /**
  * @param {string} texture [画像テクスチャキー名]
  * @param {life} [Number] [体力]

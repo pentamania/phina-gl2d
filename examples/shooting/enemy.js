@@ -258,6 +258,7 @@ phina.define('Boss', {
 
     this.one('changePatternOne', function(){
       this.resetPosition();
+      this.addOrbit();
     });
     this.one('changePatternTwo', function(){
       this.resetPosition();
@@ -267,7 +268,7 @@ phina.define('Boss', {
   resetPosition: function() {
     this.isAnimating = true;
     this.tweener.clear()
-    .to(this._startPos, 2400, 'easeOutQuad')
+    .to(this._startPos, 1200, 'easeOutQuad')
     .wait(300)
     .call(function() {
       this.age = 0;
@@ -277,9 +278,22 @@ phina.define('Boss', {
     return this;
   },
 
-  // パターン変化で時間経過
+  // パターン変化で増やす
   addOrbit: function(index) {
-
+    var self = this;
+    var radius = 60;
+    var angSpeed = 8;
+    this.orbits.forEach(function(orbit, i) {
+      orbit.addChildTo(self.parent)
+      .on('enterframe', function(e) {
+        var frame = e.app.frame;
+        var radian = (orbit.startDeg + frame * angSpeed).toRadian();
+        orbit.position.set(
+          self.x + radius * Math.cos(radian),
+          self.y + radius * Math.sin(radian)
+        );
+      });
+    });
   },
 
   // 当たり判定をとるため、子機を親と同じレイヤーに配置する
@@ -330,7 +344,7 @@ phina.define('Boss', {
       var radian = RAD_UNIT * deg;
       this.x = this._startPos.x + radX * Math.sin(radian);
       this.y = this._startPos.y + radY * Math.sin(radian * 0.5);
-      if (this.age%16 === 0) this.fireBullet();
+      if (this.age%8 === 0) this.fireBullet();
     } else if (this.life < this._fullLife * 0.66) {
       // 上下
       this.flare('changePatternOne');
