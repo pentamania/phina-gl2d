@@ -96,7 +96,7 @@ phina.define('MainScene', {
       });
     }
 
-    // タイトルもスタート後スクロール
+    // タイトル: スタート後スクロール
     this.titleLayer.on('enterframe', function(){
       if (!self.isStarted || !this.visible) return;
       this.x -= self.scrollSpeed;
@@ -134,7 +134,7 @@ phina.define('MainScene', {
     .setPosition(gx.center(), gy.span(15))
     ;
 
-    // 敵出現パターン関係
+    // 敵出現関係
     this._enemyPointer = 0;
     ENEMY_PATTERNS.targetLayer = this.enemyLayer;
     this.enemyLauncher = EnemyLauncher();
@@ -185,28 +185,7 @@ phina.define('MainScene', {
     if (!this.isStarted) {
       // スタート画面解除
       if (p.getPointingStart()) {
-        player.anim.gotoAndPlay('fly');
-        player.tweener.clear()
-        .by({y: -40}, 1600, 'easeOutElastic')
-        .to({x: -100, y: -200}, 600, 'easeOutQuad')
-        .set({x: -100, y: self.height * 0.5})
-        .wait(240)
-        .call(function() {
-          self.isStarted = true;
-          // self.scrollSpeed = SCROLL_SPEED * 2;
-        })
-        .to({x: self.width * 0.3}, 800, "easeInOutQuad")
-        .call(function() {
-          player.isAnimating = false;
-          self.UILayer.setVisible(true);
-        })
-        ;
-
-        sctw.clear()
-        .to({scrollSpeed: SCROLL_SPEED * 5}, 1000, "easeInQuad")
-        .to({scrollSpeed: SCROLL_SPEED}, 5000)
-        ;
-
+        this.gameStart();
       } else {
         return;
       }
@@ -359,6 +338,35 @@ phina.define('MainScene', {
     }
   },
 
+  gameStart: function () {
+    var self = this;
+    var player = this.player;
+
+    // プレイヤーアニメーション -> スクロール開始
+    player.anim.gotoAndPlay('fly');
+    player.tweener.clear()
+    .by({y: -40}, 1600, 'easeOutElastic')
+    .to({x: -100, y: -200}, 600, 'easeOutQuad')
+    .set({x: -100, y: self.height * 0.5})
+    .wait(240)
+    .call(function() {
+      self.isStarted = true;
+      // self.scrollSpeed = SCROLL_SPEED * 2;
+    })
+    .to({x: self.width * 0.3}, 800, "easeInOutQuad")
+    .call(function() {
+      player.isAnimating = false;
+      self.UILayer.setVisible(true);
+    })
+    ;
+
+    this.tweener.clear()
+    .to({scrollSpeed: SCROLL_SPEED * 5}, 1000, "easeInQuad")
+    .to({scrollSpeed: SCROLL_SPEED}, 5000)
+    ;
+  },
+
+  // クラス化
   whiteBlast: function(x, y) {
     var s = Sprite('whiteCircle').addChildTo(this.effectLayer);
     s.tweener.clear()
