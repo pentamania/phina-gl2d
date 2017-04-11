@@ -19,12 +19,17 @@ phina.define('TitleLayer', {
     .setPosition(gx.center(), gy.span(5))
 
     // "Press start..."
-    var startLabel = Label({
-      text: "Press screen to start !",
-      fill: "white",
-      stroke: "#6E6E6E",
+    var startLabel = this.startButton = Button({
+      text: "Press here or Z-key to start !",
+      fill: "transparent",
+      // fill: "white",
+      // stroke: "#6E6E6E",
+      fontColor: "blue",
       fontSize: 20,
-    }).addChildTo(this)
+      width: SCREEN_WIDTH * 0.8
+    })
+    // setSize(SCREEN_WIDTH * 0.8)
+    .addChildTo(this)
     .setPosition(gx.center(), gy.span(12));
 
     startLabel.tweener
@@ -37,9 +42,6 @@ phina.define('TitleLayer', {
 
   },
 
-  withdrawAnim: function() {
-
-  }
 });
 
 /**

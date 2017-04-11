@@ -96,13 +96,6 @@ phina.define('MainScene', {
       });
     }
 
-    // タイトル: スタート後スクロール
-    this.titleLayer.on('enterframe', function(){
-      if (!self.isStarted || !this.visible) return;
-      this.x -= self.scrollSpeed;
-      if (this.x < -SCREEN_WIDTH) this.visible = false;
-    })
-
     // ボム演出
     // 仲間
     var friendList = [
@@ -169,9 +162,26 @@ phina.define('MainScene', {
       self.UILayer.setVisible(true);
     }
 
+    this.one('gameStart', this.gameStart.bind(this))
+
+    // タイトル: スタート後スクロール
+    this.titleLayer.on('enterframe', function(){
+      if (!self.isStarted || !this.visible) return;
+      this.x -= self.scrollSpeed;
+      if (this.x < -SCREEN_WIDTH) this.visible = false;
+    });
+    this.titleLayer.startButton.onclick = function() {
+      self.flare('gameStart');
+      // if (self.isStarted) return;
+      // self.gameStart();
+    }
+
+
   },
 
   update: function(app) {
+    // if (!this.isStarted) return;
+
     var self = this;
     var frame = app.frame;
     var kb = app.keyboard;
@@ -182,10 +192,12 @@ phina.define('MainScene', {
 
     this.age++;
 
+    // スタート画面解除
     if (!this.isStarted) {
-      // スタート画面解除
-      if (p.getPointingStart()) {
-        this.gameStart();
+      // if (p.getPointingStart()) {
+      if (kb.getKeyDown('z')) {
+        // this.gameStart();
+        this.flare('gameStart');
       } else {
         return;
       }
@@ -195,7 +207,7 @@ phina.define('MainScene', {
       // this.exit("main");
     }
 
-    // 敵出現
+    // 敵の出現
     this.enemyLauncher.tick();
     if (currentPattern && TIME_TABLE.frameSum + currentPattern[0] < this.age) {
       TIME_TABLE.frameSum += currentPattern[0];
@@ -231,9 +243,10 @@ phina.define('MainScene', {
 
     // enemy children
     self.enemyLayer.children.each(function(enemy){
+      if (enemy.isAnimating) return;
+
       // enemy destroy
       if (enemy.life <= 0) {
-        if (enemy.isAnimating) return;
 
         // Boss撃破
         if (enemy.isBoss) {
@@ -366,7 +379,7 @@ phina.define('MainScene', {
     ;
   },
 
-  // クラス化
+  // TODO: クラス化
   whiteBlast: function(x, y) {
     var s = Sprite('whiteCircle').addChildTo(this.effectLayer);
     s.tweener.clear()
@@ -397,6 +410,10 @@ phina.define('MainScene', {
         player.respawn();
       }
     }.bind(this));
+  },
+
+  bossDestroyed: function (boss) {
+    // body...
   },
 
   showResult: function() {
