@@ -450,9 +450,10 @@ phina.define('MainScene', {
   // ボム （C.A.S.）
   fireBomb: function() {
     var gauge = this.bombGauge;
-
-    if (gauge.value < gauge.maxValue) return;
     var self = this;
+
+    // 何もしない
+    if (this.player.isAnimating || gauge.value < gauge.maxValue) return;
 
     gauge.value = 0;
     this.player.invinsible = 200;
@@ -470,7 +471,6 @@ phina.define('MainScene', {
       enemy.life -= BOMB_POWER;
     }.bind(this));
 
-    // 弾消し: 消した分だけスコア足す？
     // var tempChildren = self.bulletLayer.children.slice()
     for (var i = 0, len = self.bulletLayer.children.length; i < len; i++) {
       var child = self.bulletLayer.children[0];
@@ -480,7 +480,7 @@ phina.define('MainScene', {
       if (child != null) child.remove();
     }
 
-    // 爆発： TODO、プール化
+    // 爆発 TODO、プール化
     (20).times(function() {
       var x = Math.randint(0, SCREEN_WIDTH);
       var y = Math.randint(0, SCREEN_HEIGHT);
