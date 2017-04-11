@@ -414,12 +414,14 @@ phina.define('MainScene', {
     var player = this.player;
     this.generateBlast(player.x, player.y, 32, "redRect");
     this.remainLife--;
+
     player.destroyed(function(){
       if (this.remainLife < 0) {
         // this.gameover();
         this.showResult();
       } else {
         player.respawn();
+        this.bombGauge.refill();
       }
     }.bind(this));
   },

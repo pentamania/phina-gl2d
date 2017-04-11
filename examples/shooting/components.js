@@ -433,6 +433,10 @@ phina.define("BombGauge", {
 
   },
 
+  refill: function () {
+    this.setValue(this.maxValue);
+  }
+
 });
 
 /**
