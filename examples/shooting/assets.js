@@ -2,7 +2,7 @@
 // てきとうにテクスチャ素材
 ;(function(){
   var am = AssetManager;
-  var r, lw, img;
+  var r, lw, img, shape;
   var drawShape = function(shape) {
     shape.render(shape.canvas);
     return shape.canvas;
@@ -30,6 +30,18 @@
   .strokeCircle(r, r, r-lw);
   am.set('image', 'redBullet', img);
 
+  // 天アイテム
+  shape = phina.display.Label({
+    text: "金",
+    fontSize: 14,
+    fontFamily: "Meirio",
+    fill: "#E7EE29",
+    stroke: "#gold",
+  });
+  am.set('image', 'scoreItem', drawShape(shape))
+
+  // 敵 =========
+
   // teki: cucumber
   r = 16;
   lw = r/4;
@@ -41,7 +53,7 @@
   img.strokePolygon(r, r, r-lw, 6);
   am.set('image', 'cucumber', img);
 
-  // hoshi
+  // teki: hoshi
   r = 16;
   lw = r/4 | 0;
   img = phina.graphics.Canvas().setSize(r*2, r*2);

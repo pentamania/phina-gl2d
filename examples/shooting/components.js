@@ -272,6 +272,7 @@ phina.define('WarningText', {
 });
 
 /**
+ * TODO
  * animation
  */
 phina.define('AnimatingLabel', {
@@ -434,3 +435,23 @@ phina.define("BombGauge", {
 
 });
 
+/**
+ * TODO
+ * ScoreItem
+ */
+phina.define('ScoreItem', {
+  superClass: 'AbstractObjClass',
+
+  init: function(x, y, score) {
+    this.superInit("scoreItem");
+    this.score = score || 100;
+    this.radius = 32;
+    this.vec = Vector2(2, 0);
+    this.position.set(x, y);
+  },
+
+  update: function () {
+    this.vec.x -= 0.05;
+    this.position.add(this.vec);
+  }
+});

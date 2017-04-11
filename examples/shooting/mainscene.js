@@ -28,7 +28,7 @@ phina.define('MainScene', {
     this.shotLayer = DisplayElement(options).addChildTo(rootLayer);
     this.friendLayer = DisplayElement(options).addChildTo(rootLayer);
     this.bulletLayer = DisplayElement(options).addChildTo(rootLayer);
-    // this.UILayer = DisplayElement(options).addChildTo(this);
+    this.itemLayer = DisplayElement(options).addChildTo(rootLayer);
     this.UILayer = UILayer(options).addChildTo(this).setVisible(false);
     this.titleLayer = TitleLayer(options).addChildTo(this);
     this.resultLayer = ResultLayer(options).addChildTo(this);
@@ -135,7 +135,7 @@ phina.define('MainScene', {
 
     // UI update
     this.on('enterframe', function(e) {
-      this.UILayer.scoreLabel.text = this._score;
+      this.UILayer.scoreLabel.text = "￥ "+this._score;
       this.UILayer.remainLifeLabel.text = " x " + Math.max(0, this.remainLife);
     })
 
@@ -162,6 +162,7 @@ phina.define('MainScene', {
       self.UILayer.setVisible(true);
     }
 
+    // ゲーム開始
     this.one('gameStart', this.gameStart.bind(this))
 
     // タイトル: スタート後スクロール
@@ -175,7 +176,6 @@ phina.define('MainScene', {
       // if (self.isStarted) return;
       // self.gameStart();
     }
-
 
   },
 
@@ -303,6 +303,18 @@ phina.define('MainScene', {
     self.bulletLayer.children.each(function(bullet){
       if (!player.invinsible && !player.isAnimating && bullet.hitTestCircle(player.x, player.y)) {
         self.playerDestroyed();
+      }
+    });
+
+    // item action
+    var tempChildren = this.itemLayer.children.slice();
+    tempChildren.each(function(item) {
+      // TODO: player位置をサーチして吸引させる？
+
+      // vs player
+      if (!player.isAnimating && item.hitTestCircle(player.x, player.y)) {
+        self._score += item.score;
+        item.remove();
       }
     });
 
@@ -462,7 +474,8 @@ phina.define('MainScene', {
     // var tempChildren = self.bulletLayer.children.slice()
     for (var i = 0, len = self.bulletLayer.children.length; i < len; i++) {
       var child = self.bulletLayer.children[0];
-      // TODO: 点アイテム
+      // 点アイテム
+      ScoreItem(child.x, child.y).addChildTo(self.itemLayer);
       // this._score += 10;
       if (child != null) child.remove();
     }
