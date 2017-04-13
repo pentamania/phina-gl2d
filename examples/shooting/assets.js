@@ -220,10 +220,10 @@ var TIME_TABLE = {
     // [30, "verticals", [SCREEN_HEIGHT-40]],
 
     // // ここから本番
-    [100, "liner", []],
-    [120, "liner", [SCREEN_HEIGHT-60]],
-    [120, "liner"],
-    [120, "liner", [SCREEN_HEIGHT-60]],
+    // [100, "liner", []],
+    // [120, "liner", [SCREEN_HEIGHT-60]],
+    // [120, "liner"],
+    // [120, "liner", [SCREEN_HEIGHT-60]],
 
     // [90, "meteors", [SCREEN_HEIGHT*0.3 | 0]],
     // [45, "meteors", [SCREEN_HEIGHT*0.7 | 0]],
@@ -231,12 +231,12 @@ var TIME_TABLE = {
     // [45, "meteors", [SCREEN_HEIGHT*0.7 | 0]],
 
     // // 魚群
-    [40, "sinMoves", [10, true]],
-    [0, "sinMoves", [40]],
-    [0, "sinMoves", [70]],
-    [0, "sinMoves", [100]],
-    [0, "sinMoves", [130]],
-    [0, "sinMoves", [160]],
+    // [40, "sinMoves", [10, true]],
+    // [0, "sinMoves", [40]],
+    // [0, "sinMoves", [70]],
+    // [0, "sinMoves", [100]],
+    // [0, "sinMoves", [130]],
+    // [0, "sinMoves", [160]],
 
     // [40, "sinMoves", [10]],
     // [30, "sinMoves", [60]],

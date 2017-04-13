@@ -250,36 +250,7 @@ phina.define('MainScene', {
 
         // Boss撃破
         if (enemy.isBoss) {
-          sctw.clear()
-          .call(function() {
-            self.generateBlast(enemy.x, enemy.y, 32, "redRect");
-            enemy.isAnimating = true;
-            enemy.animation.gotoAndPlay('dead');
-          })
-          .wait(1600)
-          .call(function(){
-            self.generateBlast(enemy.x, enemy.y, 32, "redRect");
-            enemy.destroyAnimation(2800);
-          })
-          // 爆発エフェクト
-          .wait(500)
-          .call(function(){ self.generateBlast(enemy.x, enemy.y+10, 32, "redRect"); })
-          .wait(500)
-          .call(function(){ self.generateBlast(enemy.x-20, enemy.y+10, 32, "redRect"); })
-          .wait(500)
-          .call(function(){ self.generateBlast(enemy.x+20, enemy.y+10, 32, "redRect"); })
-          .wait(260)
-          .call(function(){
-            self.generateBlast(enemy.x, enemy.y, 32, "redRect");
-            self.whiteBlast(enemy.x, enemy.y);
-            enemy.remove();
-          })
-          .wait(1400)
-          .call(function() {
-            self.player.isAnimating = true;
-            self.showResult();
-          })
-          ;
+          self.bossDestroyed(enemy);
         } else {
           // 雑魚
           self.generateBlast(enemy.x, enemy.y, 32, "redRect");
@@ -426,8 +397,45 @@ phina.define('MainScene', {
     }.bind(this));
   },
 
-  bossDestroyed: function (boss) {
-    // body...
+  bossDestroyed: function(enemy) {
+    var self = this;
+
+    this.tweener.clear()
+    .call(function() {
+      // 無敵化
+      // self.player.isAnimating = true;
+      self.player.invinsible = Infinity;
+
+      self.generateBlast(enemy.x, enemy.y, 32, "redRect");
+      enemy.isAnimating = true;
+      enemy.animation.gotoAndPlay('dead');
+    })
+    .wait(1600)
+    .call(function(){
+      self.generateBlast(enemy.x, enemy.y, 32, "redRect");
+      enemy.destroyAnimation(2800);
+    })
+    // 爆発エフェクトここから
+    .wait(500)
+    .call(function(){ self.generateBlast(enemy.x, enemy.y+10, 32, "redRect"); })
+    .wait(500)
+    .call(function(){ self.generateBlast(enemy.x-20, enemy.y+10, 32, "redRect"); })
+    .wait(500)
+    .call(function(){ self.generateBlast(enemy.x+20, enemy.y+10, 32, "redRect"); })
+    .wait(260)
+    .call(function(){
+      self.generateBlast(enemy.x, enemy.y, 32, "redRect");
+      self.whiteBlast(enemy.x, enemy.y);
+      enemy.remove();
+    })
+    .wait(1400)
+    .call(function() {
+      // プレイヤー画面外へ？
+      self.player.invinsible = 0;
+      self.showResult();
+    })
+    ;
+
   },
 
   showResult: function() {
@@ -476,7 +484,7 @@ phina.define('MainScene', {
     // var tempChildren = self.bulletLayer.children.slice()
     for (var i = 0, len = self.bulletLayer.children.length; i < len; i++) {
       var child = self.bulletLayer.children[0];
-      // 点アイテム
+      // 点アイテムに変換
       ScoreItem(child.x, child.y).addChildTo(self.itemLayer);
       // this._score += 10;
       if (child != null) child.remove();

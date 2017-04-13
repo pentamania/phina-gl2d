@@ -147,7 +147,8 @@ var ENEMY_TYPES = {
   },
   "boss": {
     texture: "boss",
-    life: 1000,
+    life: 100,
+    // life: 1000,
     score: 10000,
   }
 };
