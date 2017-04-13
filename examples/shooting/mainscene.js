@@ -190,8 +190,6 @@ phina.define('MainScene', {
     var sctw = this.tweener;
     var currentPattern = TIME_TABLE.pattern[this._enemyPointer];
 
-    this.age++;
-
     // スタート画面解除
     if (!this.isStarted) {
       // if (p.getPointingStart()) {
@@ -202,6 +200,8 @@ phina.define('MainScene', {
         return;
       }
     }
+
+    this.age++;
 
     if (DEBUG_MODE && kb.getKeyDown('q')) {
       // this.exit("main");
