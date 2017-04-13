@@ -26,14 +26,6 @@
   <script src="mainscene.js"></script>
 
   <script type="text/javascript">
-    var USE_WEBGL;
-    var DEBUG_MODE;
-    (function(){
-      var qsParams = phina.util.QueryString.parse();
-      USE_WEBGL = (qsParams.webgl != null) ? JSON.parse(qsParams.webgl) : true;
-      DEBUG_MODE = (qsParams.debug != null) ? JSON.parse(qsParams.debug) : false;
-    }());
-
     phina.main(function() {
       var app = GameApp({
         width: SCREEN_WIDTH,
