@@ -14,10 +14,12 @@ var RAD_UNIT = 0.01745;
 
 var USE_WEBGL;
 var DEBUG_MODE;
+var BOSS_ONLY;
 (function(){
   var qsParams = phina.util.QueryString.parse();
   USE_WEBGL = (qsParams.webgl != null) ? JSON.parse(qsParams.webgl) : true;
   DEBUG_MODE = (qsParams.debug != null) ? JSON.parse(qsParams.debug) : false;
+  BOSS_ONLY = (qsParams.bossOnly != null) ? JSON.parse(qsParams.bossOnly) : false;
 }());
 
 var Log = function() {

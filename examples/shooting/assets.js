@@ -210,7 +210,6 @@ var ENEMY_PATTERNS = {
  * 敵出現タイムテーブル
  */
 var TIME_TABLE = {
-
   frameSum: 0,
   pattern: [
     // [直前パターンからの待機フレーム, "編隊タイプ", 引数配列]
@@ -256,3 +255,4 @@ var TIME_TABLE = {
   ]
 };
 
+if (BOSS_ONLY) TIME_TABLE.pattern = [[100, "boss"]];
