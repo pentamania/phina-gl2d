@@ -280,9 +280,12 @@ phina.define('MainScene', {
     // item action
     var tempChildren = this.itemLayer.children.slice();
     tempChildren.each(function(item) {
-      // TODO: player位置をサーチして吸引させる？
+      // player位置をサーチ・吸引させる
+      if (player.position.distance(item.position) < ITEM_SEARCH_RANGE) {
+        item.target = player;
+      }
 
-      // vs player
+      // vs player hittest
       if (!player.isAnimating && item.hitTestCircle(player.x, player.y)) {
         self._score += item.score;
         item.remove();

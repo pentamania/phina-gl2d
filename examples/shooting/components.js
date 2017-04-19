@@ -446,6 +446,8 @@ phina.define("BombGauge", {
 phina.define('ScoreItem', {
   superClass: 'AbstractObjClass',
 
+  target: null,
+
   init: function(x, y, score) {
     this.superInit("scoreItem");
     this.score = score || 100;
@@ -455,7 +457,13 @@ phina.define('ScoreItem', {
   },
 
   update: function () {
-    this.vec.x -= 0.05;
-    this.position.add(this.vec);
+    if (this.target) {
+      var rad = Math.atan2(this.target.y - this.y, this.target.x - this.x);
+      var speed = 5;
+      this.position.add({x: speed * Math.cos(rad), y:speed * Math.sin(rad)});
+    } else {
+      this.vec.x -= 0.05;
+      this.position.add(this.vec);
+    }
   }
 });
