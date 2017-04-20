@@ -226,6 +226,24 @@ phina.define('ExplosionCircle', {
 });
 
 /**
+ * White Cirlcle flash
+ * 爆発演出用
+ */
+phina.define('WhiteCircleFlash', {
+  superClass: 'phina.display.Sprite',
+
+  init: function(x, y) {
+    this.superInit("whiteCircle");
+    this.tweener.clear()
+    .set({x: x, y: y})
+    .to({scaleX:100, scaleY:80, alpha: 0}, 1000, "easeInQuad")
+    .call(function(){
+      this.remove();
+    })
+  },
+});
+
+/**
  * Warning
  */
 phina.define('WarningText', {

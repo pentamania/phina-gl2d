@@ -337,17 +337,6 @@ phina.define('MainScene', {
     }
   },
 
-  // TODO: クラス化
-  whiteBlast: function(x, y) {
-    var s = Sprite('whiteCircle').addChildTo(this.effectLayer);
-    s.tweener.clear()
-    .set({x: x, y: y})
-    .to({scaleX:100, scaleY:80, alpha: 0}, 1000, "easeInQuad")
-    .call(function(){
-      this.remove();
-    })
-  },
-
   generateBlast: function(x, y, num, textureName) {
     for (var i = 0; i < num; i++) {
       this.objectPools[textureName].pick(function(chip) {
@@ -414,7 +403,7 @@ phina.define('MainScene', {
     .wait(260)
     .call(function(){
       self.generateBlast(enemy.x, enemy.y, 32, "redRect");
-      self.whiteBlast(enemy.x, enemy.y);
+      WhiteCircleFlash(enemy.x, enemy.y).addChildTo(self.effectLayer);
       enemy.remove();
     })
     .wait(1400)
@@ -424,7 +413,6 @@ phina.define('MainScene', {
       self.showResult();
     })
     ;
-
   },
 
   gameStart: function () {
