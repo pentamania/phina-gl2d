@@ -219,6 +219,9 @@ phina.define('MainScene', {
         // TODO：雑魚片す？ -> ワーニング cb-> ボス出現
         // this.UILayer.showWarning(function() {
           var boss = Boss().addChildTo(self.enemyLayer).resetPosition();
+          boss.on('patternChange', function() {
+            self.generateBlast(boss.x, boss.y, 32, "redRect");
+          })
           self.UILayer.bossLifeGauge.setVisible(true).setTarget(boss);
         // });
       // 雑魚編隊

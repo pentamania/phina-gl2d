@@ -242,10 +242,10 @@ phina.define('Boss', {
     this.animation = FrameAnimation('boss').attachTo(this).gotoAndPlay('fly');
 
     this.setPosition(SCREEN_WIDTH * 1.5, SCREEN_HEIGHT / 2);
-    this.vec = Vector2(0, 0);
+    // this.vec = Vector2(0, 0);
     this.isAnimating = true;
     this._fullLife = this.life;
-    this._startPos = {x: SCREEN_WIDTH*0.8, y: SCREEN_HEIGHT*0.5};
+    this._initialPos = {x: SCREEN_WIDTH*0.8, y: SCREEN_HEIGHT*0.5};
 
     // 子機
     this.orbits = [];
@@ -256,19 +256,12 @@ phina.define('Boss', {
       this.orbits.push(orbit);
     }.bind(this));
 
-    this.one('changePatternOne', function(){
-      this.resetPosition();
-      this.addOrbit();
-    });
-    this.one('changePatternTwo', function(){
-      this.resetPosition();
-    });
   },
 
   resetPosition: function() {
     this.isAnimating = true;
     this.tweener.clear()
-    .to(this._startPos, 1200, 'easeOutQuad')
+    .to(this._initialPos, 1200, 'easeOutQuad')
     .wait(300)
     .call(function() {
       this.age = 0;
@@ -278,7 +271,6 @@ phina.define('Boss', {
     return this;
   },
 
-  // パターン変化で増やす
   addOrbit: function(index) {
     var self = this;
     var radius = 60;
@@ -322,6 +314,7 @@ phina.define('Boss', {
     this.orbits = null;
   },
 
+  // 傾く
   destroyAnimation: function(duration) {
     duration = duration || 3000;
     this.tweener.clear()
@@ -331,37 +324,70 @@ phina.define('Boss', {
 
   update: function(app) {
     if (this.isAnimating) return;
-    // TODO: 残りライフでパターン変える
 
-    if (this.life < this._fullLife * 0.333) {
-      // S字ムーブ
-      this.flare('changePatternTwo');
-      var period = 180; // 一周期にかかるフレーム数
-      var radX = 40;
-      var radY = 140;
-      var degUnit = 180 / (period * 0.25);
-      var deg = degUnit * this.age;
-      var radian = RAD_UNIT * deg;
-      this.x = this._startPos.x + radX * Math.sin(radian);
-      this.y = this._startPos.y + radY * Math.sin(radian * 0.5);
-      if (this.age%8 === 0) this.fireBullet();
-    } else if (this.life < this._fullLife * 0.66) {
-      // 上下
-      this.flare('changePatternOne');
-      var period = 500; // 一周期にかかるフレーム数
-      var radY = 140;
-      var degUnit = 180 / (period * 0.25);
-      var deg = degUnit * this.age;
-      var radian = RAD_UNIT * deg;
-      this.x = this._startPos.x;
-      this.y = this._startPos.y + radY * Math.sin(radian * 0.5);
-      if (this.age%24 === 0) this.fireBullet();
-    } else {
-      // その場
-      if (this.age%30 === 0) this.fireBullet();
+    switch (this._pattern) {
+      case "sMove":
+        // S字を描くように
+        var period = 180; // 一周期にかかるフレーム数
+        var radX = 40;
+        var radY = 140;
+        var degUnit = 180 / (period * 0.25);
+        var deg = degUnit * this.age;
+        var radian = RAD_UNIT * deg;
+        this.x = this._initialPos.x + radX * Math.sin(radian);
+        this.y = this._initialPos.y + radY * Math.sin(radian * 0.5);
+        if (this.age%8 === 0) this.fireBullet();
+        break;
+
+      case "upDown":
+        // 上下移動
+        var period = 500; // 一周期にかかるフレーム数
+        var radY = 140;
+        var degUnit = 180 / (period * 0.25);
+        var deg = degUnit * this.age;
+        var radian = RAD_UNIT * deg;
+        this.x = this._initialPos.x;
+        this.y = this._initialPos.y + radY * Math.sin(radian * 0.5);
+        if (this.age%24 === 0) this.fireBullet();
+        break;
+
+      default:
+        // 初期状態：その場にとどまる
+        if (this.age%30 === 0) this.fireBullet();
+        break;
     }
 
+    // change pattern by life
+    if (this.life < this._fullLife * 0.333) {
+      this.changePattern('sMove');
+    } else if (this.life < this._fullLife * 0.66) {
+      this.changePattern('upDown');
+    }
 
+  },
+
+  changePattern: function(pattern) {
+    if (pattern === this._pattern) return;
+
+    this.flare('patternChange');
+    this.resetPosition();
+    this._pattern = pattern;
+    switch (pattern) {
+      case "upDown":
+        this.addOrbit();
+        break;
+      default:
+        break;
+    }
+  },
+
+  // TODO: パターンごとに撃ち方変える？
+  fireBullet: function() {
+    (3).times(function(i, num){
+      var rad = ((180 - 30) + 30 * i) * RAD_UNIT;
+      Bullet(this.x, this.y, rad, 4).addChildTo(bulletConfig.layer);
+    }.bind(this))
+    var rad = 180;
   },
 
   // appearAnimation: function() {
@@ -375,14 +401,5 @@ phina.define('Boss', {
 
   //   return this;
   // },
-
-  // TODO: 3way　撃つ
-  fireBullet: function() {
-    (3).times(function(i, num){
-      var rad = ((180 - 30) + 30 * i) * RAD_UNIT;
-      Bullet(this.x, this.y, rad, 4).addChildTo(bulletConfig.layer);
-    }.bind(this))
-    var rad = 180;
-  },
 
 });
