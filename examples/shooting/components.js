@@ -90,10 +90,12 @@ phina.define('Shot', {
   spawn: function(x, y, angle, speed) {
     speed = speed || 10;
     angle = angle || 0;
+    var radian = angle.toRadian();
     this.setPosition(x, y);
     this.vec.set(
-      speed,
-      speed * Math.sin(angle.toRadian())
+      // speed,
+      speed * Math.cos(radian),
+      speed * Math.sin(radian)
     );
 
     this.targetLayer.addChild(this);

@@ -5,7 +5,7 @@ phina.define('MainScene', {
   age: 0,
   _score: 0,
   _shotExp: 0,
-  _shotLevel: 1,
+  _shotLevel: 4,
   remainLife: PLAYER_INITIAL_LIFE,
   isStarted: false,
 
@@ -479,7 +479,13 @@ phina.define('MainScene', {
       case 3: fireNway(5); break;
       case 4:
         fireNway(5);
-        // TODO: backshot
+        // backshot
+        for (var i=0; i < 2; i++) {
+          var angle = 160 + (i * 20 * 2);
+          this.objectPools['playerShot'].pick(function(shot) {
+            shot.spawn(player.x, player.y-2, angle);
+          });
+        }
         break;
     }
   },
