@@ -4,6 +4,8 @@ phina.define('MainScene', {
 
   age: 0,
   _score: 0,
+  _shotExp: 0,
+  _shotLevel: 1,
   remainLife: PLAYER_INITIAL_LIFE,
   isStarted: false,
 
@@ -232,47 +234,52 @@ phina.define('MainScene', {
     }
 
     // ボム
-    if (kb.getKeyDown('x')) {
-      this.fireBomb();
-    }
+    if (kb.getKeyDown('x')) this.fireBomb();
 
     if (self.bombGauge.value < self.bombGauge.maxValue) {
-      // UI.Gauge.setValueにバグあり
+      // UI.Gauge.setValueにバグあり とりあえずの処置
       self.bombGauge.value = Math.clamp(self.bombGauge.value+1, 0, self.bombGauge.maxValue);
     }
 
+    // shot level up
+    if (
+      self._shotLevel < MAX_SHOT_LEVEL
+      && self._shotExp > 50 * self._shotLevel
+    ) {
+      self._shotLevel++;
+      // Log("shot level up",self._shotLevel);
+    }
+
     // enemy children
-    self.enemyLayer.children.each(function(enemy){
+    self.enemyLayer.children.each(function(enemy) {
       if (enemy.isAnimating) return;
 
-      // enemy destroy
       if (enemy.life <= 0) {
-
-        // Boss撃破
-        if (enemy.isBoss) {
-          self.bossDestroyed(enemy);
-        } else {
-          // 雑魚
-          self.generateBlast(enemy.x, enemy.y, 32, "redRect");
-          enemy.remove();
-        }
-        if (enemy.score != null) self._score += enemy.score;
+        self.enemyDestroyed(enemy);
       }
 
       // enemy vs player
-      if (!player.invinsible && !player.isAnimating && enemy.hitTestCircle(player.x, player.y)) {
+      if (
+        !player.invinsible
+        && !player.isAnimating
+        && enemy.hitTestCircle(player.x, player.y)
+      ) {
         self.playerDestroyed();
       }
 
       // enemy vs player shot
-      self.shotLayer.children.each(function(shot){
+      self.shotLayer.children.each(function(shot) {
         self.shotEnemyHitTest(shot, enemy);
       });
     });
 
     // enemy bullet vs player
-    self.bulletLayer.children.each(function(bullet){
-      if (!player.invinsible && !player.isAnimating && bullet.hitTestCircle(player.x, player.y)) {
+    self.bulletLayer.children.each(function(bullet) {
+      if (
+        !player.invinsible
+        && !player.isAnimating
+        && bullet.hitTestCircle(player.x, player.y)
+      ) {
         self.playerDestroyed();
       }
     });
@@ -303,24 +310,14 @@ phina.define('MainScene', {
       if (kb.getKey('right')) player.x += player.moveSpeed;
     }
 
-    if (frame%4 === 0) {
-      if (!player.isAnimating) {
+    if (!player.isAnimating && frame%4 === 0) {
+      // if (kb.getKey('z')) self.playerShotFire();
+      self.playerShotFire();
 
-        // player shot
-        if (kb.getKey('z')) {
-          for (var i=0; i < 3; i++) {
-            var angle = -10 + i*10;
-            this.objectPools['playerShot'].pick(function(shot) {
-              shot.spawn(player.x, player.y-2, angle);
-            });
-          }
-        }
-
-        // ブーストエフェクト
-        this.objectPools["boostEffect"].pick(function(chip) {
-          chip.spawn(player.x-5, player.y);
-        });
-      }
+      // ブーストエフェクト
+      this.objectPools["boostEffect"].pick(function(chip) {
+        chip.spawn(player.x-5, player.y);
+      });
     }
 
   },
@@ -335,34 +332,6 @@ phina.define('MainScene', {
       shot.remove();
       enemy.life -= shot.power;
     }
-  },
-
-  gameStart: function () {
-    var self = this;
-    var player = this.player;
-
-    // プレイヤーアニメーション -> スクロール開始
-    player.anim.gotoAndPlay('fly');
-    player.tweener.clear()
-    .by({y: -40}, 1600, 'easeOutElastic')
-    .to({x: -100, y: -200}, 600, 'easeOutQuad')
-    .set({x: -100, y: self.height * 0.5})
-    .wait(240)
-    .call(function() {
-      self.isStarted = true;
-      // self.scrollSpeed = SCROLL_SPEED * 2;
-    })
-    .to({x: self.width * 0.3}, 800, "easeInOutQuad")
-    .call(function() {
-      player.isAnimating = false;
-      self.UILayer.setVisible(true);
-    })
-    ;
-
-    this.tweener.clear()
-    .to({scrollSpeed: SCROLL_SPEED * 5}, 1000, "easeInQuad")
-    .to({scrollSpeed: SCROLL_SPEED}, 5000)
-    ;
   },
 
   // TODO: クラス化
@@ -398,6 +367,20 @@ phina.define('MainScene', {
         this.bombGauge.refill();
       }
     }.bind(this));
+  },
+
+  enemyDestroyed: function (enemy) {
+    if (enemy.isBoss) {
+      // Boss撃破
+      this.bossDestroyed(enemy);
+    } else {
+      // 雑魚撃破
+      this.generateBlast(enemy.x, enemy.y, 32, "redRect");
+      enemy.remove();
+    }
+
+    if (enemy.score != null) this._score += enemy.score;
+    this._shotExp += 50;
   },
 
   bossDestroyed: function(enemy) {
@@ -441,6 +424,34 @@ phina.define('MainScene', {
 
   },
 
+  gameStart: function () {
+    var self = this;
+    var player = this.player;
+
+    // プレイヤーアニメーション -> スクロール開始
+    player.anim.gotoAndPlay('fly');
+    player.tweener.clear()
+    .by({y: -40}, 1600, 'easeOutElastic')
+    .to({x: -100, y: -200}, 600, 'easeOutQuad')
+    .set({x: -100, y: self.height * 0.5})
+    .wait(240)
+    .call(function() {
+      self.isStarted = true;
+      // self.scrollSpeed = SCROLL_SPEED * 2;
+    })
+    .to({x: self.width * 0.3}, 800, "easeInOutQuad")
+    .call(function() {
+      player.isAnimating = false;
+      self.UILayer.setVisible(true);
+    })
+    ;
+
+    this.tweener.clear()
+    .to({scrollSpeed: SCROLL_SPEED * 5}, 1000, "easeInQuad")
+    .to({scrollSpeed: SCROLL_SPEED}, 5000)
+    ;
+  },
+
   showResult: function() {
     this.UILayer.setVisible(false);
     this.resultLayer.setVisible(true).setResult(this._score);
@@ -459,6 +470,28 @@ phina.define('MainScene', {
   //   this.resultLayer.setVisible(false);
   //   this.scrollSpeed = 0;
   // },
+
+  playerShotFire: function () {
+    var player = this.player;
+    var fireNway = function(n) {
+      for (var i=0; i < n; i++) {
+        var angle = - SHOT_ANGLE_UNIT * ((n - 1) * 0.5) + i * SHOT_ANGLE_UNIT;
+        this.objectPools['playerShot'].pick(function(shot) {
+          shot.spawn(player.x, player.y-2, angle);
+        });
+      }
+    }.bind(this);
+
+    switch (this._shotLevel) {
+      case 1: fireNway(1); break;
+      case 2: fireNway(3); break;
+      case 3: fireNway(5); break;
+      case 4:
+        fireNway(5);
+        // TODO: backshot
+        break;
+    }
+  },
 
   // ボム （C.A.S.）
   fireBomb: function() {
