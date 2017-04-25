@@ -73,7 +73,7 @@ phina.define('Enemy', {
     this.setPosition(x, y);
 
     // 初期移動速度
-    var speed = data.speed || 2;
+    var speed = (data.speed != null) ? data.speed : 2;
     this.vec = Vector2(-speed, 0);
     if (fromLeft) this.vec.x *= -1;
 
@@ -81,6 +81,7 @@ phina.define('Enemy', {
     this.radius = data.radius || 16;
 
     switch (type) {
+      // プレイヤーに突っ込む
       case "assalt":
         var rad = this.getTargetRadian();
         this.vec.set(
@@ -89,18 +90,9 @@ phina.define('Enemy', {
         );
         break;
 
-      // case "vTurnDown":
-      //   this.vec.set(-3, 0);
-      //   break;
-      // case "vTurnUp":
-      //   this.vec.set(-3, 0);
-      //   break;
-      // case "vTurnDownLeft":
-      //   this.vec.set(3, 0);
-      //   break;
-      // case "vTurnUpLeft":
-      //   this.vec.set(3, 0);
-      //   break;
+      case "sinMove":
+        this.baseY = this.y;
+        break;
 
       case "muteki":
         var d = 600;
@@ -128,9 +120,7 @@ phina.define('Enemy', {
       this.remove();
     }
 
-    // 動き
     switch (this.type) {
-
       case "assalt":
         if (this.x < SCREEN_WIDTH * 0.8 && this.age%20 === 0) {
           this.fireBullet();
@@ -138,13 +128,15 @@ phina.define('Enemy', {
         break;
 
       case "sinMove":
-        var r = 2;
-        var freq = 10;
-        var rad = this.age * 0.01745 * freq;
-        this.vec.y = Math.sin(rad) * r;
-        this.rotation += 4;
+        // TODO: パラメータを自由に変えられるようにする？
+        var r = 30; // 半径
+        var frequency = 4; // 周波数、高いほどうねうねする
+        var rad = this.age * frequency * RAD_UNIT;
+        this.y = this.baseY + Math.sin(rad) * r;
+        // this.rotation += 4;
         break;
 
+      // V字移動型
       case "vTurnDown":
         if (this.age === 150) {
         // if (this.x < SCREEN_WIDTH * 0.3) {
@@ -184,6 +176,7 @@ phina.define('Enemy', {
         break;
 
       case "hardBody":
+        // do nothing
         break;
 
       default:
@@ -227,7 +220,7 @@ phina.define('Enemy', {
 });
 
 /**
- * Mid Boss
+ * (Mid) Boss
  *
  */
 phina.define('Boss', {

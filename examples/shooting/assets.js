@@ -113,7 +113,6 @@
 
 }());
 
-
 // 出現パターン
 var ENEMY_PATTERNS = {
   targetLayer: null, // 追加対象
@@ -214,11 +213,12 @@ var TIME_TABLE = {
   pattern: [
     // [直前パターンからの待機フレーム, "編隊タイプ", 引数配列]
 
+    // debug用 =====
     // [10, "vTurns", [60]],
     // [30, "vTurns", [SCREEN_HEIGHT-40, true, true]],
     // [30, "verticals", [SCREEN_HEIGHT-40]],
 
-    // // ここから本番
+    // // ここから本番　=====
     // [100, "liner", []],
     // [120, "liner", [SCREEN_HEIGHT-60]],
     // [120, "liner"],
@@ -230,12 +230,14 @@ var TIME_TABLE = {
     // [45, "meteors", [SCREEN_HEIGHT*0.7 | 0]],
 
     // // 魚群
-    // [40, "sinMoves", [10, true]],
-    // [0, "sinMoves", [40]],
-    // [0, "sinMoves", [70]],
-    // [0, "sinMoves", [100]],
-    // [0, "sinMoves", [130]],
-    // [0, "sinMoves", [160]],
+    // [40, "sinMoves", [40, true]],
+    [0, "sinMoves", [40]],
+    [0, "sinMoves", [70]],
+    [0, "sinMoves", [100]],
+    [0, "sinMoves", [130]],
+    [0, "sinMoves", [160]],
+    [0, "sinMoves", [190]],
+    [0, "sinMoves", [220]],
 
     // [40, "sinMoves", [10]],
     // [30, "sinMoves", [60]],
