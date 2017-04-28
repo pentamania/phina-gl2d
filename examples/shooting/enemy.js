@@ -56,7 +56,7 @@ phina.define('EnemyLauncher', {
 phina.define('Enemy', {
   superClass: 'AbstractObjClass',
 
-  _isAppeared: false, //画面内に出現済み
+  _isAppeared: false, // 画面内に出現済み
   isAnimating: false, // イベントアニメ中
   destroyable: true, // removeできる
   canAttack: true,
@@ -73,7 +73,7 @@ phina.define('Enemy', {
     this.setPosition(x, y);
 
     // 初期移動速度
-    var speed = (data.speed != null) ? data.speed : 2;
+    var speed = this.speed = (data.speed != null) ? data.speed : 2;
     this.vec = Vector2(-speed, 0);
     if (fromLeft) this.vec.x *= -1;
 
@@ -93,6 +93,15 @@ phina.define('Enemy', {
       case "sinMove":
         this.baseY = this.y;
         break;
+
+      // case "whirl":
+      //   this.axis = ({}).$extend(this.position);
+      //   this.vec.set(0, 0);
+      //   this.startR = 250;
+      //   this.startDeg = 0;
+      //   this.attenuation = 1.1; // 減衰量
+      //   this.destroyable = false;
+      //   break;
 
       case "muteki":
         var d = 600;
@@ -135,6 +144,20 @@ phina.define('Enemy', {
         this.y = this.baseY + Math.sin(rad) * r;
         // this.rotation += 4;
         break;
+
+      // case "whirl":
+      //   // if (this.startR > 0) this.startR--;
+      //   // 復路は消せるように
+      //   if (!this.destroyable && this.startR <= 0 ) {
+      //     this.destroyable = true;
+      //   }
+      //   var r = this.startR -= this.attenuation; // 半径
+      //   var rad = (this.startDeg + this.age) * RAD_UNIT * this.speed;
+      //   this.setPosition(
+      //     this.axis.x + Math.cos(rad) * r,
+      //     this.axis.y + Math.sin(rad) * r
+      //   );
+        // break;
 
       // V字移動型
       case "vTurnDown":
@@ -217,6 +240,57 @@ phina.define('Enemy', {
     return Math.atan2(this.target.y - this.y, this.target.x - this.x);
   }
 
+});
+
+/**
+ * 渦を巻く敵
+ */
+phina.define('WhirlGuy', {
+  // superClass: 'Enemy',
+  superClass: 'AbstractObjClass',
+
+  destroyable: false,
+
+  init: function(x, y, startDegree, startRadius, disableAttack) {
+    var data = ENEMY_TYPES['whirl'];
+    this.superInit(data.texture);
+    this.type = 'whirl';
+    this.life = data.life;
+    this.score = data.score || 0;
+    this.speed = data.speed || 1;
+    this.radius = data.radius || 16;
+    this.target = bulletConfig.target;
+
+    this.axis = Vector2(x, y);
+    this.startDeg = startDegree || 0; // const
+    this.rotRadius = startRadius || 250;
+    this.attenuation = 1; // 半径減衰量 これもパラメータせっていできるようにする？
+
+    if (!disableAttack) this.one('fireBullet', this.fireBullet.bind(this));
+  },
+
+  update: function (app) {
+    if (this.destroyable && this.isOutOfScreen()) {
+      this.remove();
+    }
+
+    // 復路は消せるように
+    if (!this.destroyable && this.rotRadius <= 0 ) {
+      this.destroyable = true;
+      this.flare('fireBullet');
+    }
+    var r = this.rotRadius -= this.attenuation; // 半径
+    var rad = (this.startDeg + this.age * this.speed) * RAD_UNIT;
+    this.setPosition(
+      this.axis.x + Math.cos(rad) * r,
+      this.axis.y - Math.sin(rad) * r
+    );
+  },
+
+  fireBullet: function() {
+    var rad = this.startDeg.toRadian();
+    Bullet(this.x, this.y, rad, 3).addChildTo(bulletConfig.layer);
+  }
 });
 
 /**

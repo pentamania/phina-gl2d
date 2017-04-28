@@ -15,7 +15,8 @@ var ITEM_SEARCH_RANGE = 70;
 var MAX_SHOT_LEVEL = 4;
 var SHOT_ANGLE_UNIT = 12;
 
-var RAD_UNIT = 0.01745;
+// var RAD_UNIT = 0.01745;
+var RAD_UNIT = Math.PI / 180;
 
 var USE_WEBGL;
 var DEBUG_MODE;
@@ -119,6 +120,12 @@ var ENEMY_TYPES = {
   "sinMove": {
     texture: "cucumber",
     life: 10,
+    score: 100,
+  },
+  "whirl": {
+    texture: "cucumber",
+    life: 10,
+    speed: 4,
     score: 100,
   },
   "vTurn": {
