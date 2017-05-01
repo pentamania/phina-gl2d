@@ -228,9 +228,10 @@ phina.define('MainScene', {
       } else {
         var pattern = ({}).$extend(ENEMY_PATTERNS[name]);
         var args = currentPattern[2];
+        var options = currentPattern[3];
         if (args != null) pattern.args = args;
         // Log(pattern, TIME_TABLE.frameSum);
-        this.enemyLauncher.pushTask(pattern);
+        this.enemyLauncher.pushTask(pattern, options);
       }
 
       this._enemyPointer++;

@@ -1,6 +1,7 @@
 
 /**
  * 敵出現タイムテーブル
+ * ステージはとりあえず一つ
  */
 var TIME_TABLE = {
   frameSum: 0,
@@ -11,9 +12,9 @@ var TIME_TABLE = {
     // [10, "vTurns", [60]],
     // [30, "vTurns", [SCREEN_HEIGHT-40, true, true]],
     // [30, "verticals", [SCREEN_HEIGHT-40]],
-    [40, "flower", [120, 120, 45, 140]],
-    [40, "whirls", [240, 120, 45, 140]],
-
+    [40, "whirls", [240, 120, 45, 140], {count: 14, interval: 20}],
+    [40, "liner", [240], {count: 14, interval: 20}],
+    [40, "flower", [120, 120, 45, 140], {count: 4, interval: 20}],
 
     // // ここから本番　=====
     // [100, "liner", []],

@@ -4,9 +4,9 @@
 
 タスク例
 "linear": {
-  count: 4,
+  count: 4, // 初期値
+  interval: 20, // 初期値
   action: function() { // 行う処理 }
-  interval: 20,
   _tick: 0, // added
   _currentCount: 0, // added
 }
@@ -20,9 +20,12 @@ phina.define('EnemyLauncher', {
     this._tasks = [];
   },
 
-  pushTask: function(task) {
+  // pushTask: function(task, actionNum, interval) {
+  pushTask: function(task, option) {
+    if (option != null) task.$extend(option);
     task._tick = 0;
     task._currentCount = 0;
+
     this._tasks.push(task);
   },
 
@@ -48,6 +51,7 @@ phina.define('EnemyLauncher', {
 
     // TODO: nullになったtask消す？
   }
+
 });
 
 /**
