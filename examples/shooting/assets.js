@@ -130,7 +130,24 @@ var ENEMY_PATTERNS = {
       var eType = "basic";
       var x = (fromLeft) ? -SCREEN_WIDTH * 0.2 : SCREEN_WIDTH * 1.2;
       y = y || 60;
-      Enemy(x, y, eType, fromLeft).addChildTo(ENEMY_PATTERNS.targetLayer);
+      var direction = (fromLeft) ? 0 : null;
+      Enemy(x, y, eType, direction).addChildTo(ENEMY_PATTERNS.targetLayer);
+    }
+  },
+
+  "vTurns": {
+    count: 6,
+    interval: 30,
+    action: function(y, goUp, fromLeft) {
+      var eType = (goUp && fromLeft) ? "vTurnUpLeft" :
+      (goUp) ? "vTurnUp" : // 左から出現
+      (fromLeft) ? "vTurnDownLeft" : // 左から出現
+      "vTurnDown";
+
+      var x = (fromLeft) ? -SCREEN_WIDTH * 0.2 : SCREEN_WIDTH * 1.2;
+      y = y || 40;
+      var direction = (fromLeft) ? 0 : null;
+      Enemy(x, y, eType, direction).addChildTo(ENEMY_PATTERNS.targetLayer);
     }
   },
 
@@ -149,28 +166,13 @@ var ENEMY_PATTERNS = {
   "flower": {
     count: 1,
     interval: 1,
-    action: function(x, y, gap, rad) {
+    action: function(x, y, gap, radius) {
       x = x || SCREEN_WIDTH * 0.5;
       y = y || SCREEN_HEIGHT * 0.5;
       var unit = 360 / gap;
       for (var i = unit; i >= 0; i--) {
-        WhirlGuy(x, y, gap*i, rad).addChildTo(ENEMY_PATTERNS.targetLayer);
+        WhirlGuy(x, y, gap*i, radius).addChildTo(ENEMY_PATTERNS.targetLayer);
       }
-    }
-  },
-
-  "vTurns": {
-    count: 6,
-    interval: 30,
-    action: function(y, goUp, fromLeft) {
-      var eType = (goUp && fromLeft) ? "vTurnUpLeft" :
-      (goUp) ? "vTurnUp" : // 左から出現
-      (fromLeft) ? "vTurnDownLeft" : // 左から出現
-      "vTurnDown";
-
-      var x = (fromLeft) ? -SCREEN_WIDTH * 0.2 : SCREEN_WIDTH * 1.2;
-      y = y || 40;
-      Enemy(x, y, eType, fromLeft).addChildTo(ENEMY_PATTERNS.targetLayer);
     }
   },
 

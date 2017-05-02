@@ -65,7 +65,7 @@ phina.define('Enemy', {
   destroyable: true, // removeできる
   canAttack: true,
 
-  init: function(x, y, type, fromLeft) {
+  init: function(x, y, type, directionAngle) {
     var eType = type.replace(/Up|Down|Left|Right/g, "");
     var data = ENEMY_TYPES[eType];
     this.superInit(data.texture);
@@ -79,7 +79,9 @@ phina.define('Enemy', {
     // 初期移動速度
     var speed = this.speed = (data.speed != null) ? data.speed : 2;
     this.vec = Vector2(-speed, 0);
-    if (fromLeft) this.vec.x *= -1;
+    if (directionAngle != null) {
+      this.vec.fromAngle(directionAngle * RAD_UNIT, speed);
+    }
 
     // 判定サイズ
     this.radius = data.radius || 16;
