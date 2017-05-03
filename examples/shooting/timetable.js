@@ -9,12 +9,12 @@ var TIME_TABLE = {
     // [直前パターンからの待機フレーム, "編隊タイプ", 引数配列]
 
     // debug用 =====
-    // [30, "vTurns", [SCREEN_HEIGHT-40, true, true]],
     // [30, "verticals", [SCREEN_HEIGHT-40]],
     // [40, "whirls", [240, 120, 45, 140], {count: 14, interval: 20}],
-    [40, "liner", [240, true], {count: 14, interval: 20}],
-    [10, "vTurns", [60, false, true]],
-    // [40, "liner", [240], {count: 14, interval: 20}],
+    [40, "liner", [null, 240], {count: 14, interval: 20}],
+    [40, "liner"],
+    [10, "liner", [null, null, 190, 90]],
+    // [10, "vTurns", [null, null, 160, 90]],
     // [40, "flower", [120, 120, 45, 140], {count: 4, interval: 20}],
 
     // // ここから本番　=====

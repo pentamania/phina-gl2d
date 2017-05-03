@@ -115,6 +115,7 @@ var ENEMY_TYPES = {
     texture: "cucumber",
     life: 10,
     score: 100,
+    speed: 2,
     radius: 12,
   },
   "sinMove": {

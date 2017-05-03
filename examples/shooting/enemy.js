@@ -249,28 +249,134 @@ phina.define('Enemy', {
 });
 
 /**
+ * 敵キャラ抽象クラス
+ */
+phina.define('EnemyAbstract', {
+  superClass: 'AbstractObjClass',
+
+  _isAppeared: false, // 画面内に出現済み
+  isAnimating: false, // イベントアニメ中
+  destroyable: true, // removeできる
+  canAttack: true,
+
+  init: function(typeName, isSpecialType) {
+    var data = ENEMY_TYPES[typeName];
+    this.superInit(data.texture);
+
+    this.type = typeName;
+    this.life = data.life;
+    this.score = data.score || 0;
+    this.target = bulletConfig.target;
+    // this.setPosition(x, y);
+
+    // 初期移動速度
+    var speed = this.speed = (data.speed != null) ? data.speed : 2;
+    this.vec = Vector2(-speed, 0);
+
+    // 判定サイズ
+    this.radius = data.radius || 16;
+
+    // 汎用処理
+    if (!isSpecialType) {
+      this.on('enterframe', function() {
+        if (!this.isAnimating) {
+          this.position.add(this.vec);
+        }
+
+        // removeしてよいかどうかのフラグ
+        if (!this._isAppeared && !this.isOutOfScreen()) {
+          this._isAppeared = true;
+        }
+        if (this.destroyable && this._isAppeared && this.isOutOfScreen()) {
+          this.remove();
+        }
+      });
+    }
+
+  },
+
+  // setSpeed: function(speed) {
+  // },
+
+  setVectorAngle: function(angle, speed) {
+    if (speed != null) this.speed = speed;
+    this.vec.fromAngle(angle * RAD_UNIT, this.speed);
+  },
+
+  // 仮想
+  fireBullet: function() {
+    if (!this.canAttack) return;
+
+    // 自機に向かって撃つ
+    var rad = this.getTargetRadian();
+    Bullet(this.x, this.y, rad, 2).addChildTo(bulletConfig.layer);
+  },
+
+  getTargetRadian: function() {
+    return Math.atan2(this.target.y - this.y, this.target.x - this.x);
+  }
+
+});
+
+/**
+ * 方向転換型
+ *
+ */
+phina.define('BasicGuy', {
+  superClass: 'EnemyAbstract',
+
+  _transformSum: 0,
+
+  init: function(x, y, initialDegree, nextDegree) {
+    this.superInit('basic');
+    this.setPosition(x, y);
+
+    if (initialDegree) {
+      this.setVectorAngle(initialDegree);
+    }
+
+    if (nextDegree) {
+      this.one('changeRoute', function() {
+        this.setVectorAngle(nextDegree);
+      });
+    }
+
+    this.one('fireBullet', function() {
+      this.fireBullet();
+    })
+  },
+
+  update: function (app) {
+    if (!this.isAnimating) {
+      // 移動した分
+      this._transformSum += this.vec.length();
+    }
+
+    // if (this.age === 180) {
+    // if (this.has('changeRoute') && this._transformSum > SCREEN_WIDTH*0.5) {
+    if (this._transformSum > SCREEN_WIDTH * 0.5) {
+      if (this.has('changeRoute')) this.flare('changeRoute');
+      this.flare('fireBullet');
+    }
+
+  },
+
+});
+
+/**
  * 渦を巻く敵
  */
 phina.define('WhirlGuy', {
-  // superClass: 'Enemy',
-  superClass: 'AbstractObjClass',
-
-  destroyable: false,
+  superClass: 'EnemyAbstract',
 
   init: function(x, y, startDegree, startRadius, disableAttack) {
-    var data = ENEMY_TYPES['whirl'];
-    this.superInit(data.texture);
-    this.type = 'whirl';
-    this.life = data.life;
-    this.score = data.score || 0;
-    this.speed = data.speed || 1;
-    this.radius = data.radius || 16;
-    this.target = bulletConfig.target;
+    this.superInit('whirl', true);
 
     this.axis = Vector2(x, y);
     this.startDeg = startDegree || 0; // const
     this.rotRadius = startRadius || 250;
     this.attenuation = 1; // 半径減衰量 これもパラメータせっていできるようにする？
+    this.vec = null;
 
     if (!disableAttack) this.one('fireBullet', this.fireBullet.bind(this));
   },
@@ -285,6 +391,7 @@ phina.define('WhirlGuy', {
       this.destroyable = true;
       this.flare('fireBullet');
     }
+
     var r = this.rotRadius -= this.attenuation; // 半径
     var rad = (this.startDeg + this.age * this.speed) * RAD_UNIT;
     this.setPosition(
