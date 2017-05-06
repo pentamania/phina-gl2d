@@ -159,8 +159,17 @@ var ENEMY_PATTERNS = {
     action: function(x, y, initialDegree, nextDegree) {
       x = (x != null) ? x : SCREEN_WIDTH * 1.2;
       y = y || 40;
+      BasicGuy(x, y, initialDegree, nextDegree).addChildTo(ENEMY_PATTERNS.targetLayer);
+    }
+  },
 
-      var e = BasicGuy(x, y, initialDegree, nextDegree).addChildTo(ENEMY_PATTERNS.targetLayer);
+  "mine": {
+    count: 1,
+    interval: 1,
+    action: function(x, y, bulletNum) {
+      x = x || SCREEN_WIDTH * 0.5;
+      y = y || SCREEN_HEIGHT * 0.5;
+      FloatingMineGuy(x, y, bulletNum).addChildTo(ENEMY_PATTERNS.targetLayer);
     }
   },
 

@@ -134,6 +134,11 @@ var ENEMY_TYPES = {
     life: 4,
     score: 100,
   },
+  "mine": {
+    texture: "meteorStar",
+    life: 20,
+    score: 200,
+  },
   "hardBody": {
     texture: "cucumber",
     life: 100,

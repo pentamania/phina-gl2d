@@ -37,7 +37,7 @@ phina.define('EnemyLauncher', {
       if (task == null) return;
 
       ++task._tick; // 個別のカウント
-      if (task._tick%task.interval === 0) {
+      if (task._tick % task.interval === 0) {
         var args = (Array.isArray(task.args)) ? task.args : [];
         task.action.apply(null, args);
         ++task._currentCount;
@@ -404,6 +404,50 @@ phina.define('WhirlGuy', {
     var rad = this.startDeg.toRadian();
     Bullet(this.x, this.y, rad, 3).addChildTo(bulletConfig.layer);
   }
+});
+
+/**
+ * 自爆型
+ */
+phina.define('FloatingMineGuy', {
+  superClass: 'EnemyAbstract',
+
+  init: function(x, y, bulletNum, destroyTime) {
+    this.superInit("mine");
+    this.vec = Vector2(0, 0);
+    this.setPosition(x, y);
+    this.setScale(2.5, 2.5);
+    this.alpha = 0;
+    this.rotation = 600;
+
+    bulletNum = bulletNum || 12;
+    destroyTime = destroyTime || 1000;
+    this.isAnimating = true;
+    this.tweener.clear()
+    .to({scaleX: 1.2, scaleY: 1.2, rotation: 0, alpha: 1}, 600, "easeOutQuint")
+    .call(function() {
+      // 当たり判定
+      this.isAnimating = false;
+    }, this)
+    .wait(destroyTime)
+    .call(function() {
+      this.selfDestroy(bulletNum);
+    }, this)
+  },
+
+  selfDestroy: function(bulletNum) {
+    var rad = 360 / bulletNum * RAD_UNIT;
+    for (var i = 0; i < bulletNum; i++) {
+      Bullet(this.x, this.y, rad * i, 3).addChildTo(bulletConfig.layer);
+    }
+
+    this.remove();
+  },
+
+  update: function() {
+
+  },
+
 });
 
 /**

@@ -11,6 +11,10 @@ var TIME_TABLE = {
     // debug用 =====
     // [30, "verticals", [SCREEN_HEIGHT-40]],
     // [40, "whirls", [240, 120, 45, 140], {count: 14, interval: 20}],
+    // [0, "mine", [100, 100, 32]],
+    [100, "mine", [150, 150]],
+    [0, "mine", [170, 170]],
+    [0, "mine", [200, 200]],
     [40, "liner", [null, 240], {count: 14, interval: 20}],
     [40, "liner"],
     [10, "liner", [null, null, 190, 90]],
