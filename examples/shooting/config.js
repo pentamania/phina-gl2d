@@ -118,7 +118,7 @@ var ENEMY_TYPES = {
     speed: 2,
     radius: 12,
   },
-  "sinMove": {
+  "sine": {
     texture: "cucumber",
     life: 10,
     score: 100,

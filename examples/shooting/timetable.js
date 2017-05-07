@@ -21,11 +21,12 @@ var TIME_TABLE = {
     // [10, "vTurns", [null, null, 160, 90]],
     // [40, "flower", [120, 120, 45, 140], {count: 4, interval: 20}],
     // [0, "kabe"],
-    [30, "kabe", [2, 2]],
-    [30, "kabe", [3, 2]],
-    [30, "kabe", [4, 2]],
-    [30, "kabe", [5, 2, 10]],
-    // [30, "kabe", [4, 2]],
+
+    // あとで使う
+    [30, "kabe", [2, 1]],
+    [30, "kabe", [3, 1]],
+    [30, "kabe", [4, 1]],
+    // [30, "kabe", [5, 2, 10]], // 追い越し初見殺し
 
     // // ここから本番　=====
     // [100, "liner", []],
@@ -39,14 +40,17 @@ var TIME_TABLE = {
     // [45, "meteors", [SCREEN_HEIGHT*0.7 | 0]],
 
     // // 魚群
-    // [40, "sinMoves", [40, true]],
-    // [0, "sinMoves", [40]],
-    // [0, "sinMoves", [70]],
-    // [0, "sinMoves", [100]],
-    // [0, "sinMoves", [130]],
-    // [0, "sinMoves", [160]],
-    // [0, "sinMoves", [190]],
-    // [0, "sinMoves", [220]],
+    [40, "sines", [40, true]],
+    [20, "sines", [70, true]],
+    [20, "sines", [100, true]],
+
+    [0, "sines", [300, null, SCREEN_HEIGHT/2]],
+    // [0, "sines", [70]],
+    // [0, "sines", [100]],
+    // [0, "sines", [130]],
+    // [0, "sines", [160]],
+    // [0, "sines", [190]],
+    // [0, "sines", [220]],
 
     // // V-atttack
     // [130, "verticals", [60]],

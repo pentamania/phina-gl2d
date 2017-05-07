@@ -221,14 +221,18 @@ var ENEMY_PATTERNS = {
     }
   },
 
-  "sinMoves": {
+  "sines": {
     count: 10,
     interval: 20,
-    action: function(y, fromLeft) {
-      var eType = "sinMove";
+    action: function(y, fromLeft, fluctRadius) {
+      // var eType = "sinMove";
       var x = (fromLeft) ? -SCREEN_WIDTH * 0.2 : SCREEN_WIDTH * 1.2;
+      var directionAngle = (fromLeft) ? 0 : 180;
       y = y || 50;
-      Enemy(x, y, eType, fromLeft).addChildTo(ENEMY_PATTERNS.targetLayer);
+
+      // Enemy(x, y, eType, fromLeft).addChildTo(ENEMY_PATTERNS.targetLayer);
+      var e = SineGuy(x, y, directionAngle).addChildTo(ENEMY_PATTERNS.targetLayer);
+      if (fluctRadius != null) e.fluctRadius = fluctRadius;
     }
   },
 

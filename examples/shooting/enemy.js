@@ -267,7 +267,6 @@ phina.define('EnemyAbstract', {
     this.life = data.life;
     this.score = data.score || 0;
     this.target = bulletConfig.target;
-    // this.setPosition(x, y);
 
     // 初期移動速度
     var speed = this.speed = (data.speed != null) ? data.speed : 2;
@@ -283,16 +282,19 @@ phina.define('EnemyAbstract', {
           this.position.add(this.vec);
         }
 
-        // removeしてよいかどうかのフラグ
-        if (!this._isAppeared && !this.isOutOfScreen()) {
-          this._isAppeared = true;
-        }
-        if (this.destroyable && this._isAppeared && this.isOutOfScreen()) {
-          this.remove();
-        }
+        this.checkRemove();
       });
     }
+  },
 
+  checkRemove: function() {
+    // removeしてよいかどうかのフラグ
+    if (!this._isAppeared && !this.isOutOfScreen()) {
+      this._isAppeared = true;
+    }
+    if (this.destroyable && this._isAppeared && this.isOutOfScreen()) {
+      this.remove();
+    }
   },
 
   // setSpeed: function(speed) {
@@ -319,8 +321,8 @@ phina.define('EnemyAbstract', {
 });
 
 /**
- * 方向転換型
- *
+ * 基本形
+ * 方向転換可
  */
 phina.define('BasicGuy', {
   superClass: 'EnemyAbstract',
@@ -362,6 +364,36 @@ phina.define('BasicGuy', {
     }
 
   },
+
+});
+
+/**
+ * 波移動型
+ */
+phina.define('SineGuy', {
+  superClass: 'EnemyAbstract',
+
+  init: function(x, baseY, vectorAngle, fluctRadius, frequency) {
+    this.superInit("sine", true);
+    this.x = x || 0;
+    this.baseY = baseY || 0;
+    this.fluctRadius = fluctRadius || 30; // 波半径
+    this.frequency = frequency || 4; // 周波数、高いほどうねうねする
+    if (vectorAngle != null) this.setVectorAngle(vectorAngle);
+    this.destroyable = false;
+  },
+
+  update: function() {
+    this.checkRemove();
+
+    this.x += this.vec.x;
+    this.baseY += this.vec.y;
+    var rad = this.age * this.frequency * RAD_UNIT;
+    this.y = this.baseY + Math.sin(rad) * this.fluctRadius;
+
+    if (this.age === 100) this.fireBullet();
+    if (this.age > 1000) this.destroyable = true;
+  }
 
 });
 
