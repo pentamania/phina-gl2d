@@ -327,9 +327,11 @@ phina.define('BasicGuy', {
 
   _transformSum: 0,
 
-  init: function(x, y, initialDegree, nextDegree) {
+  init: function(x, y, initialDegree, nextDegree, speed) {
     this.superInit('basic');
     this.setPosition(x, y);
+
+    if (speed != null) this.speed = speed;
 
     if (initialDegree) {
       this.setVectorAngle(initialDegree);

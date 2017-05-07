@@ -140,9 +140,11 @@ var ENEMY_TYPES = {
     score: 200,
   },
   "hardBody": {
-    texture: "cucumber",
-    life: 100,
-    score: 100,
+    texture: "beniyaIta",
+    life: 200,
+    speed: 2,
+    radius: 16,
+    score: 1000,
   },
   "verticalShot": {
     texture: "cucumber",

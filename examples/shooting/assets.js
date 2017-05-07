@@ -64,6 +64,18 @@
   .strokeStar(r, r, r-lw, 6);
   am.set('image', 'meteorStar', img);
 
+  // teki ita
+  r = 16;
+  lw = r/4 | 0;
+  img = phina.graphics.Canvas().setSize(r*2, r*2);
+  img.strokeStyle = "#C71D51";
+  img.fillStyle = "#E0E557";
+  img.lineWidth = lw;
+  img.fillRect(0, 0, r*2, r*2)
+  .strokeRect(0, 0, r*2, r*2)
+  am.set('image', 'beniyaIta', img);
+
+
   // effect ==============================
   r = 8;
   lw = r/4;
@@ -223,11 +235,23 @@ var ENEMY_PATTERNS = {
   "kabe": {
     count: 1,
     interval: 1,
-    action: function() {
+    action: function(voidStart, voidLength, speed) {
       var shift = SCREEN_HEIGHT / 12;
       var eType = "hardBody";
+      voidLength = voidLength || 1;
+      if (voidStart != null) {
+        var voidEnd = voidStart + voidLength;
+      }
+
+      // 隙間をあける
       for (var i = 0; i < 12; i++) {
-        Enemy(SCREEN_WIDTH*1.2, i*shift+shift/2, eType).addChildTo(ENEMY_PATTERNS.targetLayer);
+        if (voidStart != null && voidStart <= i && i <= voidEnd) {
+          continue;
+        }
+        var e = EnemyAbstract("hardBody").addChildTo(ENEMY_PATTERNS.targetLayer);
+        e.setPosition(SCREEN_WIDTH * 1.2, i * shift + shift/2);
+        e.setVectorAngle(180, speed);
+        // Enemy(SCREEN_WIDTH * 1.2, i * shift + shift/2, eType).addChildTo(ENEMY_PATTERNS.targetLayer);
       }
     }
   },
