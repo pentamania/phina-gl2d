@@ -96,7 +96,7 @@ phina.define('UILayer', {
 
     // Warning
     this.warningText = WarningText()
-    .setPosition(this.width*2, gy.center())
+    .setPosition(this.width * 2, gy.center())
     // .setVisible(false)
     .addChildTo(this);
 
@@ -115,6 +115,8 @@ phina.define('UILayer', {
   },
 
   showWarning: function(cb) {
+    if (DEBUG_MODE) return cb();
+
     this.warningText.setVisible(true).playAnim(function() {
       cb();
     }.bind(this));
