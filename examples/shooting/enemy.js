@@ -335,7 +335,7 @@ phina.define('BasicGuy', {
 
     if (speed != null) this.speed = speed;
 
-    if (initialDegree) {
+    if (initialDegree != null) {
       this.setVectorAngle(initialDegree);
     }
 
