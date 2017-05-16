@@ -160,11 +160,11 @@ var ENEMY_PATTERNS = {
     //   var direction = (fromLeft) ? 0 : null;
     //   Enemy(x, y, eType, direction).addChildTo(ENEMY_PATTERNS.targetLayer);
     // }
-    action: function(x, y, degree, nextDegree) {
+    action: function(x, y, degree, nextDegree, speed) {
       x = (x != null) ? x : SCREEN_WIDTH * 1.2;
       y = (y != null) ? y : 60;
       degree = (degree != null) ? degree : 180;
-      BasicGuy(x, y, degree, nextDegree).addChildTo(ENEMY_PATTERNS.targetLayer);
+      BasicGuy(x, y, degree, nextDegree, speed).addChildTo(ENEMY_PATTERNS.targetLayer);
     }
   },
 
