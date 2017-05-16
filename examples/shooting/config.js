@@ -123,6 +123,11 @@ var ENEMY_TYPES = {
     life: 10,
     score: 100,
   },
+  "homing": {
+    texture: "rightHeart",
+    life: 10,
+    score: 100,
+  },
   "whirl": {
     texture: "cucumber",
     life: 10,

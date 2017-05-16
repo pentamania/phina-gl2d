@@ -64,7 +64,7 @@
   .strokeStar(r, r, r-lw, 6);
   am.set('image', 'meteorStar', img);
 
-  // teki ita
+  // teki: ita
   r = 16;
   lw = r/4 | 0;
   img = phina.graphics.Canvas().setSize(r*2, r*2);
@@ -74,6 +74,21 @@
   img.fillRect(0, 0, r*2, r*2)
   .strokeRect(0, 0, r*2, r*2)
   am.set('image', 'beniyaIta', img);
+
+  // teki: heart
+  r = 16;
+  lw = r/4 | 0;
+  img = phina.graphics.Canvas().setSize(r*2, r*2);
+  img.strokeStyle = "#C71D51";
+  img.fillStyle = "#37E550";
+  img.lineWidth = lw;
+  img.transformCenter()
+  .rotate(-90 * RAD_UNIT)
+  .fillHeart(0, 0, r-lw)
+  .strokeHeart(0, 0, r-lw);
+  // .strokeHeart(r, r, r-lw);
+  // img.fillHeart(r, r, r-lw)
+  am.set('image', 'rightHeart', img);
 
 
   // effect ==============================
@@ -150,6 +165,16 @@ var ENEMY_PATTERNS = {
       y = (y != null) ? y : 60;
       degree = (degree != null) ? degree : 180;
       BasicGuy(x, y, degree, nextDegree).addChildTo(ENEMY_PATTERNS.targetLayer);
+    }
+  },
+
+  "homings": {
+    count: 4,
+    interval: 22,
+    action: function(x, y, speed) {
+      x = (x != null) ? x : SCREEN_WIDTH * 1.2;
+      y = (y != null) ? y : 60;
+      HomingGuy(x, y, speed).addChildTo(ENEMY_PATTERNS.targetLayer);
     }
   },
 

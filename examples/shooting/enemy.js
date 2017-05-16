@@ -485,6 +485,82 @@ phina.define('FloatingMineGuy', {
 });
 
 /**
+ * HomingGuy 追っかけてくるやつ
+ * Ref: http://www7.plala.or.jp/kfb/program/stg2dvec.html
+ */
+phina.namespace(function() {
+
+  var ROTATE_UNIT = 8;
+  var ROTATE_UNIT_RAD = ROTATE_UNIT * Math.DEG_TO_RAD;
+  var LIMIT_DISTANCE = 35; // ここまで近づいたら追跡をやめる
+  var SEARCH_RANGE = 15 * Math.DEG_TO_RAD; // 上下（or左右）15度ずつ、前方30度を探索
+
+  phina.define('HomingGuy', {
+    superClass: 'EnemyAbstract',
+
+    _isChasing: true,
+
+    init: function(x, y, speed) {
+      this.superInit("homing");
+      this.setPosition(x, y);
+      this.speed　= (speed != null) ? speed : this.speed;
+      this.vec = Vector2(-this.speed, 0);
+      this.rotation = 180;
+    },
+
+    update: function() {
+      this.searchAndRotate();
+
+      // 追跡やめる
+      if (this.position.distance(this.target.position) < LIMIT_DISTANCE) {
+        this._isChasing = false;
+      }
+    },
+
+    searchAndRotate: function() {
+      if (!this._isChasing) return;
+
+      var V2 = phina.geom.Vector2;
+      var target = this.target;
+
+      // 自分 vs ターゲット間のベクトルを計算
+      var this2targetVec = V2(target.x - this.x, target.y - this.y);
+
+      // if (!this.checkTargetWithinRange(this2targetVec)) return;
+
+      // メモ：　外積 a×b = |a||b|sinθ = ax * by - ay * bx
+      if (V2.cross(this.vec, this2targetVec) > 0) {
+        // targetが上にいる
+        this.vec.rotate(ROTATE_UNIT_RAD);
+      } else {
+        // targetが下にいる
+        this.vec.rotate(-ROTATE_UNIT_RAD);
+        // this.rotation -= ROTATE_UNIT;
+      }
+
+      // 進行方向を向く：デフォルトが右向きの場合
+      if (this.age%4 === 0) this.rotation = this.vec.toDegree();
+    },
+
+    /**
+     * [checkTargetWithinRange]
+     * targetが進行方向の指定範囲内にいるかどうかをチェック
+     * メモ：　内積 cosθ = (vx * tx + vy * ty) / (sqrt(vx^2 + vy^2) * sqrt(tx^2 + ty^2))
+     * or cosθ = Vector2.dot(v, t) / (sqrt(pow(v.x) + pow(v.y)) * sqrt(pow(t.x) + pow(t.y))
+     * (sqrt(vx^2 + vy^2)はthis.speedと等価のため計算省略
+     */
+    checkTargetWithinRange: function(targetAngleVector) {
+      var cosTheta = Vector2.dot(this.vec, targetAngleVector) / (this.speed * targetAngleVector.length());
+      if (cosTheta > Math.cos(SEARCH_RANGE)) {
+        return true;
+      }
+    },
+
+  });
+
+});
+
+/**
  * (Mid) Boss
  *
  */

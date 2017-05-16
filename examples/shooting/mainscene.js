@@ -316,7 +316,7 @@ phina.define('MainScene', {
 
     if (!player.isAnimating && frame%4 === 0) {
       // if (kb.getKey('z')) self.playerShotFire();
-      // self.playerShotFire();
+      self.playerShotFire();
 
       // ブーストエフェクト
       this.objectPools["boostEffect"].pick(function(chip) {
@@ -464,6 +464,7 @@ phina.define('MainScene', {
   // },
 
   playerShotFire: function () {
+    return;
     var player = this.player;
     var fireNway = function(n) {
       for (var i=0; i < n; i++) {
