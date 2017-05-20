@@ -5,7 +5,7 @@ phina.define('MainScene', {
   age: 0,
   _score: 0,
   _shotExp: 0,
-  _shotLevel: 4,
+  _shotLevel: 2,
   remainLife: PLAYER_INITIAL_LIFE,
   isStarted: false,
 
@@ -129,6 +129,12 @@ phina.define('MainScene', {
     .setPosition(gx.center(), gy.span(15))
     ;
 
+    // bit
+    this.playerBits = [];
+    (this._shotLevel-1).times(function() {
+      self.addPlayerBit();
+    })
+
     // 敵出現関係
     this._enemyPointer = 0;
     ENEMY_PATTERNS.targetLayer = this.enemyLayer;
@@ -239,7 +245,6 @@ phina.define('MainScene', {
 
     // ボム
     if (kb.getKeyDown('x')) this.fireBomb();
-
     if (self.bombGauge.value < self.bombGauge.maxValue) {
       // UI.Gauge.setValueにバグあり とりあえずの処置
       self.bombGauge.value = Math.clamp(self.bombGauge.value+1, 0, self.bombGauge.maxValue);
@@ -251,16 +256,12 @@ phina.define('MainScene', {
       && self._shotExp > 50 * self._shotLevel
     ) {
       self._shotLevel++;
-      // Log("shot level up",self._shotLevel);
+      self.addPlayerBit();
     }
 
     // enemy children
     self.enemyLayer.children.each(function(enemy) {
       if (enemy.isAnimating) return;
-
-      if (enemy.life <= 0) {
-        self.enemyDestroyed(enemy);
-      }
 
       // enemy vs player
       if (
@@ -273,8 +274,22 @@ phina.define('MainScene', {
 
       // enemy vs player shot
       self.shotLayer.children.each(function(shot) {
+        // homings対象セット
+        if (shot.type === "homing" && shot.target == null && !enemy.isAnimating && !enemy.invinsible) {
+          shot.target = enemy;
+          enemy.on('removed', function() {
+            // if (shot.target != null) Log(shot, "searching");
+            shot.target = null;
+          });
+        }
+
         self.shotEnemyHitTest(shot, enemy);
       });
+
+      if (enemy.life <= 0) {
+        self.enemyDestroyed(enemy);
+      }
+
     });
 
     // enemy bullet vs player
@@ -373,7 +388,7 @@ phina.define('MainScene', {
     }
 
     if (enemy.score != null) this._score += enemy.score;
-    this._shotExp += 50;
+    this._shotExp += 5;
   },
 
   bossDestroyed: function(enemy) {
@@ -464,7 +479,6 @@ phina.define('MainScene', {
   // },
 
   playerShotFire: function () {
-    return;
     var player = this.player;
     var fireNway = function(n) {
       for (var i=0; i < n; i++) {
@@ -478,18 +492,36 @@ phina.define('MainScene', {
     switch (this._shotLevel) {
       case 1: fireNway(1); break;
       case 2: fireNway(3); break;
-      case 3: fireNway(5); break;
-      case 4:
-        fireNway(5);
-        // backshot
-        for (var i=0; i < 2; i++) {
-          var angle = 160 + (i * 20 * 2);
-          this.objectPools['playerShot'].pick(function(shot) {
-            shot.spawn(player.x, player.y-2, angle);
-          });
-        }
-        break;
+    //   case 3: fireNway(5); break;
+    //   case 4:
+    //     fireNway(5);
+    //     // backshot
+    //     for (var i=0; i < 2; i++) {
+    //       var angle = 160 + (i * 20 * 2);
+    //       this.objectPools['playerShot'].pick(function(shot) {
+    //         shot.spawn(player.x, player.y-2, angle);
+    //       });
+    //     }
+    //     break;
+      default: fireNway(3); break;
     }
+
+    // homing shot
+    if (this.playerBits.length) {
+      this.playerBits.forEach(function(bit){
+        HomingShot(bit.x, bit.y).addChildTo(this.shotLayer);
+     }.bind(this));
+    }
+
+    // var hShot = HomingShot(player.x, player.y).addChildTo(this.shotLayer);
+  },
+
+  addPlayerBit: function() {
+    var index = this.playerBits.length;
+    var col = (index/2 | 0) + 1;
+    var yUnit = (index%2 === 0) ? -PLAYER_BIT_INTERVAL : PLAYER_BIT_INTERVAL;
+    var bit = PlayerBit(-PLAYER_BIT_INTERVAL*col, yUnit*col, this.player).addChildTo(this.friendLayer);
+    this.playerBits.push(bit);
   },
 
   // ボム （C.A.S.）

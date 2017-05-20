@@ -71,6 +71,7 @@ phina.define('Shot', {
   init: function() {
     this.superInit('redBullet');
     this.radius = 4;
+    this.alpha = 0.7;
 
     this.power = SHOT_POWER;
     this.vec = Vector2(0, 0);
@@ -100,6 +101,100 @@ phina.define('Shot', {
 
     this.targetLayer.addChild(this);
   },
+
+});
+
+/**
+ * Player Homing Shot
+ *
+ */
+phina.namespace(function() {
+  var ROTATE_UNIT_RAD = 16 * Math.DEG_TO_RAD;
+  var V2 = phina.geom.Vector2;
+  var AGE_LIMIT = 350;
+
+  phina.define('HomingShot', {
+    superClass: 'AbstractObjClass',
+
+    target: null,
+
+    init: function(x, y, speed) {
+      this.superInit('redCard');
+
+      this.setPosition(x, y);
+      this.speed = speed || 14;
+      this.power = SHOT_POWER;
+      this.vec = V2(this.speed, 0);
+      this.type = "homing";
+      this.radius = 6;
+      this.alpha = 0.7;
+    },
+
+    update: function() {
+      this.position.add(this.vec);
+
+      if (this.isOutOfScreen()) {
+        this.remove();
+      }
+
+      if (!this.target || this.age > AGE_LIMIT) return;
+
+      // 自分 vs ターゲット間のベクトルを計算
+      var target = this.target;
+      var this2targetVec = V2(target.x - this.x, target.y - this.y);
+
+      if (V2.cross(this.vec, this2targetVec) > 0) {
+        // targetが上にいる
+        this.vec.rotate(ROTATE_UNIT_RAD);
+      } else {
+        // targetが下にいる
+        this.vec.rotate(-ROTATE_UNIT_RAD);
+      }
+
+      if (this.age%4 === 0) this.rotation = this.vec.toDegree();
+    },
+
+    spawn: function(x, y) {
+      this.setPosition(x, y);
+      this.vec.set(this.speed, 0);
+      this.targetLayer.addChild(this);
+    },
+
+  });
+
+});
+
+/**
+ * 自機オプション
+ */
+phina.namespace(function() {
+
+  phina.define('PlayerBit', {
+    superClass: 'AbstractObjClass',
+
+    init: function(x, y, mainBody) {
+      this.superInit('redTriangle');
+      this.relativePosition = Vector2(x, y);
+      this.mainBody = mainBody;
+      this.alpha = 0.7;
+      this.setPosition(mainBody.x + x, mainBody.y + y);
+    },
+
+    update: function() {
+      var mainBody = this.mainBody;
+      var rel = this.relativePosition;
+
+      // 滑るように本体に追従させる場合
+      // ターゲット位置をセット -> その位置ー自分の差分　の数%をを自分位置に加算
+      var dest = {x: mainBody.x + rel.x, y: mainBody.y + rel.y};
+      // var delta = {x: dest.x - this.x, y: dest.y - this.y};
+      // this.setPosition(this.x + delta.x*0.15, this.y + delta.y*0.15);
+
+      this.setPosition(dest.x, dest.y);
+
+      this.rotation += 10;
+    }
+  });
 
 });
 

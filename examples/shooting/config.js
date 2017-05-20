@@ -7,10 +7,11 @@ var SCREEN_WIDTH = 512;
 var SCREEN_HEIGHT = 360;
 var SCROLL_SPEED = 5;
 var SENSIBILITY = 0.8;
-var PLAYER_SPEED = 3;
+var PLAYER_SPEED = 4;
 var PLAYER_INITIAL_LIFE = 1;
 var BOMB_MAX_VALUE = 1000;
 var ITEM_SEARCH_RANGE = 70;
+var PLAYER_BIT_INTERVAL = 20;
 
 var MAX_SHOT_LEVEL = 4;
 var SHOT_ANGLE_UNIT = 12;
@@ -27,7 +28,6 @@ var BOSS_ONLY;
   DEBUG_MODE = (qsParams.debug != null) ? JSON.parse(qsParams.debug) : false;
   BOSS_ONLY = (qsParams.bossOnly != null) ? JSON.parse(qsParams.bossOnly) : false;
 }());
-
 var Log = function() {
   if (DEBUG_MODE) {
     return console.log.apply(null, arguments);

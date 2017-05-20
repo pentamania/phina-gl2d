@@ -30,6 +30,31 @@
   .strokeCircle(r, r, r-lw);
   am.set('image', 'redBullet', img);
 
+  // カード型
+  var w = 16;
+  var h = 10;
+  lw = 2;
+  img = phina.graphics.Canvas().setSize(w+lw*2, h+lw*2);
+  img.strokeStyle = "#F4240E";
+  img.fillStyle = "#FA1752";
+  img.lineWidth = lw;
+  img.fillRect(0, 0, w, h)
+  .strokeRect(0, 0, w, h)
+  am.set('image', 'redCard', img);
+
+  // △
+  r = 12;
+  lw = r/3;
+  img = phina.graphics.Canvas().setSize(r*2, r*2);
+  img.strokeStyle = "#A90A85";
+  img.fillStyle = "#EE4B4B";
+  img.lineWidth = lw;
+  img.transformCenter()
+  .rotate(90 * RAD_UNIT)
+  .fillPolygon(0, 0, r-lw, 3)
+  .strokePolygon(0, 0, r-lw, 3);
+  am.set('image', 'redTriangle', img);
+
   // 天アイテム
   shape = phina.display.Label({
     text: "金",
