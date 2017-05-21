@@ -7,6 +7,7 @@
     shape.render(shape.canvas);
     return shape.canvas;
   };
+  var D2R = Math.DEG_TO_RAD;
 
   // 弾
   r = 5;
@@ -50,7 +51,7 @@
   img.fillStyle = "#EE4B4B";
   img.lineWidth = lw;
   img.transformCenter()
-  .rotate(90 * RAD_UNIT)
+  .rotate(90 * D2R)
   .fillPolygon(0, 0, r-lw, 3)
   .strokePolygon(0, 0, r-lw, 3);
   am.set('image', 'redTriangle', img);
@@ -108,7 +109,7 @@
   img.fillStyle = "#37E550";
   img.lineWidth = lw;
   img.transformCenter()
-  .rotate(-90 * RAD_UNIT)
+  .rotate(-90 * D2R)
   .fillHeart(0, 0, r-lw)
   .strokeHeart(0, 0, r-lw);
   // .strokeHeart(r, r, r-lw);

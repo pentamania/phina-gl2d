@@ -80,7 +80,7 @@ phina.define('Enemy', {
     var speed = this.speed = (data.speed != null) ? data.speed : 2;
     this.vec = Vector2(-speed, 0);
     if (directionAngle != null) {
-      this.vec.fromAngle(directionAngle * RAD_UNIT, speed);
+      this.vec.fromAngle(directionAngle * Math.DEG_TO_RAD, speed);
     }
 
     // 判定サイズ
@@ -146,7 +146,7 @@ phina.define('Enemy', {
         // TODO: パラメータを自由に変えられるようにする？
         var r = 30; // 半径
         var frequency = 4; // 周波数、高いほどうねうねする
-        var rad = this.age * frequency * RAD_UNIT;
+        var rad = this.age * frequency * Math.DEG_TO_RAD;
         this.y = this.baseY + Math.sin(rad) * r;
         // this.rotation += 4;
         break;
@@ -158,7 +158,7 @@ phina.define('Enemy', {
       //     this.destroyable = true;
       //   }
       //   var r = this.startR -= this.attenuation; // 半径
-      //   var rad = (this.startDeg + this.age) * RAD_UNIT * this.speed;
+      //   var rad = (this.startDeg + this.age) * Math.DEG_TO_RAD * this.speed;
       //   this.setPosition(
       //     this.axis.x + Math.cos(rad) * r,
       //     this.axis.y + Math.sin(rad) * r
@@ -302,7 +302,7 @@ phina.define('EnemyAbstract', {
 
   setVectorAngle: function(angle, speed) {
     if (speed != null) this.speed = speed;
-    this.vec.fromAngle(angle * RAD_UNIT, this.speed);
+    this.vec.fromAngle(angle * Math.DEG_TO_RAD, this.speed);
   },
 
   // 仮想
@@ -388,7 +388,7 @@ phina.define('SineGuy', {
 
     this.x += this.vec.x;
     this.baseY += this.vec.y;
-    var rad = this.age * this.frequency * RAD_UNIT;
+    var rad = this.age * this.frequency * Math.DEG_TO_RAD;
     this.y = this.baseY + Math.sin(rad) * this.fluctRadius;
 
     if (this.age === 100) this.fireBullet();
@@ -427,7 +427,7 @@ phina.define('WhirlGuy', {
     }
 
     var r = this.rotRadius -= this.attenuation; // 半径
-    var rad = (this.startDeg + this.age * this.speed) * RAD_UNIT;
+    var rad = (this.startDeg + this.age * this.speed) * Math.DEG_TO_RAD;
     this.setPosition(
       this.axis.x + Math.cos(rad) * r,
       this.axis.y - Math.sin(rad) * r
@@ -470,7 +470,7 @@ phina.define('FloatingMineGuy', {
   },
 
   selfDestroy: function(bulletNum) {
-    var rad = 360 / bulletNum * RAD_UNIT;
+    var rad = 360 / bulletNum * Math.DEG_TO_RAD;
     for (var i = 0; i < bulletNum; i++) {
       Bullet(this.x, this.y, rad * i, 3).addChildTo(bulletConfig.layer);
     }
@@ -667,7 +667,7 @@ phina.define('Boss', {
         var radY = 140;
         var degUnit = 180 / (period * 0.25);
         var deg = degUnit * this.age;
-        var radian = RAD_UNIT * deg;
+        var radian = Math.DEG_TO_RAD * deg;
         this.x = this._initialPos.x + radX * Math.sin(radian);
         this.y = this._initialPos.y + radY * Math.sin(radian * 0.5);
         if (this.age%8 === 0) this.fireBullet();
@@ -679,7 +679,7 @@ phina.define('Boss', {
         var radY = 140;
         var degUnit = 180 / (period * 0.25);
         var deg = degUnit * this.age;
-        var radian = RAD_UNIT * deg;
+        var radian = deg * Math.DEG_TO_RAD;
         this.x = this._initialPos.x;
         this.y = this._initialPos.y + radY * Math.sin(radian * 0.5);
         if (this.age%24 === 0) this.fireBullet();
@@ -718,7 +718,7 @@ phina.define('Boss', {
   // TODO: パターンごとに撃ち方変える？
   fireBullet: function() {
     (3).times(function(i, num){
-      var rad = ((180 - 30) + 30 * i) * RAD_UNIT;
+      var rad = ((180 - 30) + 30 * i) * Math.DEG_TO_RAD;
       Bullet(this.x, this.y, rad, 4).addChildTo(bulletConfig.layer);
     }.bind(this))
     var rad = 180;

@@ -16,9 +16,6 @@ var PLAYER_BIT_INTERVAL = 20;
 var MAX_SHOT_LEVEL = 4;
 var SHOT_ANGLE_UNIT = 12;
 
-// var RAD_UNIT = 0.01745;
-var RAD_UNIT = Math.PI / 180;
-
 var USE_WEBGL;
 var DEBUG_MODE;
 var BOSS_ONLY;
