@@ -106,7 +106,6 @@ phina.define('Shot', {
 
 /**
  * Player Homing Shot
- *
  */
 phina.namespace(function() {
   var ROTATE_UNIT_RAD = 16 * Math.DEG_TO_RAD;
@@ -122,8 +121,8 @@ phina.namespace(function() {
       this.superInit('redCard');
 
       this.setPosition(x, y);
-      this.speed = speed || 14;
-      this.power = SHOT_POWER;
+      this.speed = speed || 13;
+      this.power = SHOT_POWER / 2;
       this.vec = V2(this.speed, 0);
       this.type = "homing";
       this.radius = 6;
@@ -131,11 +130,8 @@ phina.namespace(function() {
     },
 
     update: function() {
+      this.checkRemoval();
       this.position.add(this.vec);
-
-      if (this.isOutOfScreen()) {
-        this.remove();
-      }
 
       if (!this.target || this.age > AGE_LIMIT) return;
 
@@ -154,6 +150,7 @@ phina.namespace(function() {
       if (this.age%4 === 0) this.rotation = this.vec.toDegree();
     },
 
+    // TODO
     spawn: function(x, y) {
       this.setPosition(x, y);
       this.vec.set(this.speed, 0);
