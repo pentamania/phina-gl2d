@@ -60,9 +60,7 @@ phina.define('EnemyLauncher', {
 phina.define('Enemy', {
   superClass: 'AbstractObjClass',
 
-  _isAppeared: false, // 画面内に出現済み
   isAnimating: false, // イベントアニメ中
-  destroyable: true, // removeできる
   canAttack: true,
 
   init: function(x, y, type, directionAngle) {
@@ -254,9 +252,6 @@ phina.define('Enemy', {
 phina.define('EnemyAbstract', {
   superClass: 'AbstractObjClass',
 
-  _isAppeared: false, // 画面内に出現済み
-  isAnimating: false, // イベントアニメ中
-  destroyable: true, // removeできる
   canAttack: true,
 
   init: function(typeName, isSpecialType) {
@@ -282,18 +277,8 @@ phina.define('EnemyAbstract', {
           this.position.add(this.vec);
         }
 
-        this.checkRemove();
+        this.checkRemoval();
       });
-    }
-  },
-
-  checkRemove: function() {
-    // removeしてよいかどうかのフラグ
-    if (!this._isAppeared && !this.isOutOfScreen()) {
-      this._isAppeared = true;
-    }
-    if (this.destroyable && this._isAppeared && this.isOutOfScreen()) {
-      this.remove();
     }
   },
 
@@ -384,7 +369,7 @@ phina.define('SineGuy', {
   },
 
   update: function() {
-    this.checkRemove();
+    this.checkRemoval();
 
     this.x += this.vec.x;
     this.baseY += this.vec.y;

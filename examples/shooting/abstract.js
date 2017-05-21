@@ -43,6 +43,9 @@ phina.define('ObjectPool', {
 phina.define('AbstractObjClass', {
   superClass: "phina.display.Sprite",
 
+  _isAppeared: false,
+  destroyable: true,
+
   init: function(image, width, height) {
     this.superInit(image, width, height);
     this.setBoundingType('circle');
@@ -56,7 +59,7 @@ phina.define('AbstractObjClass', {
 
     this.on('enterframe', function(){
       this.age++;
-    })
+    });
   },
 
   isOutOfScreen: function() {
@@ -66,6 +69,16 @@ phina.define('AbstractObjClass', {
       this.y < -10 ||
       SCREEN_HEIGHT+10 < this.y
     );
+  },
+
+  // removeしてよいかどうかをチェック
+  checkRemoval: function() {
+    if (!this._isAppeared && !this.isOutOfScreen()) {
+      this._isAppeared = true;
+    }
+    if (this.destroyable && this._isAppeared && this.isOutOfScreen()) {
+      this.remove();
+    }
   },
 
 });
