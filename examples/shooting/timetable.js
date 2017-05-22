@@ -56,8 +56,11 @@
     // [直前パターンからの待機フレーム, "編隊タイプ", 引数配列]
 
     // debug用 =====
-    // [30, "verticals", [DEF_X, DEF_Y, 180, 3]],
-    // [50, "verticals", [DEF_NX, gy.span(12), 0, 3]],
+    [90, "assaults", [DEF_X, gy.span(13)]],
+    [60, "assaults", [DEF_X, gy.span(10)]],
+    [60, "assaults", [DEF_X, gy.span(7)]],
+
+    // 交差
     [30, "verticals", [gx.span(17), gy.span(-2), 90]],
     [0, "verticals", [DEF_NX, gy.span(16), 0]],
 
@@ -89,10 +92,10 @@
     // [120, "liner"],
     // [120, "liner", [SCREEN_HEIGHT-60]],
 
-    // [90, "meteors", [SCREEN_HEIGHT*0.3 | 0]],
-    // [45, "meteors", [SCREEN_HEIGHT*0.7 | 0]],
-    // [45, "meteors", [SCREEN_HEIGHT*0.3 | 0]],
-    // [45, "meteors", [SCREEN_HEIGHT*0.7 | 0]],
+    // [90, "assaults", [SCREEN_HEIGHT*0.3 | 0]],
+    // [45, "assaults", [SCREEN_HEIGHT*0.7 | 0]],
+    // [45, "assaults", [SCREEN_HEIGHT*0.3 | 0]],
+    // [45, "assaults", [SCREEN_HEIGHT*0.7 | 0]],
 
     // // 魚群
     // [40, "sines", [40, true]],

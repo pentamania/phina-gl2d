@@ -322,13 +322,13 @@ var ENEMY_PATTERNS = {
     }
   },
 
-  "meteors": {
+  "assaults": {
     count: 3,
     interval: 10,
-    action: function(y) {
-      var eType = "assalt";
-      y = y || 40;
-      Enemy(SCREEN_WIDTH*1.2, y, eType).addChildTo(ENEMY_PATTERNS.targetLayer);
+    action: function(x, y) {
+      y = (y != null) ? y : 40;
+      x = (x != null) ? x : SCREEN_WIDTH * 1.2;
+      AssaultGuy(x, y).addChildTo(ENEMY_PATTERNS.targetLayer);
     }
   },
 

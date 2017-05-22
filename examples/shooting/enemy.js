@@ -306,6 +306,26 @@ phina.define('EnemyAbstract', {
 });
 
 /**
+ * enmeytype example
+ */
+// phina.define('EnemyTypeGuy', {
+//   superClass: 'EnemyAbstract',
+
+//   init: function(x, y, degree) {
+//     this.superInit("name");
+//     this.setPosition(x, y);
+
+//     if (speed != null) this.speed = speed;
+//     degree = (degree != null) ? degree : 180;
+//     this.setVectorAngle(degree);
+//   },
+
+//   update: function() {
+//     this.checkRemoval();
+//   }
+// });
+
+/**
  * 基本形
  * 方向転換可
  */
@@ -389,6 +409,33 @@ phina.define('VerticalShotGuy', {
   },
 
 });
+
+/**
+ * Assault
+ * プレイヤーに向けて突っ込んでくる
+ */
+phina.define('AssaultGuy', {
+  superClass: 'EnemyAbstract',
+
+  init: function(x, y, degree) {
+    this.superInit("assault");
+    this.setPosition(x, y);
+
+    var speed = this.speed;
+    var rad = this.getTargetRadian();
+    this.vec.set(
+      speed * Math.cos(rad),
+      speed * Math.sin(rad)
+    );
+  },
+
+  update: function() {
+    this.checkRemoval();
+    if (this.age%6 === 0) this.fireBullet();
+  },
+
+});
+
 
 /**
  * 波移動型

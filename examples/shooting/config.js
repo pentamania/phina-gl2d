@@ -150,7 +150,7 @@ var ENEMY_TYPES = {
   },
   "verticalShot": {
     texture: "cucumber",
-    life: 60,
+    life: 30,
     score: 200,
   },
   "muteki": {
@@ -158,9 +158,9 @@ var ENEMY_TYPES = {
     life: 9000000,
     score: 100,
   },
-  "assalt": {
+  "assault": {
     texture: "meteorStar",
-    life: 20,
+    life: 50,
     score: 100,
     speed: 6,
   },
