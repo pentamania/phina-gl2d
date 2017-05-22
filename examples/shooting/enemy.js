@@ -119,9 +119,6 @@ phina.define('Enemy', {
     }
   },
 
-  // 倒された時の動作: 打ち返しなど
-  ondestroyed: function() {},
-
   update: function() {
     this.position.add(this.vec);
 
@@ -282,6 +279,9 @@ phina.define('EnemyAbstract', {
     }
   },
 
+  // 倒された時の動作: 打ち返しなど
+  ondestroyed: function() {},
+
   // setSpeed: function(speed) {
   // },
 
@@ -348,6 +348,44 @@ phina.define('BasicGuy', {
       this.flare('fireBullet');
     }
 
+  },
+
+});
+
+/**
+ * VerticalShotGuy
+ * 進行方向に対し、直角2方向に玉を打つ
+ */
+phina.define('VerticalShotGuy', {
+  superClass: 'EnemyAbstract',
+
+  init: function(x, y, degree, speed) {
+    this.superInit('verticalShot');
+    this.setPosition(x, y);
+
+    if (speed != null) this.speed = speed;
+    degree = (degree != null) ? degree : 180;
+    this.setVectorAngle(degree);
+
+    // 進行方向に直角のラジアンを計算しとく
+    this.bulletDirections = [];
+    (2).times(function(i, n) {
+      var dir = this.vec.toDegree();
+      var rad = (dir + 90 + 180 * i).toRadian();
+      this.bulletDirections.push(rad);
+    }.bind(this));
+  },
+
+  update: function (app) {
+    if (this.isAnimating) return;
+
+    if (this.age%20 === 0) this.fireBullet();
+  },
+
+  fireBullet: function() {
+    this.bulletDirections.forEach(function(rad) {
+      Bullet(this.x, this.y, rad, 3).addChildTo(bulletConfig.layer);
+    }.bind(this));
   },
 
 });

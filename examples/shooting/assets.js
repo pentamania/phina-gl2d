@@ -264,11 +264,12 @@ var ENEMY_PATTERNS = {
   "verticals": {
     count: 8,
     interval: 30,
-    action: function(y, fromLeft) {
-      var eType = "verticalShot";
-      var x = (fromLeft) ? -SCREEN_WIDTH * 0.2 : SCREEN_WIDTH * 1.2;
-      y = y || 40;
-      Enemy(x, y, eType, fromLeft).addChildTo(ENEMY_PATTERNS.targetLayer);
+    // action: function(y, fromLeft, speed) {
+    action: function(x, y, degree, speed) {
+      x = (x != null) ? x : SCREEN_WIDTH * 1.2;
+      y = (y != null) ? y : 40;
+      degree = (degree != null) ? degree : 180;
+      VerticalShotGuy(x, y, degree, speed).addChildTo(ENEMY_PATTERNS.targetLayer);
     }
   },
 

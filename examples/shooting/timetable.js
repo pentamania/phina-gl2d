@@ -49,7 +49,9 @@
     // [直前パターンからの待機フレーム, "編隊タイプ", 引数配列]
 
     // debug用 =====
-    // [30, "verticals", [SCREEN_HEIGHT-40]],
+    // [30, "verticals", [null, SCREEN_HEIGHT-40, 220, 7]],
+    [30, "verticals", [SCREEN_WIDTH*0.4, -SCREEN_HEIGHT * 0.2, 90]],
+    [30, "verticals", [SCREEN_WIDTH*0.6, SCREEN_HEIGHT*1.2, 270]],
     // [40, "whirls", [240, 120, 45, 140], {count: 14, interval: 20}],
     // [0, "mine", [100, 100, 32]],
     // [100, "mine", [150, 150]],
@@ -57,11 +59,11 @@
     // [0, "mine", [200, 200]],
     // [40, "liner", [null, 240], {count: 14, interval: 20}],
     // [40, "liner"],
-    [10, "liner", [null, null, 190, 90]],
-    [10, "vTurns", [null, null, 160, 90]],
-    [40, "flower", [120, 120, 45, 140], {count: 4, interval: 20}],
-    [0, "kabe"],
-    [30, "homings", [SCREEN_WIDTH * 0.7, -100]],
+    // [10, "liner", [null, null, 190, 90]],
+    // [10, "vTurns", [null, null, 160, 90]],
+    // [40, "flower", [120, 120, 45, 140], {count: 4, interval: 20}],
+    // [0, "kabe"],
+    // [30, "homings", [SCREEN_WIDTH * 0.7, -100]],
 
     // createPentagramPattern(40, SCREEN_WIDTH*0.1, SCREEN_HEIGHT*0.2, 120, null, 4),
     // createPentagramPattern(40, SCREEN_WIDTH*0.1, SCREEN_HEIGHT * 0.2, 80, null, 2),
