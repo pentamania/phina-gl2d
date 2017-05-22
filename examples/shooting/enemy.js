@@ -676,165 +676,155 @@ phina.namespace(function() {
 });
 
 /**
- * (Mid) Boss
+ * Boss
  *
  */
-phina.define('Boss', {
-  superClass: 'Enemy',
+phina.namespace(function() {
 
-  isBoss: true,
-  _fullLife: 0,
+  var MAX_ORBIT_NUM = 2;
+  var BULLET_NUM = 5;
+  var BULLET_RANGE = 80 ;
+  var bulletInterval = BULLET_RANGE / (BULLET_NUM - 1);
 
-  init: function() {
-    var data = ENEMY_TYPES["boss"];
-    this.superInit(0, 0, 'boss');
-    this.animation = FrameAnimation('boss').attachTo(this).gotoAndPlay('fly');
+  phina.define('Boss', {
+    superClass: 'EnemyAbstract',
 
-    this.setPosition(SCREEN_WIDTH * 1.5, SCREEN_HEIGHT / 2);
-    // this.vec = Vector2(0, 0);
-    this.isAnimating = true;
-    this._fullLife = this.life;
-    this._initialPos = {x: SCREEN_WIDTH*0.8, y: SCREEN_HEIGHT*0.5};
+    isBoss: true,
+    _maxLife: 0,
 
-    // 子機
-    this.orbits = [];
-    (2).times(function(i, num) {
-      var orbit = OrbitGuy(this, 60, i * 360/num |0);
-      this.orbits.push(orbit);
-    }.bind(this));
+    init: function() {
+      this.superInit('boss', true);
+      this.animation = FrameAnimation('boss').attachTo(this).gotoAndPlay('fly');
 
-  },
+      this.setPosition(SCREEN_WIDTH * 1.5, SCREEN_HEIGHT / 2);
+      this.isAnimating = true;
+      this._maxLife = this.life;
+      this._initialPos = {x: SCREEN_WIDTH*0.8, y: SCREEN_HEIGHT*0.5};
 
-  resetPosition: function() {
-    this.isAnimating = true;
-    this.tweener.clear()
-    .to(this._initialPos, 1200, 'easeOutQuad')
-    .wait(300)
-    .call(function() {
-      this.age = 0;
-      this.isAnimating = false;
-    }.bind(this));
+      // 子機
+      this.orbits = [];
+      (MAX_ORBIT_NUM).times(function(i, num) {
+        var orbit = OrbitGuy(this, 60, i * 360/num |0);
+        this.orbits.push(orbit);
+      }.bind(this));
 
-    return this;
-  },
+      this.setPattern('upDown');
+    },
 
-  addOrbit: function(index) {
-    this.orbits.forEach(function(orbit, i) {
-      orbit.addChildTo(this.parent)
-    }, this);
-  },
+    addOrbit: function(index) {
+      this.orbits.forEach(function(orbit, i) {
+        orbit.addChildTo(this.parent)
+      }, this);
+    },
 
-  // 当たり判定をとるため、子機を親と同じレイヤーに配置する
-  // onadded: function(e) {
-  //   var self = this;
-  //   var radius = 60;
-  //   var angSpeed = 8;
-  //   this.orbits.forEach(function(orbit, i) {
-  //     orbit.addChildTo(self.parent)
-  //     .on('enterframe', function(e) {
-  //       var frame = e.app.frame;
-  //       var radian = (orbit.startDeg + frame * angSpeed).toRadian();
-  //       orbit.position.set(
-  //         self.x + radius * Math.cos(radian),
-  //         self.y + radius * Math.sin(radian)
-  //       );
-  //     });
-  //   });
-  // },
+    onremoved: function() {
+      this.orbits.each(function(orbit) {
+        orbit.remove();
+      });
+      this.orbits = null;
+    },
 
-  onremoved: function() {
-    this.orbits.each(function(orbit) {
-      orbit.remove();
-    });
-    this.orbits = null;
-  },
+    // 傾く
+    destroyAnimation: function(duration) {
+      duration = duration || 3000;
+      this.tweener.clear()
+      .by({y: 180, rotation: 30}, duration, 'easeOutQuad')
+      // .call(cb)
+    },
 
-  // 傾く
-  destroyAnimation: function(duration) {
-    duration = duration || 3000;
-    this.tweener.clear()
-    .by({y: 180, rotation: 30}, duration, 'easeOutQuad')
-    // .call(cb)
-  },
+    update: function(app) {
+      if (this.isAnimating) return;
 
-  update: function(app) {
-    if (this.isAnimating) return;
+      switch (this._currentPattern) {
+        case "sMove":
+          // S字を描くように
+          var period = 180; // 一周期にかかるフレーム数
+          var radX = 40;
+          var radY = 140;
+          var degUnit = 180 / (period * 0.25);
+          var deg = degUnit * this.age;
+          var radian = deg.toRadian();
+          this.x = this._initialPos.x + radX * Math.sin(radian);
+          this.y = this._initialPos.y + radY * Math.sin(radian * 0.5);
 
-    switch (this._pattern) {
-      case "sMove":
-        // S字を描くように
-        var period = 180; // 一周期にかかるフレーム数
-        var radX = 40;
-        var radY = 140;
-        var degUnit = 180 / (period * 0.25);
-        var deg = degUnit * this.age;
-        var radian = Math.DEG_TO_RAD * deg;
-        this.x = this._initialPos.x + radX * Math.sin(radian);
-        this.y = this._initialPos.y + radY * Math.sin(radian * 0.5);
-        if (this.age%8 === 0) this.fireBullet();
-        break;
+          if (this.age%8 === 0) this.fireBullet();
+          break;
 
-      case "upDown":
-        // 上下移動
-        var period = 500; // 一周期にかかるフレーム数
-        var radY = 140;
-        var degUnit = 180 / (period * 0.25);
-        var deg = degUnit * this.age;
-        var radian = deg * Math.DEG_TO_RAD;
-        this.x = this._initialPos.x;
-        this.y = this._initialPos.y + radY * Math.sin(radian * 0.5);
-        if (this.age%24 === 0) this.fireBullet();
-        break;
+        case "upDown":
+          // 上下移動
+          var period = 500; // 一周期にかかるフレーム数
+          var radY = 140;
+          var degUnit = 180 / (period * 0.25);
+          var deg = degUnit * this.age;
+          var radian = deg.toRadian();
+          this.x = this._initialPos.x;
+          this.y = this._initialPos.y + radY * Math.sin(radian * 0.5);
 
-      default:
-        // 初期状態：その場にとどまる
-        if (this.age%30 === 0) this.fireBullet();
-        break;
-    }
+          if (this.age%24 === 0) this.fireBullet();
+          break;
 
-    // change pattern by life
-    if (this.life < this._fullLife * 0.333) {
-      this.changePattern('sMove');
-    } else if (this.life < this._fullLife * 0.66) {
-      this.changePattern('upDown');
-    }
+        default:
+          // 初期状態：その場にとどまる
+          if (this.age%30 === 0) this.fireBullet();
+          break;
+      }
 
-  },
+      // change pattern by life
+      if (this.life < this._maxLife * 0.333) {
+        // TODO
+      } else if (this.life < this._maxLife * 0.66) {
+        this.setPattern('sMove');
+      }
 
-  changePattern: function(pattern) {
-    if (pattern === this._pattern) return;
+    },
 
-    this.flare('patternChange');
-    this.resetPosition();
-    this._pattern = pattern;
-    switch (pattern) {
-      case "upDown":
-        this.addOrbit();
-        break;
-      default:
-        break;
-    }
-  },
+    setPattern: function(pattern) {
+      if (pattern === this._currentPattern) return;
 
-  // TODO: パターンごとに撃ち方変える？
-  fireBullet: function() {
-    (3).times(function(i, num){
-      var rad = ((180 - 30) + 30 * i) * Math.DEG_TO_RAD;
-      Bullet(this.x, this.y, rad, 4).addChildTo(bulletConfig.layer);
-    }.bind(this))
-    var rad = 180;
-  },
+      this.flare('patternChange'); // いらない？
+      this.resetPosition();
+      this._currentPattern = pattern;
+      switch (pattern) {
+        case "sMove":
+          this.addOrbit();
+          break;
+        default:
+          break;
+      }
+    },
 
-  // appearAnimation: function() {
-  //   this.tweener.clear()
-  //   .to({x: SCREEN_WIDTH * 0.8}, 1000)
-  //   .wait(1000)
-  //   .call(function(){
-  //     this.isAnimating = false;
-  //     this.age = 0;
-  //   }.bind(this));
+    // パターンごとに撃ち方変える？
+    fireBullet: function() {
+      (BULLET_NUM).times(function(i, num) {
+        var rad = ((180 - BULLET_RANGE / 2) + bulletInterval * i) * Math.DEG_TO_RAD;
+        Bullet(this.x, this.y, rad, 4).addChildTo(bulletConfig.layer);
+      }.bind(this))
+    },
 
-  //   return this;
-  // },
+    resetPosition: function() {
+      this.isAnimating = true;
+      this.tweener.clear()
+      .to(this._initialPos, 1200, 'easeOutQuad')
+      .wait(300)
+      .call(function() {
+        this.age = 0;
+        this.isAnimating = false;
+      }.bind(this));
 
+      return this;
+    },
+
+    // appearAnimation: function() {
+    //   this.tweener.clear()
+    //   .to({x: SCREEN_WIDTH * 0.8}, 1000)
+    //   .wait(1000)
+    //   .call(function(){
+    //     this.isAnimating = false;
+    //     this.age = 0;
+    //   }.bind(this));
+
+    //   return this;
+    // },
+
+  });
 });
