@@ -436,6 +436,50 @@ phina.define('AssaultGuy', {
 
 });
 
+/**
+ * orbit
+ * 本体の周りをぐるぐる
+ */
+phina.namespace(function() {
+
+  var BULLET_RAD = 180 * Math.DEG_TO_RAD;
+
+  phina.define('OrbitGuy', {
+    superClass: 'EnemyAbstract',
+
+    init: function(mainBody, orbitRadius, startDegree, angSpeed) {
+      this.superInit("orbit");
+      this.mainBody = mainBody;
+      this.orbitRadius = orbitRadius || 100;
+      this.startDegree = startDegree || 0;
+      this.angSpeed = angSpeed || 8;
+      this.destroyable = false;
+      this._isAppeared = true;
+    },
+
+    update: function() {
+      // this.checkRemoval();
+      if (this.age%12 === 0) this.fireBullet();
+
+      var radian = (this.startDegree + this.age * this.angSpeed).toRadian();
+      var oRad = this.orbitRadius;
+      var mainBody = this.mainBody;
+      this.position.set(
+        mainBody.x + oRad * Math.cos(radian),
+        mainBody.y + oRad * Math.sin(radian)
+      );
+
+      this.rotation += 4;
+    },
+
+    fireBullet: function() {
+      Bullet(this.x, this.y, BULLET_RAD, 2).addChildTo(bulletConfig.layer);
+    }
+
+  });
+
+});
+
 
 /**
  * 波移動型
@@ -466,6 +510,7 @@ phina.define('SineGuy', {
   }
 
 });
+
 
 /**
  * 渦を巻く敵
@@ -654,9 +699,7 @@ phina.define('Boss', {
     // 子機
     this.orbits = [];
     (2).times(function(i, num) {
-      var orbit = Enemy(0, 0, 'orbit');
-      orbit.destroyable = false;
-      orbit.startDeg = (i * 360/num)| 0;
+      var orbit = OrbitGuy(this, 60, i * 360/num |0);
       this.orbits.push(orbit);
     }.bind(this));
 
@@ -676,20 +719,9 @@ phina.define('Boss', {
   },
 
   addOrbit: function(index) {
-    var self = this;
-    var radius = 60;
-    var angSpeed = 8;
     this.orbits.forEach(function(orbit, i) {
-      orbit.addChildTo(self.parent)
-      .on('enterframe', function(e) {
-        var frame = e.app.frame;
-        var radian = (orbit.startDeg + frame * angSpeed).toRadian();
-        orbit.position.set(
-          self.x + radius * Math.cos(radian),
-          self.y + radius * Math.sin(radian)
-        );
-      });
-    });
+      orbit.addChildTo(this.parent)
+    }, this);
   },
 
   // 当たり判定をとるため、子機を親と同じレイヤーに配置する
@@ -697,7 +729,6 @@ phina.define('Boss', {
   //   var self = this;
   //   var radius = 60;
   //   var angSpeed = 8;
-
   //   this.orbits.forEach(function(orbit, i) {
   //     orbit.addChildTo(self.parent)
   //     .on('enterframe', function(e) {

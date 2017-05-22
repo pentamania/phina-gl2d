@@ -56,20 +56,20 @@
     // [直前パターンからの待機フレーム, "編隊タイプ", 引数配列]
 
     // debug用 =====
-    [90, "assaults", [DEF_X, gy.span(13)]],
-    [60, "assaults", [DEF_X, gy.span(10)]],
-    [60, "assaults", [DEF_X, gy.span(7)]],
+    // [90, "assaults", [DEF_X, gy.span(13)]],
+    // [60, "assaults", [DEF_X, gy.span(10)]],
+    // [60, "assaults", [DEF_X, gy.span(7)]],
 
-    // 交差
-    [30, "verticals", [gx.span(17), gy.span(-2), 90]],
-    [0, "verticals", [DEF_NX, gy.span(16), 0]],
+    // 交差: 右下
+    // [30, "verticals", [gx.span(17), gy.span(-2), 90]],
+    // [0, "verticals", [DEF_NX, gy.span(16), 0]],
 
-    [400, "verticals", [gx.span(3), gy.span(22), 270]],
-    [0, "verticals", [DEF_X, gy.span(4)]], // 横
+    // 交差: 左上
+    // [400, "verticals", [gx.span(3), gy.span(22), 270]],
+    // [0, "verticals", [DEF_X, gy.span(4)]], // 横
 
-    [40, "whirls", [240, 120, 45, 140], {count: 14, interval: 20}],
+    // [40, "whirls", [240, 120, 45, 140], {count: 14, interval: 20}],
     // [0, "mine", [100, 100, 32]],
-    // [100, "mine", [150, 150]],
     // [0, "mine", [170, 170]],
     // [0, "mine", [200, 200]],
     // [40, "liner", [null, 240], {count: 14, interval: 20}],
@@ -114,7 +114,7 @@
     // [130, "verticals", [60]],
     // [15, "verticals", [SCREEN_HEIGHT*0.7 | 0, true]],
 
-    // アイワナ式の壁
+    // アイワナ式壁
     // [30, "kabe", [2, 1]],
     // [30, "kabe", [3, 1]],
     // [30, "kabe", [4, 1]],
