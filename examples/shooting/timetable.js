@@ -45,14 +45,26 @@
     return arr;
   };
 
+  // 位置の簡略化
+  var gx = phina.util.Grid(SCREEN_WIDTH, 20);
+  var DEF_X = gx.span(22);
+  var DEF_NX = gx.span(-2);
+  var gy = phina.util.Grid(SCREEN_HEIGHT, 20);
+  var DEF_Y = gy.span(10);
+
   var pattern = [
     // [直前パターンからの待機フレーム, "編隊タイプ", 引数配列]
 
     // debug用 =====
-    // [30, "verticals", [null, SCREEN_HEIGHT-40, 220, 7]],
-    [30, "verticals", [SCREEN_WIDTH*0.4, -SCREEN_HEIGHT * 0.2, 90]],
-    [30, "verticals", [SCREEN_WIDTH*0.6, SCREEN_HEIGHT*1.2, 270]],
-    // [40, "whirls", [240, 120, 45, 140], {count: 14, interval: 20}],
+    // [30, "verticals", [DEF_X, DEF_Y, 180, 3]],
+    // [50, "verticals", [DEF_NX, gy.span(12), 0, 3]],
+    [30, "verticals", [gx.span(17), gy.span(-2), 90]],
+    [0, "verticals", [DEF_NX, gy.span(16), 0]],
+
+    [400, "verticals", [gx.span(3), gy.span(22), 270]],
+    [0, "verticals", [DEF_X, gy.span(4)]], // 横
+
+    [40, "whirls", [240, 120, 45, 140], {count: 14, interval: 20}],
     // [0, "mine", [100, 100, 32]],
     // [100, "mine", [150, 150]],
     // [0, "mine", [170, 170]],
