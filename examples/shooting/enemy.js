@@ -255,23 +255,22 @@ phina.define('AssaultGuy', {
 phina.namespace(function() {
 
   var BULLET_RAD = 180 * Math.DEG_TO_RAD;
+  var DELAY_FRAME = 14;
 
   phina.define('OrbitGuy', {
     superClass: 'EnemyAbstract',
 
     init: function(mainBody, orbitRadius, startDegree, angSpeed) {
-      this.superInit("orbit");
+      this.superInit("orbit", true);
       this.mainBody = mainBody;
       this.orbitRadius = orbitRadius || 100;
       this.startDegree = startDegree || 0;
       this.angSpeed = angSpeed || 8;
       this.destroyable = false;
-      this._isAppeared = true;
     },
 
     update: function() {
-      // this.checkRemoval();
-      if (this.age%12 === 0) this.fireBullet();
+      if (this.age%DELAY_FRAME === 0) this.fireBullet();
 
       var radian = (this.startDegree + this.age * this.angSpeed).toRadian();
       var oRad = this.orbitRadius;
