@@ -100,6 +100,7 @@ var SHOT_ANGLE_UNIT = 12;
 var SHOT_POWER = 6;
 var HOMING_SHOT_POWER = 2;
 var BOMB_POWER = 100;
+
 /**
  * @param {string} texture [画像テクスチャキー名]
  * @param {life} [Number] [体力]

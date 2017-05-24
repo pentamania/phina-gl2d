@@ -511,6 +511,7 @@ phina.namespace(function() {
       this.isAnimating = true;
       this._maxLife = this.life;
       this._initialPos = {x: SCREEN_WIDTH*0.8, y: SCREEN_HEIGHT*0.5};
+      this.isAppeared = true;
 
       // 子機
       this.orbits = [];

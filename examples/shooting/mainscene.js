@@ -275,7 +275,10 @@ phina.define('MainScene', {
       // enemy vs player shot
       self.shotLayer.children.each(function(shot) {
         // homings対象セット
-        if (shot.type === "homing" && shot.target == null && !enemy.isAnimating && !enemy.invinsible) {
+        if (
+          shot.type === "homing" && shot.target == null
+          && enemy.isAppeared && !enemy.isAnimating && !enemy.invinsible
+        ) {
           shot.target = enemy;
           enemy.on('removed', function() {
             // if (shot.target != null) Log(shot, "searching");
@@ -286,6 +289,7 @@ phina.define('MainScene', {
         self.shotEnemyHitTest(shot, enemy);
       });
 
+      // 敵消す
       if (enemy.life <= 0) {
         self.enemyDestroyed(enemy);
       }

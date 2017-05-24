@@ -65,8 +65,8 @@
     // [0, "verticals", [DEF_NX, gy.span(16), 0]],
 
     // 交差: 左上
-    // [400, "verticals", [gx.span(3), gy.span(22), 270]],
-    // [0, "verticals", [DEF_X, gy.span(4)]], // 横
+    [400, "verticals", [gx.span(3), gy.span(22), 270]],
+    [0, "verticals", [DEF_X, gy.span(4)]], // 横
 
     // [40, "whirls", [240, 120, 45, 140], {count: 14, interval: 20}],
     // [0, "mine", [100, 100, 32]],
