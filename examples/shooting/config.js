@@ -11,10 +11,6 @@ var PLAYER_SPEED = 4;
 var PLAYER_INITIAL_LIFE = 1;
 var BOMB_MAX_VALUE = 1000;
 var ITEM_SEARCH_RANGE = 70;
-var PLAYER_BIT_INTERVAL = 20;
-
-var MAX_SHOT_LEVEL = 4;
-var SHOT_ANGLE_UNIT = 12;
 
 var USE_WEBGL;
 var DEBUG_MODE;
@@ -97,7 +93,12 @@ var ASSETS = {
   },
 };
 
-var SHOT_POWER = 8;
+/* プレイヤーショット系 */
+var PLAYER_BIT_INTERVAL = 20;
+var MAX_SHOT_LEVEL = 4;
+var SHOT_ANGLE_UNIT = 12;
+var SHOT_POWER = 6;
+var HOMING_SHOT_POWER = 2;
 var BOMB_POWER = 100;
 /**
  * @param {string} texture [画像テクスチャキー名]
@@ -171,7 +172,7 @@ var ENEMY_TYPES = {
   },
   "boss": {
     texture: "boss",
-    life: 100,
+    life: 5000,
     // life: 1000,
     score: 10000,
   }

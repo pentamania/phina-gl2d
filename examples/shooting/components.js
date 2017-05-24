@@ -68,31 +68,46 @@ phina.define('Player', {
 phina.define('Shot', {
   superClass: 'AbstractObjClass',
 
-  init: function() {
+  init: function(startDeg, fluctRadius) {
     this.superInit('redBullet');
     this.radius = 4;
     this.alpha = 0.7;
 
     this.power = SHOT_POWER;
     this.vec = Vector2(0, 0);
-    this.fluct = 0;
+    this.startDeg = startDeg || 90;
+    this.fluctRadius = fluctRadius || 8;
+    this.baseY = 0;
+    this.frequency = 28;
+    // this.fluct = startDeg || 0;
   },
 
   update: function() {
-    // this.fluct = 4 * Math.sin(this._age);
-    this.position.add(this.vec);
+    // this.fluct += 4 * Math.sin(this.age);
     // this.y += this.fluct;
-    if (this.isOutOfScreen()) {
+    var radian = (this.startDeg + this.age*this.frequency).toRadian();
+    var fluctDelta = this.fluctRadius * Math.sin(radian);
+    this.baseY += this.vec.y;
+    this.x += this.vec.x;
+    this.y = this.baseY + fluctDelta;
+
+    // this.position.add(this.vec);
+
     // if (SCREEN_WIDTH < this.x) {
+    if (this.isOutOfScreen()) {
       this.remove();
     }
   },
 
-  spawn: function(x, y, angle, speed) {
+  spawn: function(x, y, angle, startDeg, speed) {
     speed = speed || 10;
     angle = angle || 0;
     var radian = angle.toRadian();
+
+    this.age = 0;
+    if (startDeg != null) this.startDeg = startDeg;
     this.setPosition(x, y);
+    this.baseY = y;
     this.vec.set(
       // speed,
       speed * Math.cos(radian),
@@ -122,7 +137,7 @@ phina.namespace(function() {
 
       this.setPosition(x, y);
       this.speed = speed || 13;
-      this.power = SHOT_POWER / 2;
+      this.power = HOMING_SHOT_POWER;
       this.vec = V2(this.speed, 0);
       this.type = "homing";
       this.radius = 6;

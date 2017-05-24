@@ -9,7 +9,7 @@
   };
   var D2R = Math.DEG_TO_RAD;
 
-  // 弾
+  // 敵弾
   r = 5;
   lw = r/4;
   img = phina.graphics.Canvas().setSize(r*2, r*2);
@@ -21,7 +21,7 @@
   am.set('image', 'enemyNormalbullet', img);
 
   // 自弾
-  r = 6;
+  r = 5;
   lw = r/3;
   img = phina.graphics.Canvas().setSize(r*2, r*2);
   img.strokeStyle = "#A90A0A";

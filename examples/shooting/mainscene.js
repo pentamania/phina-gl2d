@@ -5,7 +5,7 @@ phina.define('MainScene', {
   age: 0,
   _score: 0,
   _shotExp: 0,
-  _shotLevel: 2,
+  _shotLevel: 30,
   remainLife: PLAYER_INITIAL_LIFE,
   isStarted: false,
 
@@ -63,7 +63,7 @@ phina.define('MainScene', {
       {
         poolName: "playerShot",
         className: Shot,
-        arguments: [self.shotLayer],
+        arguments: [],
         count: 256,
         targetLayer: self.shotLayer,
       },
@@ -131,7 +131,7 @@ phina.define('MainScene', {
 
     // bit
     this.playerBits = [];
-    (this._shotLevel-1).times(function() {
+    (this._shotLevel).times(function() {
       self.addPlayerBit();
     })
 
@@ -489,9 +489,17 @@ phina.define('MainScene', {
       }
     }.bind(this);
 
-    switch (this._shotLevel) {
-      case 1: fireNway(1); break;
-      case 2: fireNway(3); break;
+    // スパイラルショット
+    for (var i = 0; i < 2; i++) {
+      this.objectPools['playerShot'].pick(function(shot) {
+        shot.spawn(player.x, player.y, 0, 90+i*180);
+      });
+    }
+
+    // nway
+    // switch (this._shotLevel) {
+    //   case 1: fireNway(1); break;
+    //   case 2: fireNway(3); break;
     //   case 3: fireNway(5); break;
     //   case 4:
     //     fireNway(5);
@@ -503,8 +511,8 @@ phina.define('MainScene', {
     //       });
     //     }
     //     break;
-      default: fireNway(3); break;
-    }
+    //   default: fireNway(1); break;
+    // }
 
     // homing shot
     if (this.playerBits.length) {
