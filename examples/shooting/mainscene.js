@@ -136,10 +136,13 @@ phina.define('MainScene', {
     })
 
     // 敵出現関係
-    this._enemyPointer = 0;
+    // this._enemyPointer = 0;
+    // TIME_TABLE.frameSum = 0;
     ENEMY_PATTERNS.targetLayer = this.enemyLayer;
-    this.enemyLauncher = EnemyLauncher();
-    TIME_TABLE.frameSum = 0;
+    this.enemyLauncher = EnemyLauncher(TIME_TABLE.pattern);
+    this.enemyLauncher.on('waveend', function() {
+      self.bossAppearance();
+    });
 
     // UI update
     this.on('enterframe', function(e) {
@@ -166,6 +169,7 @@ phina.define('MainScene', {
       // タイトルすっ飛ばす
       this.isStarted = true;
       player.isAnimating = false;
+      player.anim.gotoAndPlay('fly');
       self.scrollSpeed = SCROLL_SPEED;
       self.UILayer.setVisible(true);
     }
@@ -196,7 +200,7 @@ phina.define('MainScene', {
     var p = app.pointer;
     var player = this.player;
     var sctw = this.tweener;
-    var currentPattern = TIME_TABLE.pattern[this._enemyPointer];
+    // var currentPattern;
 
     // スタート画面解除
     if (!this.isStarted) {
@@ -217,31 +221,6 @@ phina.define('MainScene', {
 
     // 敵の出現
     this.enemyLauncher.tick();
-    if (currentPattern && TIME_TABLE.frameSum + currentPattern[0] < this.age) {
-      TIME_TABLE.frameSum += currentPattern[0];
-      var name = currentPattern[1];
-      // Bossの出現
-      if (name === "boss") {
-        // TODO：雑魚片す？ -> ワーニング cb-> ボス出現
-        this.UILayer.showWarning(function() {
-          var boss = Boss().addChildTo(self.enemyLayer).resetPosition();
-          boss.on('patternChange', function() {
-            self.generateBlast(boss.x, boss.y, 32, "redRect");
-          })
-          self.UILayer.bossLifeGauge.setVisible(true).setTarget(boss);
-        });
-      // 雑魚編隊
-      } else {
-        var pattern = ({}).$extend(ENEMY_PATTERNS[name]);
-        var args = currentPattern[2];
-        var options = currentPattern[3];
-        if (args != null) pattern.args = args;
-        // Log(pattern, TIME_TABLE.frameSum);
-        this.enemyLauncher.pushTask(pattern, options);
-      }
-
-      this._enemyPointer++;
-    }
 
     // ボム
     if (kb.getKeyDown('x')) this.fireBomb();
@@ -293,7 +272,6 @@ phina.define('MainScene', {
       if (enemy.life <= 0) {
         self.enemyDestroyed(enemy);
       }
-
     });
 
     // enemy bullet vs player
@@ -393,6 +371,23 @@ phina.define('MainScene', {
 
     if (enemy.score != null) this._score += enemy.score;
     this._shotExp += 5;
+  },
+
+  bossAppearance: function() {
+    var self = this;
+    this.tweener.clear()
+    .wait(1500)
+    .call(function(){
+
+      // TODO：(雑魚片す？) -> ワーニング cb-> ボス出現
+      self.UILayer.showWarning(function() {
+        var boss = Boss().addChildTo(self.enemyLayer).resetPosition();
+        boss.on('patternChange', function() {
+          self.generateBlast(boss.x, boss.y, 32, "redRect");
+        });
+        self.UILayer.bossLifeGauge.setVisible(true).setTarget(boss);
+      });
+    })
   },
 
   bossDestroyed: function(enemy) {
@@ -510,7 +505,7 @@ phina.define('MainScene', {
     //     // backshot
     //     for (var i=0; i < 2; i++) {
     //       var angle = 160 + (i * 20 * 2);
-    //       this.objectPools['playerShot'].pick(function(shot) {
+    //       this.objectPools['playerShot'].99(function(shot) {
     //         shot.spawn(player.x, player.y-2, angle);
     //       });
     //     }

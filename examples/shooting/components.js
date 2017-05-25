@@ -125,7 +125,7 @@ phina.define('Shot', {
 phina.namespace(function() {
   var ROTATE_UNIT_RAD = 16 * Math.DEG_TO_RAD;
   var V2 = phina.geom.Vector2;
-  var AGE_LIMIT = 350;
+  var AGE_LIMIT = 350;9
 
   phina.define('HomingShot', {
     superClass: 'AbstractObjClass',

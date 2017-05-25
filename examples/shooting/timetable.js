@@ -53,7 +53,7 @@
   var DEF_Y = gy.span(10);
 
   var pattern = [
-    // [直前パターンからの待機フレーム, "編隊タイプ", 引数配列]
+    // [直前パターンからの待機フレーム, "編隊タイプ", 引数配列, 上書きオプション]
 
     // debug用 =====
     // [90, "assaults", [DEF_X, gy.span(13)]],
@@ -65,15 +65,15 @@
     // [0, "verticals", [DEF_NX, gy.span(16), 0]],
 
     // 交差: 左上
-    [400, "verticals", [gx.span(3), gy.span(22), 270]],
-    [0, "verticals", [DEF_X, gy.span(4)]], // 横
+    // [400, "verticals", [gx.span(3), gy.span(22), 270]],
+    // [0, "verticals", [DEF_X, gy.span(4)]], // 横
 
     // [40, "whirls", [240, 120, 45, 140], {count: 14, interval: 20}],
     // [0, "mine", [100, 100, 32]],
     // [0, "mine", [170, 170]],
     // [0, "mine", [200, 200]],
     // [40, "liner", [null, 240], {count: 14, interval: 20}],
-    // [40, "liner"],
+    // [0, "liner"],
     // [10, "liner", [null, null, 190, 90]],
     // [10, "vTurns", [null, null, 160, 90]],
     // [40, "flower", [120, 120, 45, 140], {count: 4, interval: 20}],
@@ -127,7 +127,7 @@
     // [120, "kabe"],
     // [120, "kabe"],
 
-    [100, "boss"],
+    // [100, "boss"],
   ];
 
   timeTable.pattern = flatten(pattern);
