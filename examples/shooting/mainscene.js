@@ -5,7 +5,7 @@ phina.define('MainScene', {
   age: 0,
   _score: 0,
   _shotExp: 0,
-  _shotLevel: 2,
+  _shotLevel: 0,
   remainLife: PLAYER_INITIAL_LIFE,
   isStarted: false,
 

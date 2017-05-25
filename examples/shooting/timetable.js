@@ -78,7 +78,7 @@
     // [10, "vTurns", [null, null, 160, 90]],
     // [40, "flower", [120, 120, 45, 140], {count: 4, interval: 20}],
     // [0, "kabe"],
-    // [30, "homings", [SCREEN_WIDTH * 0.7, -100]],
+    [30, "homings", [gx.span(22), 100]],
 
     // createPentagramPattern(40, SCREEN_WIDTH*0.1, SCREEN_HEIGHT*0.2, 120, null, 4),
     // createPentagramPattern(40, SCREEN_WIDTH*0.1, SCREEN_HEIGHT * 0.2, 80, null, 2),

@@ -197,10 +197,10 @@ var ENEMY_PATTERNS = {
   "homings": {
     count: 4,
     interval: 22,
-    action: function(x, y, speed) {
+    action: function(x, y, speed, startAngle) {
       x = (x != null) ? x : SCREEN_WIDTH * 1.2;
       y = (y != null) ? y : 60;
-      HomingGuy(x, y, speed).addChildTo(ENEMY_PATTERNS.targetLayer);
+      HomingGuy(x, y, speed, startAngle).addChildTo(ENEMY_PATTERNS.targetLayer);
     }
   },
 

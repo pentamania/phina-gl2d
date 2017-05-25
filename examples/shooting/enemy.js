@@ -370,12 +370,14 @@ phina.namespace(function() {
 
     _isChasing: true,
 
-    init: function(x, y, speed) {
+    init: function(x, y, speed, startAngle) {
       this.superInit("homing");
       this.setPosition(x, y);
       this.speed　= (speed != null) ? speed : this.speed;
-      this.vec = Vector2(-this.speed, 0);
-      this.rotation = 180;
+
+      startAngle = (startAngle != null) ? startAngle : 180;
+      this.rotation = startAngle;
+      this.setVectorAngle(startAngle);
     },
 
     update: function() {
