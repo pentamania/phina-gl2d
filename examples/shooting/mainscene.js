@@ -35,6 +35,7 @@ phina.define('MainScene', {
     this.titleLayer = TitleLayer(options).addChildTo(this);
     this.resultLayer = ResultLayer(options).addChildTo(this);
     bulletConfig.layer = this.bulletLayer;
+    bulletConfig.enemyLayer = this.enemyLayer;
 
     // オブジェクトプール： マネジャー化する？
     this.objectPools = {};
@@ -272,6 +273,12 @@ phina.define('MainScene', {
       if (enemy.life <= 0) {
         self.enemyDestroyed(enemy);
       }
+
+      // ボスタイムアップ
+      if (enemy.isBoss && enemy.ageOfDeath < enemy.age) {
+        enemy.flare('timeup');
+      }
+
     });
 
     // enemy bullet vs player
@@ -385,6 +392,10 @@ phina.define('MainScene', {
         boss.on('patternChange', function() {
           self.generateBlast(boss.x, boss.y, 32, "redRect");
         });
+        boss.one('timeup', function() {
+          console.log("Time up");
+          self.bossDestroyed(boss);
+        })
         self.UILayer.bossLifeGauge.setVisible(true).setTarget(boss);
       });
     })
@@ -392,7 +403,9 @@ phina.define('MainScene', {
 
   bossDestroyed: function(enemy) {
     var self = this;
+    // if (!this.isStarted) return;
 
+    self.UILayer.bossLifeGauge.setVisible(false);
     this.tweener.clear()
     .call(function() {
       // 無敵化

@@ -439,14 +439,15 @@ phina.namespace(function() {
 phina.namespace(function() {
 
   var MAX_ORBIT_NUM = 2;
-  var BULLET_NUM = 5;
-  var BULLET_RANGE = 80 ;
+  var BULLET_NUM = 12;
+  var BULLET_RANGE = 260;
   var bulletInterval = BULLET_RANGE / (BULLET_NUM - 1);
 
   phina.define('Boss', {
     superClass: 'EnemyAbstract',
 
     isBoss: true,
+    ageOfDeath: BOSS_AGE_OF_DEATH,
     _maxLife: 0,
 
     init: function() {
@@ -493,6 +494,13 @@ phina.namespace(function() {
     update: function(app) {
       if (this.isAnimating) return;
 
+      // ミサイル敵
+      if (this.age%90 === 0) {
+        (2).times(function(i, n) {
+          HomingGuy(this.x+16, this.y, 6, -45 + i*90).addChildTo(bulletConfig.enemyLayer);
+        }.bind(this))
+      }
+
       switch (this._currentPattern) {
         case "sMove":
           // S字を描くように
@@ -505,7 +513,7 @@ phina.namespace(function() {
           this.x = this._initialPos.x + radX * Math.sin(radian);
           this.y = this._initialPos.y + radY * Math.sin(radian * 0.5);
 
-          if (this.age%8 === 0) this.fireBullet();
+          if (this.age%16 === 0) this.fireBullet();
           break;
 
         case "upDown":
@@ -518,7 +526,7 @@ phina.namespace(function() {
           this.x = this._initialPos.x;
           this.y = this._initialPos.y + radY * Math.sin(radian * 0.5);
 
-          if (this.age%24 === 0) this.fireBullet();
+          if (this.age%32 === 0) this.fireBullet();
           break;
 
         default:
@@ -539,7 +547,7 @@ phina.namespace(function() {
     setPattern: function(pattern) {
       if (pattern === this._currentPattern) return;
 
-      this.flare('patternChange'); // いらない？
+      this.flare('patternChange'); // パターン変更時のアニメーションなどに
       this.resetPosition();
       this._currentPattern = pattern;
       switch (pattern) {
