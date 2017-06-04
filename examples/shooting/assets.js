@@ -4,6 +4,11 @@
   var am = AssetManager;
   var r, lw, img, shape;
   var drawShape = function(shape) {
+    // if (shape.children) {
+    //   shape.children.each(function(child){
+    //     child.render(child.canvas);
+    //   })
+    // }
     shape.render(shape.canvas);
     return shape.canvas;
   };
@@ -65,6 +70,33 @@
     stroke: "#gold",
   });
   am.set('image', 'scoreItem', drawShape(shape))
+
+  // パワーアップアイテム
+  // r = 12;
+  // lw = r/3;
+  // img = phina.graphics.Canvas().setSize(r*2, r*2);
+  // img.strokeStyle = "#A90A85";
+  // img.fillStyle = "#EE4B4B";
+  // img.lineWidth = lw;
+  // img.context.textAlign = 'center';
+  // img.context.font = "12px";
+  // img.context.fillText("Pfdsafa", 0, 0);
+  // img.transformCenter();
+  // am.set('image', 'powerItem', img)
+
+  r = 14;
+  shape = phina.ui.Button({
+    text: "P",
+    textAlign: 'center',
+    width: r,
+    height: r,
+    fontSize: r,
+    cornerRadius: 2,
+    fontFamily: "Meirio",
+    fill: "#F82B2B",
+    stroke: "transparent",
+  });
+  am.set('image', 'powerItem', drawShape(shape))
 
   // 敵 =========
 

@@ -76,7 +76,7 @@
     // [0, "liner"],
     // [10, "liner", [null, null, 190, 90]],
     // [10, "vTurns", [null, null, 160, 90]],
-    // [40, "flower", [120, 120, 45, 140], {count: 4, interval: 20}],
+    [40, "flower", [120, 120, 45, 140], {count: 4, interval: 20}],
     // [0, "kabe"],
     [30, "homings", [gx.span(22), 100]],
 

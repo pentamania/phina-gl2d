@@ -233,7 +233,7 @@ phina.define('MainScene', {
     // shot level up
     if (
       self._shotLevel < MAX_SHOT_LEVEL
-      && self._shotExp > 50 * self._shotLevel
+      && self._shotExp > SHOT_POWERUP_BORDER * (self._shotLevel+1)
     ) {
       self._shotLevel++;
       self.addPlayerBit();
@@ -302,13 +302,21 @@ phina.define('MainScene', {
 
       // vs player hittest
       if (!player.isAnimating && item.hitTestCircle(player.x, player.y)) {
-        self._score += item.score;
+        if (item.score != null) {
+          // 点アイテム
+          self._score += item.score;
+        } else {
+          // Pアイテム
+          self._shotExp = Math.min(self._shotExp + item.energy, MAX_SHOT_ENERGY);
+        }
+
         item.remove();
       }
     });
 
     // player action
     if (!player.isAnimating) {
+      // move
       if (p.getPointing()) {
         player.position.add(p.deltaPosition.mul(SENSIBILITY));
       }
@@ -316,16 +324,17 @@ phina.define('MainScene', {
       if (kb.getKey('down')) player.y += player.moveSpeed;
       if (kb.getKey('left')) player.x -= player.moveSpeed;
       if (kb.getKey('right')) player.x += player.moveSpeed;
-    }
 
-    if (!player.isAnimating && frame%4 === 0) {
-      // if (kb.getKey('z')) self.playerShotFire();
-      self.playerShotFire();
+      // shot
+      if (frame%4 === 0) {
+        if (kb.getKey('z') || p.getPointing()) self.playerShotFire();
+        // self.playerShotFire();
 
-      // ブーストエフェクト
-      this.objectPools["boostEffect"].pick(function(chip) {
-        chip.spawn(player.x-5, player.y);
-      });
+        // ブーストエフェクト
+        this.objectPools["boostEffect"].pick(function(chip) {
+          chip.spawn(player.x-5, player.y);
+        });
+      }
     }
 
   },
@@ -374,10 +383,15 @@ phina.define('MainScene', {
       // 雑魚撃破
       this.generateBlast(enemy.x, enemy.y, 32, "redRect");
       enemy.remove();
+      // this._shotExp += 5;
+      for (var i = 0; i < 3; i++) {
+        var r = RAND_INTS.pickup();
+        ScoreItem(enemy.x+r, enemy.y+r).addChildTo(this.itemLayer);
+      }
+      PowerUpItem(enemy.x, enemy.y).addChildTo(this.itemLayer);
     }
 
     if (enemy.score != null) this._score += enemy.score;
-    this._shotExp += 5;
   },
 
   bossAppearance: function() {

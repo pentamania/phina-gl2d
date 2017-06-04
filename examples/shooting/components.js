@@ -567,7 +567,6 @@ phina.define("BombGauge", {
 });
 
 /**
- * TODO
  * ScoreItem
  */
 phina.define('ScoreItem', {
@@ -588,6 +587,35 @@ phina.define('ScoreItem', {
       var rad = Math.atan2(this.target.y - this.y, this.target.x - this.x);
       var speed = 5;
       this.position.add({x: speed * Math.cos(rad), y:speed * Math.sin(rad)});
+    } else {
+      this.vec.x -= 0.05;
+      this.position.add(this.vec);
+    }
+  }
+
+});
+
+/**
+ * Power-up Item
+ */
+phina.define('PowerUpItem', {
+  superClass: 'AbstractObjClass',
+
+  target: null,
+
+  init: function(x, y) {
+    this.superInit("powerItem");
+    this.radius = 32;
+    this.vec = Vector2(2, 0);
+    this.position.set(x, y);
+    this.energy = SHOT_ENERGY_UNIT;
+  },
+
+  update: function () {
+    if (this.target) {
+      var rad = Math.atan2(this.target.y - this.y, this.target.x - this.x);
+      var speed = 10;
+      this.position.add({x: speed * Math.cos(rad), y: speed * Math.sin(rad)});
     } else {
       this.vec.x -= 0.05;
       this.position.add(this.vec);

@@ -96,11 +96,15 @@ var ASSETS = {
 
 /* プレイヤーショット系 */
 var PLAYER_BIT_INTERVAL = 20;
+var SHOT_POWERUP_BORDER = 100;
+var SHOT_ENERGY_UNIT = 5; // ショットパワーアップ 基本単位
 var MAX_SHOT_LEVEL = 4;
-var SHOT_ANGLE_UNIT = 12;
+var MAX_SHOT_ENERGY = SHOT_POWERUP_BORDER * MAX_SHOT_LEVEL;
+// var SHOT_ANGLE_UNIT = 12;
 var SHOT_POWER = 6;
 var HOMING_SHOT_POWER = 2;
 var BOMB_POWER = 100;
+var RAND_INTS = [].range(-25, 25);
 
 /**
  * @param {string} texture [画像テクスチャキー名]

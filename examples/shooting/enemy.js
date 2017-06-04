@@ -33,6 +33,8 @@ phina.define('EnemyAbstract', {
         this.checkRemoval();
       });
     }
+
+    // this.on('removed', this.ondestroyed.bind(this));
   },
 
   // 倒された時の動作: 打ち返しなど
