@@ -193,6 +193,17 @@
   img.fillCircle(r, r, r);
   am.set('image', 'appearEffect', img);
 
+  // button BG
+  r = 32;
+  lw = r/4;
+  img = phina.graphics.Canvas().setSize(r*2, r*2);
+  img.strokeStyle = "#631416";
+  img.fillStyle = "#EBAF97";
+  img.lineWidth = lw;
+  img.fillPolygon(r, r, r-lw, 6);
+  img.strokePolygon(r, r, r-lw, 6);
+  am.set('image', 'buttonBG', img);
+
   // GAME OVER
   var shape = phina.display.Label({
     text: "GAME OVER",

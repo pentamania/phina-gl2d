@@ -56,6 +56,7 @@ phina.define('UILayer', {
     this.renderChildBySelf = false;
     var gx = this.gridX;
     var gy = this.gridY;
+    this.alpha = 0.7;
 
     // ゲームオーバーラベル
     this.gameoverLabel = Sprite('gameoverLabel')
@@ -106,7 +107,15 @@ phina.define('UILayer', {
     .setVisible(false)
     .addChildTo(this)
     ;
-    this.alpha = 0.7;
+
+    // ボム発動ボタン
+    var bbtn = this.bomberButton = Sprite('buttonBG')
+    .setPosition(this.width * 0.9, gy.span(14))
+    .setInteractive(true)
+    .addChildTo(this);
+    Label({text:"B", fill: "#6F0303", fontSize:14})
+    .addChildTo(bbtn);
+
   },
 
   showGameover: function() {

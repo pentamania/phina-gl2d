@@ -129,6 +129,9 @@ phina.define('MainScene', {
     this.bombGauge = BombGauge().addChildTo(this.UILayer)
     .setPosition(gx.center(), gy.span(15))
     ;
+    this.UILayer.bomberButton.on('pointstart', function(e) {
+      self.fireBomber();
+    });
 
     // bit
     this.playerBits = [];
@@ -179,7 +182,7 @@ phina.define('MainScene', {
     this.one('gameStart', this.gameStart.bind(this))
 
     // タイトル: スタート後スクロール
-    this.titleLayer.on('enterframe', function(){
+    this.titleLayer.on('enterframe', function() {
       if (!self.isStarted || !this.visible) return;
       this.x -= self.scrollSpeed;
       if (this.x < -SCREEN_WIDTH) this.visible = false;
@@ -224,7 +227,7 @@ phina.define('MainScene', {
     this.enemyLauncher.tick();
 
     // ボム
-    if (kb.getKeyDown('x')) this.fireBomb();
+    if (kb.getKeyDown('x')) this.fireBomber();
     if (self.bombGauge.value < self.bombGauge.maxValue) {
       // UI.Gauge.setValueにバグあり とりあえずの処置
       self.bombGauge.value = Math.clamp(self.bombGauge.value+1, 0, self.bombGauge.maxValue);
@@ -563,7 +566,7 @@ phina.define('MainScene', {
   },
 
   // ボム （C.A.S.）
-  fireBomb: function() {
+  fireBomber: function() {
     var gauge = this.bombGauge;
     var self = this;
 
