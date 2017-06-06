@@ -1,4 +1,6 @@
-
+/**
+ * mainScene
+ */
 phina.define('MainScene', {
   superClass: 'DisplayScene',
 
@@ -84,6 +86,11 @@ phina.define('MainScene', {
         pool.add(obj);
       })
     });
+
+    // filter適用
+    var AM = AssetManager;
+    var filtered = AM.get('image', 'tomapiyo').clone().filter(AM.get('filter', 'blueFilter'));
+    AM.set('image', 'tomapiyo_blue', filtered);
 
     // 背景スクロール
     for (var i = 0; i < 2; i++) {

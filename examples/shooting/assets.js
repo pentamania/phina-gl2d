@@ -1,7 +1,7 @@
 
 // てきとうにテクスチャ素材
 ;(function(){
-  var am = AssetManager;
+  var am = phina.asset.AssetManager;
   var r, lw, img, shape;
   var drawShape = function(shape) {
     // if (shape.children) {
@@ -212,6 +212,15 @@
     fill: "#EE7C29",
   });
   am.set('image', 'gameoverLabel', drawShape(shape))
+
+  // filterのセット
+  var blueFilter = function(pixel, i, x, y, imageData) {
+    if (pixel[3] === 0) return;
+    var data = imageData.data;
+    data[i+0] *= 0.3;
+    data[i+1] *= 0.3;
+  };
+  am.set('filter', 'blueFilter', blueFilter);
 
 }());
 

@@ -185,7 +185,13 @@ phina.namespace(function() {
     superClass: 'AbstractObjClass',
 
     init: function(x, y, mainBody) {
-      this.superInit('redTriangle');
+      // this.superInit('redTriangle');
+      this.superInit('tomapiyo_blue', 64, 64);
+      this.setScale(0.4, 0.4);
+      this.anim = FrameAnimation('tomapiyo').attachTo(this)
+      .gotoAndPlay('fly');
+      // this.frameIndex = 1;
+
       this.relativePosition = Vector2(x, y);
       this.mainBody = mainBody;
       this.alpha = 0.7;
@@ -204,7 +210,7 @@ phina.namespace(function() {
 
       this.setPosition(dest.x, dest.y);
 
-      this.rotation += 10;
+      // this.rotation += 10;
     }
   });
 
