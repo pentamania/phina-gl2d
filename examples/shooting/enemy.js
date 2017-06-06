@@ -34,12 +34,30 @@ phina.define('EnemyAbstract', {
       });
     }
 
-    // this.on('removed', this.ondestroyed.bind(this));
+    // あたり判定
+    this.invinsible = ENEMY_INVINSIBLE_INIT_FRAME;
+    this.on('enterframe', function() {
+      if (0 < this.invinsible) this.invinsible--;
+    });
+     // this.on('removed', this.ondestroyed.bind(this));
   },
 
   // 倒された時の動作: 打ち返しなど
   ondestroyed: function() {},
 
+  // 出現時にエフェクト
+  onadded: function() {
+    var circle = Sprite("appearEffect")
+    .addChildTo(this)
+
+    circle.tweener.clear().to({
+      scaleX: 8,
+      scaleY: 8,
+      alpha: 0
+    }, 400).call(function(){
+      circle.remove()
+    })
+  },
   // setSpeed: function(speed) {
   // },
 

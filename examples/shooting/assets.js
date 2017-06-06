@@ -185,7 +185,13 @@
   img = phina.graphics.Canvas().setSize(r*2, r*2);
   img.fillStyle = "#FFF";
   img.fillCircle(r, r, r);
-  am.set('image', 'whiteCircle', img)
+  am.set('image', 'whiteCircle', img);
+
+  r = 8;
+  img = phina.graphics.Canvas().setSize(r*2, r*2);
+  img.fillStyle = "#312D4B";
+  img.fillCircle(r, r, r);
+  am.set('image', 'appearEffect', img);
 
   // GAME OVER
   var shape = phina.display.Label({

@@ -246,6 +246,7 @@ phina.define('MainScene', {
       // enemy vs player
       if (
         !player.invinsible
+        && !enemy.invinsible
         && !player.isAnimating
         && enemy.hitTestCircle(player.x, player.y)
       ) {
@@ -342,11 +343,14 @@ phina.define('MainScene', {
   shotEnemyHitTest: function(shot, enemy) {
     var cls = Collision;
     var self = this;
-    if (enemy.isAnimating) return;
+    // if (enemy.invinsible || enemy.isAnimating) return;
     // if (shot.hitTestElement(enemy)) {
     if (cls.testCircleCircle(shot, enemy)) {
       self.generateBlast(shot.x, shot.y, 8, "yellowRect");
       shot.remove();
+
+      // 無敵ではダメージは通らない
+      if (enemy.invinsible !== 0) return;
       enemy.life -= shot.power;
     }
   },
