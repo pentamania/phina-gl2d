@@ -467,6 +467,7 @@ phina.namespace(function() {
     superClass: 'EnemyAbstract',
 
     isBoss: true,
+    ageSum: 0,
     ageOfDeath: BOSS_AGE_OF_DEATH,
     _maxLife: 0,
 
@@ -487,6 +488,7 @@ phina.namespace(function() {
         this.orbits.push(orbit);
       }.bind(this));
 
+      // パターン設定
       this.setPattern('upDown');
     },
 
@@ -513,6 +515,7 @@ phina.namespace(function() {
 
     update: function(app) {
       if (this.isAnimating) return;
+      this.ageSum++;
 
       // ミサイル敵
       if (this.age%90 === 0) {
@@ -558,6 +561,7 @@ phina.namespace(function() {
       // change pattern by life
       if (this.life < this._maxLife * 0.333) {
         // TODO
+
       } else if (this.life < this._maxLife * 0.66) {
         this.setPattern('sMove');
       }
@@ -592,6 +596,20 @@ phina.namespace(function() {
       this.tweener.clear()
       .to(this._initialPos, 1200, 'easeOutQuad')
       .wait(300)
+      .call(function() {
+        this.age = 0;
+        this.isAnimating = false;
+      }.bind(this));
+
+      return this;
+    },
+
+    startDashAnimation: function() {
+      this.isAnimating = true;
+      this.tweener.clear()
+      .to(this._initialPos, 1200, 'easeOutQuad')
+      .wait(300)
+
       .call(function() {
         this.age = 0;
         this.isAnimating = false;

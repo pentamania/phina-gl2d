@@ -286,7 +286,7 @@ phina.define('MainScene', {
       }
 
       // ボスタイムアップ
-      if (enemy.isBoss && enemy.ageOfDeath < enemy.age) {
+      if (enemy.isBoss && enemy.ageOfDeath < enemy.ageSum) {
         enemy.flare('timeup');
       }
 
@@ -417,12 +417,18 @@ phina.define('MainScene', {
       // TODO：(雑魚片す？) -> ワーニング cb-> ボス出現
       self.UILayer.showWarning(function() {
         var boss = Boss().addChildTo(self.enemyLayer).resetPosition();
+        var brtl = self.UILayer.bossRemainTimeLabel;
+        brtl.setVisible(true);
         boss.on('patternChange', function() {
           self.generateBlast(boss.x, boss.y, 32, "redRect");
         });
         boss.one('timeup', function() {
-          console.log("Time up");
+          // console.log("Time up");
+          brtl.setVisible(false);
           self.bossDestroyed(boss);
+        })
+        self.on('enterframe', function() {
+          brtl.text = BOSS_AGE_OF_DEATH - boss.ageSum;
         })
         self.UILayer.bossLifeGauge.setVisible(true).setTarget(boss);
       });

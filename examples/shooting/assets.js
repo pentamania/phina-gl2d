@@ -15,7 +15,7 @@
   var D2R = Math.DEG_TO_RAD;
 
   // 敵弾
-  r = 5;
+  r = 8;
   lw = r/4;
   img = phina.graphics.Canvas().setSize(r*2, r*2);
   img.strokeStyle = "#143F10";

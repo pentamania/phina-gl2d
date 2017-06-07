@@ -108,14 +108,31 @@ phina.define('UILayer', {
     .addChildTo(this)
     ;
 
+    // ボス制限時間
+    var brtl = this.bossRemainTimeLabel = Label({
+      text: null,
+      fill: "#2BDA44",
+      stroke: "#045A43",
+      fontSize: 42,
+      fontFamily: "Aldrich",
+    })
+    .setVisible(false)
+    .setPosition(gx.center(), gy.span(5))
+    .addChildTo(this)
+    ;
+    brtl.tweener.clear()
+    .to({alpha: 0}, 600)
+    .to({alpha: 1}, 600)
+    .setLoop(1)
+    ;
+
     // ボム発動ボタン
     var bbtn = this.bomberButton = Sprite('buttonBG')
     .setPosition(this.width * 0.9, gy.span(14))
     .setInteractive(true)
     .addChildTo(this);
-    Label({text:"B", fill: "#6F0303", fontSize:14})
+    Label({text:"B", fill: "#6F0303", fontSize:14, fontFamily: "Aldrich"})
     .addChildTo(bbtn);
-
   },
 
   showGameover: function() {
