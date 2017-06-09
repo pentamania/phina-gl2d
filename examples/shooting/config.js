@@ -12,7 +12,7 @@ var PLAYER_INITIAL_LIFE = 1;
 var BOMB_MAX_VALUE = 1000;
 var ITEM_SEARCH_RANGE = 70;
 var BOSS_AGE_OF_DEATH = 5300; // 90sec = 90000ms / 17 = about 5300 frame
-// var BOSS_AGE_OF_DEATH = 300; // 90sec = 90000ms / 17 = about 5300 frame
+// var BOSS_AGE_OF_DEATH = 300;
 var ENEMY_INVINSIBLE_INIT_FRAME = 40;
 
 var USE_WEBGL;
@@ -103,7 +103,7 @@ var SHOT_ENERGY_UNIT = 5; // ショットパワーアップ 基本単位
 var MAX_SHOT_LEVEL = 4;
 var MAX_SHOT_ENERGY = SHOT_POWERUP_BORDER * MAX_SHOT_LEVEL;
 // var SHOT_ANGLE_UNIT = 12;
-var SHOT_POWER = 6;
+var SHOT_POWER = 5;
 var HOMING_SHOT_POWER = 2;
 var BOMB_POWER = 100;
 var RAND_INTS = [].range(-25, 25);
@@ -164,7 +164,7 @@ var ENEMY_TYPES = {
   },
   "muteki": {
     texture: "cucumber",
-    life: 9000000,
+    life: Infinity,
     score: 100,
   },
   "assault": {
@@ -175,12 +175,12 @@ var ENEMY_TYPES = {
   },
   "orbit": {
     texture: "cucumber",
-    life: 2000,
+    life: 800,
     score: 2000,
   },
   "boss": {
     texture: "boss",
-    life: 5000,
+    life: 2800,
     // life: 1000,
     score: 10000,
   }

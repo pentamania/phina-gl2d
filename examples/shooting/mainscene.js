@@ -7,7 +7,7 @@ phina.define('MainScene', {
   age: 0,
   _score: 0,
   _shotExp: 0,
-  _shotLevel: 0,
+  _shotLevel: 2,
   remainLife: PLAYER_INITIAL_LIFE,
   isStarted: false,
 
@@ -251,7 +251,7 @@ phina.define('MainScene', {
 
     // enemy children
     self.enemyLayer.children.each(function(enemy) {
-      if (enemy.isAnimating) return;
+      // if (enemy.isAnimating) return;
 
       // enemy vs player
       if (
@@ -268,7 +268,9 @@ phina.define('MainScene', {
         // homings対象セット
         if (
           shot.type === "homing" && shot.target == null
-          && enemy.isAppeared && !enemy.isAnimating && !enemy.invinsible
+          && enemy.isAppeared
+          // && !enemy.isAnimating
+          // && !enemy.invinsible
         ) {
           shot.target = enemy;
           enemy.on('removed', function() {
@@ -361,7 +363,7 @@ phina.define('MainScene', {
 
       // 無敵ではダメージは通らない
       if (enemy.invinsible !== 0) return;
-      enemy.life -= shot.power;
+      enemy.life -= (enemy.isSuperArmor) ? 1 : shot.power;
     }
   },
 
@@ -599,6 +601,7 @@ phina.define('MainScene', {
     this.enemyLayer.children.each(function(enemy) {
       if (enemy.isAnimating) return;
       this.generateBlast(enemy.x, enemy.y, 8, "yellowRect");
+      // if (!enemy.isBoss) enemy.life -= BOMB_POWER;
       enemy.life -= BOMB_POWER;
     }.bind(this));
 

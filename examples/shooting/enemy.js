@@ -219,7 +219,7 @@ phina.define('AssaultGuy', {
 phina.namespace(function() {
 
   var BULLET_RAD = 180 * Math.DEG_TO_RAD;
-  var DELAY_FRAME = 14;
+  var FIRE_DELAY_FRAME = 18;
 
   phina.define('OrbitGuy', {
     superClass: 'EnemyAbstract',
@@ -234,7 +234,7 @@ phina.namespace(function() {
     },
 
     update: function() {
-      if (this.age%DELAY_FRAME === 0) this.fireBullet();
+      if (this.age%FIRE_DELAY_FRAME === 0) this.fireBullet();
 
       var radian = (this.startDegree + this.age * this.angSpeed).toRadian();
       var oRad = this.orbitRadius;
@@ -248,6 +248,7 @@ phina.namespace(function() {
     },
 
     fireBullet: function() {
+      if (!this.canAttack) return;
       Bullet(this.x, this.y, BULLET_RAD, 2).addChildTo(bulletConfig.layer);
     }
 
@@ -469,6 +470,7 @@ phina.namespace(function() {
     isBoss: true,
     ageSum: 0,
     ageOfDeath: BOSS_AGE_OF_DEATH,
+    isSuperArmor: false,
     _maxLife: 0,
 
     init: function() {
@@ -483,13 +485,17 @@ phina.namespace(function() {
 
       // 子機
       this.orbits = [];
-      (MAX_ORBIT_NUM).times(function(i, num) {
+      MAX_ORBIT_NUM.times(function(i, num) {
         var orbit = OrbitGuy(this, 60, i * 360/num |0);
+        orbit.canAttack = false;
         this.orbits.push(orbit);
       }.bind(this));
 
       // パターン設定
-      this.setPattern('upDown');
+      this.on('added', function(){
+        this.setPattern('upDownEasy');
+        // this.setPattern('upDownHard');
+      })
     },
 
     addOrbit: function(index) {
@@ -514,10 +520,11 @@ phina.namespace(function() {
     },
 
     update: function(app) {
-      if (this.isAnimating) return;
       this.ageSum++;
 
-      // ミサイル敵
+      if (this.isAnimating) return;
+
+      // ミサイル定期発射
       if (this.age%90 === 0) {
         (2).times(function(i, n) {
           HomingGuy(this.x+16, this.y, 6, -45 + i*90).addChildTo(bulletConfig.enemyLayer);
@@ -525,7 +532,7 @@ phina.namespace(function() {
       }
 
       switch (this._currentPattern) {
-        case "sMove":
+        case "yakekuso":
           // S字を描くように
           var period = 180; // 一周期にかかるフレーム数
           var radX = 40;
@@ -536,10 +543,24 @@ phina.namespace(function() {
           this.x = this._initialPos.x + radX * Math.sin(radian);
           this.y = this._initialPos.y + radY * Math.sin(radian * 0.5);
 
-          if (this.age%16 === 0) this.fireBullet();
+          if (this.age%24 === 0) this.fireBullet();
+          break;
+        case "upDownHard":
+          // 突撃モード
+          if (this.age !== 0 && this.age%300 === 0) this.dashAttack();
+          // 上下移動
+          var period = 300; // 一周期にかかるフレーム数
+          var radY = 140;
+          var degUnit = 180 / (period * 0.25);
+          var radian = (degUnit * this.age).toRadian();
+          this.x = this._initialPos.x;
+          this.y = this._initialPos.y + radY * Math.sin(radian * 0.5);
+
+          if (this.age%36 === 0) this.fireBullet();
           break;
 
-        case "upDown":
+        case "upDownEasy":
+
           // 上下移動
           var period = 500; // 一周期にかかるフレーム数
           var radY = 140;
@@ -549,21 +570,20 @@ phina.namespace(function() {
           this.x = this._initialPos.x;
           this.y = this._initialPos.y + radY * Math.sin(radian * 0.5);
 
-          if (this.age%32 === 0) this.fireBullet();
+          if (this.age%36 === 0) this.fireBullet();
           break;
 
         default:
           // 初期状態：その場にとどまる
-          if (this.age%30 === 0) this.fireBullet();
+          // if (this.age%30 === 0) this.fireBullet();
           break;
       }
 
       // change pattern by life
       if (this.life < this._maxLife * 0.333) {
-        // TODO
-
+        this.setPattern('yakekuso');
       } else if (this.life < this._maxLife * 0.66) {
-        this.setPattern('sMove');
+        this.setPattern('upDownHard');
       }
 
     },
@@ -575,8 +595,13 @@ phina.namespace(function() {
       this.resetPosition();
       this._currentPattern = pattern;
       switch (pattern) {
-        case "sMove":
+        case "upDownHard":
           this.addOrbit();
+          break;
+        case "yakekuso":
+          this.orbits.forEach(function(o){
+            o.canAttack = true;
+          });
           break;
         default:
           break;
@@ -593,26 +618,38 @@ phina.namespace(function() {
 
     resetPosition: function() {
       this.isAnimating = true;
+      this.isSuperArmor = true;
+
       this.tweener.clear()
       .to(this._initialPos, 1200, 'easeOutQuad')
       .wait(300)
       .call(function() {
         this.age = 0;
+        this.isSuperArmor = false;
         this.isAnimating = false;
       }.bind(this));
 
       return this;
     },
 
-    startDashAnimation: function() {
-      this.isAnimating = true;
-      this.tweener.clear()
-      .to(this._initialPos, 1200, 'easeOutQuad')
-      .wait(300)
+    dashAttack: function() {
+      // var rad = this.getTargetRadian();
+      if (this.isAnimating) return;
 
+      this.isAnimating = true;
+      this.isSuperArmor = true;
+      var gap = [-80, -40, 0, 40, 80].pickup();
+      // this.invinsible = Infinity;
+      var tgt = this.target;
+      this.tweener.clear()
+      .wait(500)
+      .by({x: 60}, 500, 'easeOutQuad') //予備動作
+      .to({x: tgt.x-gap, y:tgt.y}, 500, 'easeOutQuad')
+      .wait(1000)
       .call(function() {
-        this.age = 0;
-        this.isAnimating = false;
+        this.resetPosition();
+        this.isSuperArmor = false;
+        // this.invinsible = 0;
       }.bind(this));
 
       return this;
