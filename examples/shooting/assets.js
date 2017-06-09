@@ -4,11 +4,6 @@
   var am = phina.asset.AssetManager;
   var r, lw, img, shape;
   var drawShape = function(shape) {
-    // if (shape.children) {
-    //   shape.children.each(function(child){
-    //     child.render(child.canvas);
-    //   })
-    // }
     shape.render(shape.canvas);
     return shape.canvas;
   };
@@ -70,19 +65,6 @@
     stroke: "#gold",
   });
   am.set('image', 'scoreItem', drawShape(shape))
-
-  // パワーアップアイテム
-  // r = 12;
-  // lw = r/3;
-  // img = phina.graphics.Canvas().setSize(r*2, r*2);
-  // img.strokeStyle = "#A90A85";
-  // img.fillStyle = "#EE4B4B";
-  // img.lineWidth = lw;
-  // img.context.textAlign = 'center';
-  // img.context.font = "12px";
-  // img.context.fillText("Pfdsafa", 0, 0);
-  // img.transformCenter();
-  // am.set('image', 'powerItem', img)
 
   r = 14;
   shape = phina.ui.Button({
@@ -237,13 +219,6 @@ var ENEMY_PATTERNS = {
   "liner": {
     count: 8,
     interval: 25,
-    // action: function(y, fromLeft) {
-    //   var eType = "basic";
-    //   var x = (fromLeft) ? -SCREEN_WIDTH * 0.2 : SCREEN_WIDTH * 1.2;
-    //   y = y || 60;
-    //   var direction = (fromLeft) ? 0 : null;
-    //   Enemy(x, y, eType, direction).addChildTo(ENEMY_PATTERNS.targetLayer);
-    // }
     action: function(x, y, degree, nextDegree, speed) {
       x = (x != null) ? x : SCREEN_WIDTH * 1.2;
       y = (y != null) ? y : 60;
@@ -259,28 +234,6 @@ var ENEMY_PATTERNS = {
       x = (x != null) ? x : SCREEN_WIDTH * 1.2;
       y = (y != null) ? y : 60;
       HomingGuy(x, y, speed, startAngle).addChildTo(ENEMY_PATTERNS.targetLayer);
-    }
-  },
-
-  // 消す？
-  "vTurns": {
-    count: 6,
-    interval: 30,
-    // action: function(y, goUp, fromLeft) {
-    //   var eType = (goUp && fromLeft) ? "vTurnUpLeft" :
-    //   (goUp) ? "vTurnUp" : // 左から出現
-    //   (fromLeft) ? "vTurnDownLeft" : // 左から出現
-    //   "vTurnDown";
-
-    //   var x = (fromLeft) ? -SCREEN_WIDTH * 0.2 : SCREEN_WIDTH * 1.2;
-    //   y = y || 40;
-    //   var direction = (fromLeft) ? 0 : null;
-    //   Enemy(x, y, eType, direction).addChildTo(ENEMY_PATTERNS.targetLayer);
-    // }
-    action: function(x, y, initialDegree, nextDegree) {
-      x = (x != null) ? x : SCREEN_WIDTH * 1.2;
-      y = y || 40;
-      BasicGuy(x, y, initialDegree, nextDegree).addChildTo(ENEMY_PATTERNS.targetLayer);
     }
   },
 

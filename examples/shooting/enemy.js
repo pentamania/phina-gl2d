@@ -14,7 +14,7 @@ phina.define('EnemyAbstract', {
     this.type = typeName;
     this.life = data.life;
     this.score = data.score || 0;
-    this.target = bulletConfig.target;
+    this.target = BulletConfig.target;
 
     // 初期移動速度
     var speed = this.speed = (data.speed != null) ? data.speed : 2;
@@ -35,7 +35,7 @@ phina.define('EnemyAbstract', {
     }
 
     // あたり判定
-    this.invinsible = ENEMY_INVINSIBLE_INIT_FRAME;
+    this.invinsible = ENEMY_INIT_INVINSIBLE_FRAME;
     this.on('enterframe', function() {
       if (0 < this.invinsible) this.invinsible--;
     });
@@ -72,7 +72,7 @@ phina.define('EnemyAbstract', {
 
     // 自機に向かって撃つ
     var rad = this.getTargetRadian();
-    Bullet(this.x, this.y, rad, 2).addChildTo(bulletConfig.layer);
+    Bullet(this.x, this.y, rad, 2).addChildTo(BulletConfig.layer);
   },
 
   getTargetRadian: function() {
@@ -180,7 +180,7 @@ phina.define('VerticalShotGuy', {
 
   fireBullet: function() {
     this.bulletDirections.forEach(function(rad) {
-      Bullet(this.x, this.y, rad, 3).addChildTo(bulletConfig.layer);
+      Bullet(this.x, this.y, rad, 3).addChildTo(BulletConfig.layer);
     }.bind(this));
   },
 
@@ -249,7 +249,7 @@ phina.namespace(function() {
 
     fireBullet: function() {
       if (!this.canAttack) return;
-      Bullet(this.x, this.y, BULLET_RAD, 2).addChildTo(bulletConfig.layer);
+      Bullet(this.x, this.y, BULLET_RAD, 2).addChildTo(BulletConfig.layer);
     }
 
   });
@@ -327,7 +327,7 @@ phina.define('WhirlGuy', {
 
   fireBullet: function() {
     var rad = this.startDeg.toRadian();
-    Bullet(this.x, this.y, rad, 3).addChildTo(bulletConfig.layer);
+    Bullet(this.x, this.y, rad, 3).addChildTo(BulletConfig.layer);
   }
 });
 
@@ -363,7 +363,7 @@ phina.define('FloatingMineGuy', {
   selfDestroy: function(bulletNum) {
     var rad = 360 / bulletNum * Math.DEG_TO_RAD;
     for (var i = 0; i < bulletNum; i++) {
-      Bullet(this.x, this.y, rad * i, 3).addChildTo(bulletConfig.layer);
+      Bullet(this.x, this.y, rad * i, 3).addChildTo(BulletConfig.layer);
     }
 
     this.remove();
@@ -527,7 +527,7 @@ phina.namespace(function() {
       // ミサイル定期発射
       if (this.age%90 === 0) {
         (2).times(function(i, n) {
-          HomingGuy(this.x+16, this.y, 6, -45 + i*90).addChildTo(bulletConfig.enemyLayer);
+          HomingGuy(this.x+16, this.y, 6, -45 + i*90).addChildTo(BulletConfig.enemyLayer);
         }.bind(this))
       }
 
@@ -612,7 +612,7 @@ phina.namespace(function() {
     fireBullet: function() {
       (BULLET_NUM).times(function(i, num) {
         var rad = ((180 - BULLET_RANGE / 2) + bulletInterval * i) * Math.DEG_TO_RAD;
-        Bullet(this.x, this.y, rad, 4).addChildTo(bulletConfig.layer);
+        Bullet(this.x, this.y, rad, 4).addChildTo(BulletConfig.layer);
       }.bind(this))
     },
 

@@ -13,7 +13,7 @@ var BOMB_MAX_VALUE = 1000;
 var ITEM_SEARCH_RANGE = 70;
 var BOSS_AGE_OF_DEATH = 5300; // 90sec = 90000ms / 17 = about 5300 frame
 // var BOSS_AGE_OF_DEATH = 300;
-var ENEMY_INVINSIBLE_INIT_FRAME = 40;
+var ENEMY_INIT_INVINSIBLE_FRAME = 40;
 
 var USE_WEBGL;
 var DEBUG_MODE;
@@ -30,71 +30,74 @@ var Log = function() {
   }
 };
 
-var bulletConfig = {
+var BulletConfig = {
   target: null,
   layer: null,
 };
 
-var assetPath = "../../assets/";
-var ASSETS = {
-  image: {
-    "tomapiyo": assetPath+"tomapiyo.png",
-    "buropiyo": assetPath+"buropiyo.png",
-    "takepiyo": assetPath+"takepiyo.png",
-    "mikapiyo": assetPath+"mikapiyo.png",
-    "meropiyo": assetPath+"meropiyo.png",
-    "nasupiyo": assetPath+"nasupiyo.png",
-    "boss": assetPath+"karasu_ss.png",
-    "bg": assetPath+"background.png",
-  },
+(function(){
+  var assetPath = "../../assets/";
+  window.ASSETS = {
+    image: {
+      "tomapiyo": assetPath+"tomapiyo.png",
+      "buropiyo": assetPath+"buropiyo.png",
+      "takepiyo": assetPath+"takepiyo.png",
+      "mikapiyo": assetPath+"mikapiyo.png",
+      "meropiyo": assetPath+"meropiyo.png",
+      "nasupiyo": assetPath+"nasupiyo.png",
+      "boss": assetPath+"karasu_ss.png",
+      "bg": assetPath+"background.png",
+    },
 
-  // sound: {
-  //   "":
-  // },
+    // sound: {
+    //   "":
+    // },
 
-  spritesheet: {
-    "tomapiyo": {
-      "frame": {
-        "width": 64, // 1フレームの画像サイズ（横）
-        "height": 64, // 1フレームの画像サイズ（縦）
-        "cols": 6, // フレーム数（横）
-        "rows": 3, // フレーム数（縦）
+    spritesheet: {
+      "tomapiyo": {
+        "frame": {
+          "width": 64, // 1フレームの画像サイズ（横）
+          "height": 64, // 1フレームの画像サイズ（縦）
+          "cols": 6, // フレーム数（横）
+          "rows": 3, // フレーム数（縦）
+        },
+        "animations" : {
+          "wait": {
+            "frames": [5],
+          },
+          "fly": {              //アニメーション名
+            "frames": [1, 2, 3],
+            "next": "fly",
+            "frequency": 5      //フレーム毎の間隔
+          },
+           "dead": {
+            "frames": [4],
+          }
+        }
       },
-      "animations" : {
-        "wait": {
-          "frames": [5],
+
+      "boss": {
+        "frame": {
+          "width": 64,
+          "height": 64,
+          "cols": 3,
+          "rows": 1,
         },
-        "fly": {              //アニメーション名
-          "frames": [1, 2, 3],
-          "next": "fly",
-          "frequency": 5      //フレーム毎の間隔
-        },
-         "dead": {
-          "frames": [4],
+        "animations" : {
+          "fly": {
+            "frames": [0, 1, 2],
+            "next": "fly",
+            "frequency": 8
+          },
+           "dead": {
+            "frames": [],
+          }
         }
       }
     },
+  };
 
-    "boss": {
-      "frame": {
-        "width": 64,
-        "height": 64,
-        "cols": 3,
-        "rows": 1,
-      },
-      "animations" : {
-        "fly": {
-          "frames": [0, 1, 2],
-          "next": "fly",
-          "frequency": 8
-        },
-         "dead": {
-          "frames": [],
-        }
-      }
-    }
-  },
-};
+}());
 
 /* プレイヤーショット系 */
 var PLAYER_BIT_INTERVAL = 20;
@@ -181,7 +184,6 @@ var ENEMY_TYPES = {
   "boss": {
     texture: "boss",
     life: 2800,
-    // life: 1000,
     score: 10000,
   }
 };

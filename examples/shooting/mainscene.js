@@ -20,7 +20,7 @@ phina.define('MainScene', {
     this.scrollSpeed = 0;
 
     // player
-    var player = bulletConfig.target = this.player = Player(gx.center(), gy.center());
+    var player = BulletConfig.target = this.player = Player(gx.center(), gy.center());
 
     // レイヤーとか
     var rootLayer = this.rootLayer = (USE_WEBGL) ? GLLayer(options) : DisplayElement(options);
@@ -36,8 +36,9 @@ phina.define('MainScene', {
     this.UILayer = UILayer(options).addChildTo(this).setVisible(false);
     this.titleLayer = TitleLayer(options).addChildTo(this);
     this.resultLayer = ResultLayer(options).addChildTo(this);
-    bulletConfig.layer = this.bulletLayer;
-    bulletConfig.enemyLayer = this.enemyLayer;
+    BulletConfig.layer = this.bulletLayer;
+    BulletConfig.enemyLayer = this.enemyLayer;
+    this.itemLayer.alpha = 0.7;
 
     // オブジェクトプール： マネジャー化する？
     this.objectPools = {};
@@ -46,14 +47,14 @@ phina.define('MainScene', {
         poolName: "yellowRect",
         className: ExplosionChip,
         arguments: [0, 0, 16, "yellowRect"],
-        count: 100,
+        count: 256,
         targetLayer: self.effectLayer,
       },
       {
         poolName: "redRect",
         className: ExplosionChip,
         arguments: [0, 0, 16, "redRect"],
-        count: 100,
+        count: 256,
         targetLayer: self.effectLayer,
       },
       {
@@ -70,13 +71,6 @@ phina.define('MainScene', {
         count: 256,
         targetLayer: self.shotLayer,
       },
-      // {
-      //   poolName: "enemyBullet",
-      //   className: Shot,
-      //   arguments: [self.shotLayer],
-      //   count: 256,
-      //   targetLayer: self.shotLayer,
-      // },
     ];
     objectPoolConfig.each(function(data) {
       var pool = self.objectPools[data.poolName] = ObjectPool();
@@ -132,7 +126,7 @@ phina.define('MainScene', {
       return sprite;
     });
 
-    // ボムゲージ
+    // ボムゲージ / ボタン
     this.bombGauge = BombGauge().addChildTo(this.UILayer)
     .setPosition(gx.center(), gy.span(15))
     ;
@@ -140,7 +134,7 @@ phina.define('MainScene', {
       self.fireBomber();
     });
 
-    // bit
+    // 自機オプション
     this.playerBits = [];
     (this._shotLevel).times(function() {
       self.addPlayerBit();
@@ -183,10 +177,10 @@ phina.define('MainScene', {
       player.anim.gotoAndPlay('fly');
       self.scrollSpeed = SCROLL_SPEED;
       self.UILayer.setVisible(true);
+    } else {
+      // ゲーム開始
+      this.one('gameStart', this.gameStart.bind(this))
     }
-
-    // ゲーム開始
-    this.one('gameStart', this.gameStart.bind(this))
 
     // タイトル: スタート後スクロール
     this.titleLayer.on('enterframe', function() {
@@ -421,17 +415,21 @@ phina.define('MainScene', {
         var boss = Boss().addChildTo(self.enemyLayer).resetPosition();
         var brtl = self.UILayer.bossRemainTimeLabel;
         brtl.setVisible(true);
+
         boss.on('patternChange', function() {
           self.generateBlast(boss.x, boss.y, 32, "redRect");
         });
+
         boss.one('timeup', function() {
           // console.log("Time up");
           brtl.setVisible(false);
           self.bossDestroyed(boss);
         })
+
         self.on('enterframe', function() {
           brtl.text = BOSS_AGE_OF_DEATH - boss.ageSum;
         })
+
         self.UILayer.bossLifeGauge.setVisible(true).setTarget(boss);
       });
     })
@@ -472,7 +470,7 @@ phina.define('MainScene', {
     })
     .wait(1400)
     .call(function() {
-      // プレイヤー画面外へ？
+      // TODO: プレイヤー画面外へ？
       self.player.invinsible = 0;
       self.showResult();
     })
@@ -568,8 +566,6 @@ phina.define('MainScene', {
         HomingShot(bit.x, bit.y).addChildTo(this.shotLayer);
      }.bind(this));
     }
-
-    // var hShot = HomingShot(player.x, player.y).addChildTo(this.shotLayer);
   },
 
   addPlayerBit: function() {
