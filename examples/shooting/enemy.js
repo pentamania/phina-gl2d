@@ -471,6 +471,7 @@ phina.namespace(function() {
     ageSum: 0,
     ageOfDeath: BOSS_AGE_OF_DEATH,
     isSuperArmor: false,
+    isDestroyed: false,
     _maxLife: 0,
 
     init: function() {
@@ -520,6 +521,7 @@ phina.namespace(function() {
     },
 
     update: function(app) {
+      if (this.isDestroyed) return;
       this.ageSum++;
 
       if (this.isAnimating) return;

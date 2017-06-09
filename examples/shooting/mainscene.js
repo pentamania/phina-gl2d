@@ -436,9 +436,11 @@ phina.define('MainScene', {
   },
 
   bossDestroyed: function(enemy) {
-    var self = this;
     // if (!this.isStarted) return;
+    if (enemy.isDestroyed) return;
+    var self = this;
 
+    enemy.isDestroyed = true;
     self.UILayer.bossLifeGauge.setVisible(false);
     this.tweener.clear()
     .call(function() {
