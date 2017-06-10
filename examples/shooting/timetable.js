@@ -5,7 +5,7 @@
  */
 ;(function(global) {
   /*
-    平準化処理
+    テーブル用の特殊な平準化処理
     flatten([ [30, "pattern"...], [[40, "inner",...], [40, "inner",...]], ...])
     -> [ [30, "pattern" ...], [40, "inner",...], [40, "inner",...], ...]
   */
@@ -45,17 +45,40 @@
     return arr;
   };
 
+  /**
+   * 通路のように壁パターンを並べる
+   * startVoidIndexは 0~12
+   */
+  var createCorridorPattern = function(initWait, interval, firstVoidIndex, num, reverse) {
+    var arr = [];
+    var voidLength = 2;
+    var speed = 6;
+
+    (num).times(function(i, n) {
+      wait = (i !== 0) ? interval : initWait;
+      var nextIndex = (reverse) ? firstVoidIndex - i : firstVoidIndex + i;
+      var voidStart = Math.clamp(nextIndex, 0, 11);
+      arr.push([wait, "kabe", [voidStart, voidLength, speed]]);
+    });
+
+    return arr;
+  };
+
   // 位置の簡略化
   var gx = phina.util.Grid(SCREEN_WIDTH, 20);
+  var gxs = function(n) { return gx.span(n); };
   var DEF_X = gx.span(22);
   var DEF_NX = gx.span(-2);
+
   var gy = phina.util.Grid(SCREEN_HEIGHT, 20);
+  var gys = function(n) { return gy.span(n); };
   var DEF_Y = gy.span(10);
 
   var pattern = [
     // [直前パターンからの待機フレーム, "編隊タイプ", 引数配列, 上書きオプション]
 
     // debug用 =====
+
     // [90, "assaults", [DEF_X, gy.span(13)]],
     // [60, "assaults", [DEF_X, gy.span(10)]],
     // [60, "assaults", [DEF_X, gy.span(7)]],
@@ -78,7 +101,7 @@
     // [10, "vTurns", [null, null, 160, 90]],
     // [40, "flower", [120, 120, 45, 140], {count: 4, interval: 20}],
     // [0, "kabe"],
-    [30, "homings", [gx.span(22), 100]],
+    // [30, "homings", [gx.span(22), 100]],
 
     // createPentagramPattern(40, SCREEN_WIDTH*0.1, SCREEN_HEIGHT*0.2, 120, null, 4),
     // createPentagramPattern(40, SCREEN_WIDTH*0.1, SCREEN_HEIGHT * 0.2, 80, null, 2),
@@ -87,17 +110,19 @@
 
     // ここから本番　=====
 
-    // [100, "liner", []],
-    // [120, "liner", [SCREEN_HEIGHT-60]],
+    // 基本
+    // [100, "liner"],
+    // [120, "liner", [null, SCREEN_HEIGHT-60]],
     // [120, "liner"],
-    // [120, "liner", [SCREEN_HEIGHT-60]],
+    // [120, "liner", [null, SCREEN_HEIGHT-60]],
 
-    // [90, "assaults", [SCREEN_HEIGHT*0.3 | 0]],
-    // [45, "assaults", [SCREEN_HEIGHT*0.7 | 0]],
-    // [45, "assaults", [SCREEN_HEIGHT*0.3 | 0]],
-    // [45, "assaults", [SCREEN_HEIGHT*0.7 | 0]],
+    // 突撃隊：誘導を促す
+    // [90, "assaults", [DEF_X, gys(6)]],
+    // [45, "assaults", [DEF_X, gys(14)]],
+    // [45, "assaults", [DEF_X, gys(6)]],
+    // [45, "assaults", [DEF_X, gys(14)]],
 
-    // // 魚群
+    // // 魚群： 後ろから
     // [40, "sines", [40, true]],
     // [20, "sines", [70, true]],
     // [20, "sines", [100, true]],
@@ -112,13 +137,19 @@
 
     // // V-atttack
     // [130, "verticals", [60]],
-    // [15, "verticals", [SCREEN_HEIGHT*0.7 | 0, true]],
 
+    // 最終通路
+    [15, "verticals", [SCREEN_HEIGHT*0.7 | 0, true]], // hardmodeならあり？
+    createCorridorPattern(20, 10, 0, 11),
+    createCorridorPattern(10, 10, 9, 10, true),
+    // createCorridorPattern(10, 10, 1, 7),
+    // createCorridorPattern(10, 10, 7, 3, true),
+    // createCorridorPattern(10, 10, 3, 3),
     // アイワナ式壁
-    // [30, "kabe", [2, 1]],
-    // [30, "kabe", [3, 1]],
-    // [30, "kabe", [4, 1]],
-    // [30, "kabe", [5, 2, 10]], // 追い越し初見殺し
+    [60, "kabe", [2, 1]],
+    [30, "kabe", [3, 1]],
+    [30, "kabe", [4, 1]],
+    [80, "kabe", [5, 2, 9]], // 追い越し初見殺し
 
     // // ボス前　壁
     // [400, "mutekiSingle", 120],
@@ -131,7 +162,6 @@
   ];
 
   timeTable.pattern = flatten(pattern);
-
   global.TIME_TABLE = timeTable;
 }(window));
 

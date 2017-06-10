@@ -310,13 +310,13 @@ var ENEMY_PATTERNS = {
         var voidEnd = voidStart + voidLength;
       }
 
-      // 隙間をあける
       for (var i = 0; i < 12; i++) {
+        // 隙間をあける
         if (voidStart != null && voidStart <= i && i <= voidEnd) {
           continue;
         }
-        var e = EnemyAbstract("hardBody").addChildTo(ENEMY_PATTERNS.targetLayer);
-        e.setPosition(SCREEN_WIDTH * 1.2, i * shift + shift/2);
+        var e = EnemyAbstract(eType).addChildTo(ENEMY_PATTERNS.targetLayer);
+        e.setPosition(SCREEN_WIDTH * 1.5, i * shift + shift/2);
         e.setVectorAngle(180, speed);
         // Enemy(SCREEN_WIDTH * 1.2, i * shift + shift/2, eType).addChildTo(ENEMY_PATTERNS.targetLayer);
       }
