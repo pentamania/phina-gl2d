@@ -8,9 +8,10 @@ var SCREEN_HEIGHT = 360;
 var SCROLL_SPEED = 5;
 var SENSIBILITY = 0.8;
 var PLAYER_SPEED = 4;
-var PLAYER_INITIAL_LIFE = 1;
+var PLAYER_START_LEVEL = 0;
+var PLAYER_INITIAL_LIFE = 2;
 var BOMB_MAX_VALUE = 1000;
-var ITEM_SEARCH_RANGE = 70;
+var ITEM_SEARCH_RANGE = 80;
 var BOSS_AGE_OF_DEATH = 5300; // 90sec = 90000ms / 17 = about 5300 frame
 // var BOSS_AGE_OF_DEATH = 300;
 var ENEMY_INIT_INVINSIBLE_FRAME = 40;
@@ -101,17 +102,19 @@ var BulletConfig = {
 
 /* プレイヤーショット系 */
 var PLAYER_BIT_INTERVAL = 20;
+
 var SHOT_POWERUP_BORDER = 100;
-var SHOT_ENERGY_UNIT = 5; // ショットパワーアップ 基本単位
+var SHOT_ENERGY_UNIT = 5; // ショットパワーアップアイテム 基本単位
 var MAX_SHOT_LEVEL = 4;
-var MAX_SHOT_ENERGY = SHOT_POWERUP_BORDER * MAX_SHOT_LEVEL;
+// var MAX_SHOT_ENERGY = SHOT_POWERUP_BORDER * MAX_SHOT_LEVEL;
 // var SHOT_ANGLE_UNIT = 12;
-var SHOT_POWER = 5;
+var SHOT_POWER = 4;
 var HOMING_SHOT_POWER = 2;
 var BOMB_POWER = 100;
-var RAND_INTS = [].range(-25, 25);
+var RAND_INTS = [].range(-25, 25); // アイテムバラマキ用
 
 /**
+ * 敵データ
  * @param {string} texture [画像テクスチャキー名]
  * @param {life} [Number] [体力]
  * @param {score} [Number] [獲得点数]
@@ -121,7 +124,7 @@ var RAND_INTS = [].range(-25, 25);
  */
 var ENEMY_TYPES = {
   "basic": {
-    texture: "cucumber",
+    texture: "redTriangle",
     life: 10,
     score: 100,
     speed: 2,

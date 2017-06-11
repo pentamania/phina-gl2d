@@ -137,13 +137,18 @@ phina.define('BasicGuy', {
       this._transformSum += this.vec.length();
     }
 
-    // if (this.age === 180) {
     // if (this.has('changeRoute') && this._transformSum > SCREEN_WIDTH*0.5) {
-    if (this._transformSum > SCREEN_WIDTH * 0.5) {
-      if (this.has('changeRoute')) this.flare('changeRoute');
-      this.flare('fireBullet');
+    if (this.has('changeRoute')) {
+      if (this._transformSum > SCREEN_WIDTH) {
+        this.flare('changeRoute');
+        this.flare('fireBullet');
+      }
+      // if (this.has('changeRoute')) this.flare('changeRoute');
+    } else  {
+      // if (this._transformSum > SCREEN_WIDTH*0.5) this.flare('fireBullet');
     }
 
+    this.rotation += 4;
   },
 
 });
@@ -281,8 +286,10 @@ phina.define('SineGuy', {
     var rad = this.age * this.frequency * Math.DEG_TO_RAD;
     this.y = this.baseY + Math.sin(rad) * this.fluctRadius;
 
-    if (this.age === 100) this.fireBullet();
-    if (this.age > 1000) this.destroyable = true;
+    // 独自のdestroyフラグ
+    if (this.x < - SCREEN_WIDTH * 0.3 || SCREEN_WIDTH * 1.4 < this.x) this.destroyable = true;
+    // if (this.age === 100) this.fireBullet();
+    // if (this.age > 1000) this.destroyable = true;
   }
 
 });
@@ -303,6 +310,7 @@ phina.define('WhirlGuy', {
     this.attenuation = 1; // 半径減衰量 これもパラメータせっていできるようにする？
     this.vec = null;
 
+    this.destroyable = false;
     if (!disableAttack) this.one('fireBullet', this.fireBullet.bind(this));
   },
 

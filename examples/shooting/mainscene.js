@@ -7,7 +7,7 @@ phina.define('MainScene', {
   age: 0,
   _score: 0,
   _shotExp: 0,
-  _shotLevel: 2,
+  _shotLevel: PLAYER_START_LEVEL,
   remainLife: PLAYER_INITIAL_LIFE,
   isStarted: false,
 
@@ -241,6 +241,7 @@ phina.define('MainScene', {
     ) {
       self._shotLevel++;
       self.addPlayerBit();
+      Log('level up!')
     }
 
     // enemy children
@@ -314,7 +315,8 @@ phina.define('MainScene', {
           self._score += item.score;
         } else {
           // Pアイテム
-          self._shotExp = Math.min(self._shotExp + item.energy, MAX_SHOT_ENERGY);
+          // self._shotExp = Math.min(self._shotExp + item.energy, MAX_SHOT_ENERGY);
+          self._shotExp += item.energy;
         }
 
         item.remove();

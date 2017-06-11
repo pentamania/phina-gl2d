@@ -43,19 +43,6 @@
   .strokeRect(0, 0, w, h)
   am.set('image', 'redCard', img);
 
-  // △
-  r = 12;
-  lw = r/3;
-  img = phina.graphics.Canvas().setSize(r*2, r*2);
-  img.strokeStyle = "#A90A85";
-  img.fillStyle = "#EE4B4B";
-  img.lineWidth = lw;
-  img.transformCenter()
-  .rotate(90 * D2R)
-  .fillPolygon(0, 0, r-lw, 3)
-  .strokePolygon(0, 0, r-lw, 3);
-  am.set('image', 'redTriangle', img);
-
   // 天アイテム
   shape = phina.display.Label({
     text: "金",
@@ -130,6 +117,19 @@
   // img.fillHeart(r, r, r-lw)
   am.set('image', 'rightHeart', img);
 
+  // red △
+  r = 12;
+  lw = r/3;
+  img = phina.graphics.Canvas().setSize(r*2, r*2);
+  img.strokeStyle = "#A90A85";
+  img.fillStyle = "#EE4B4B";
+  img.lineWidth = lw;
+  img.transformCenter()
+  .rotate(90 * D2R)
+  .fillPolygon(0, 0, r-lw, 3)
+  .strokePolygon(0, 0, r-lw, 3);
+  am.set('image', 'redTriangle', img);
+
 
   // effect ==============================
   r = 8;
@@ -175,6 +175,7 @@
   img.fillCircle(r, r, r);
   am.set('image', 'appearEffect', img);
 
+  // UI ===================-
   // button BG
   r = 32;
   lw = r/4;
@@ -217,7 +218,7 @@ var ENEMY_PATTERNS = {
   },
 
   "liner": {
-    count: 8,
+    count: 6,
     interval: 25,
     action: function(x, y, degree, nextDegree, speed) {
       x = (x != null) ? x : SCREEN_WIDTH * 1.2;
@@ -228,7 +229,7 @@ var ENEMY_PATTERNS = {
   },
 
   "homings": {
-    count: 4,
+    count: 3,
     interval: 22,
     action: function(x, y, speed, startAngle) {
       x = (x != null) ? x : SCREEN_WIDTH * 1.2;
@@ -250,12 +251,12 @@ var ENEMY_PATTERNS = {
   "whirls": {
     count: 5,
     interval: 18,
-    action: function(x, y, deg, rad) {
+    action: function(cx, cy, deg, rad) {
       // var eType = "whirl";
-      x = x || SCREEN_WIDTH * 0.5;
-      y = y || SCREEN_HEIGHT * 0.5;
-      // Enemy(x, y, eType).addChildTo(ENEMY_PATTERNS.targetLayer);
-      WhirlGuy(x, y, deg, rad).addChildTo(ENEMY_PATTERNS.targetLayer);
+      cx = cx || SCREEN_WIDTH * 0.5;
+      cy = cy || SCREEN_HEIGHT * 0.5;
+      // Enemy(cx, y, eType).addChildTo(ENEMY_PATTERNS.targetLayer);
+      WhirlGuy(cx, cy, deg, rad).addChildTo(ENEMY_PATTERNS.targetLayer);
     }
   },
 
@@ -334,7 +335,7 @@ var ENEMY_PATTERNS = {
   },
 
   "assaults": {
-    count: 3,
+    count: 1,
     interval: 10,
     action: function(x, y) {
       y = (y != null) ? y : 40;

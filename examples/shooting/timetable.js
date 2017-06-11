@@ -25,21 +25,46 @@
   };
 
   var timeTable = {
-    frameSum: 0,
+    // frameSum: 0,
     pattern: null,
   };
 
-  var createPentagramPattern = function(wait, centerX, centerY, radius, baseAngle, ratio) {
+  /**
+   * [createPentagramPattern description]
+   * @param  {[type]} initWait  [最初のウェイト]
+   * @param  {[type]} centerX   [中心x]
+   * @param  {[type]} centerY   [中心y]
+   * @param  {[type]} radius    [五芒星半径]
+   * @param  {[type]} baseAngle [五芒星傾き]
+   * @param  {[type]} ratio     [出現位置倍率：遠くから出現させるときとか]
+   * @return {array}           []
+   */
+  var createPentagramPattern = function(initWait, centerX, centerY, radius, baseAngle, ratio) {
     var arr = [];
     var ratio = ratio || 2;
     var baseAngle = baseAngle || 0;
     var _wait = 0;
 
     (5).times(function(i, n) {
-      _wait = (i !== 0) ? 0 : wait;
+      _wait = (i !== 0) ? 0 : initWait;
       var radian = (baseAngle + 72 * i) * Math.DEG_TO_RAD;
       var deg = baseAngle + 180 - 18/ratio + 72 * i;
       arr.push([_wait, "liner", [centerX + radius*ratio * Math.cos(radian), centerY + radius*ratio * Math.sin(radian), deg, null, 4], {count: 6, interval: 10}]);
+    });
+
+    return arr;
+  };
+
+  /**
+   * 魚群パターン
+   */
+  var createSinesPattern = function(initWait, yStart, yInterval, num, fromLeft) {
+    var arr = [];
+
+    (num).times(function(i, n) {
+      wait = (i !== 0) ? 0 : initWait;
+      var y = yStart + i * yInterval;
+      arr.push([wait, "sines", [y, fromLeft]]);
     });
 
     return arr;
@@ -56,7 +81,7 @@
 
     (num).times(function(i, n) {
       wait = (i !== 0) ? interval : initWait;
-      var nextIndex = (reverse) ? firstVoidIndex - i : firstVoidIndex + i;
+      // var nextIndex = (reverse) ? firstVoidIndex - i : firstVoidIndex + i;
       var voidStart = Math.clamp(nextIndex, 0, 11);
       arr.push([wait, "kabe", [voidStart, voidLength, speed]]);
     });
@@ -78,6 +103,8 @@
     // [直前パターンからの待機フレーム, "編隊タイプ", 引数配列, 上書きオプション]
 
     // debug用 =====
+    // createPentagramPattern(140, gxs(10), gys(10), 60, null),
+    // createPentagramPattern(140, gxs(10), gys(14), 60, 10),
 
     // [90, "assaults", [DEF_X, gy.span(13)]],
     // [60, "assaults", [DEF_X, gy.span(10)]],
@@ -94,40 +121,47 @@
     // [40, "whirls", [240, 120, 45, 140], {count: 14, interval: 20}],
     // [0, "mine", [100, 100, 32]],
     // [0, "mine", [170, 170]],
-    // [0, "mine", [200, 200]],
-    // [40, "liner", [null, 240], {count: 14, interval: 20}],
-    // [0, "liner"],
-    // [10, "liner", [null, null, 190, 90]],
-    // [10, "vTurns", [null, null, 160, 90]],
     // [40, "flower", [120, 120, 45, 140], {count: 4, interval: 20}],
-    // [0, "kabe"],
     // [30, "homings", [gx.span(22), 100]],
 
-    // createPentagramPattern(40, SCREEN_WIDTH*0.1, SCREEN_HEIGHT*0.2, 120, null, 4),
-    // createPentagramPattern(40, SCREEN_WIDTH*0.1, SCREEN_HEIGHT * 0.2, 80, null, 2),
-    // createPentagramPattern(120, SCREEN_WIDTH*0.5, SCREEN_HEIGHT*0.5, 120),
-    // createPentagramPattern(120, SCREEN_WIDTH*0.9, SCREEN_HEIGHT*0.9, 80, null, 2),
+    // createSinesPattern(140, 70, 30, 3, false),
 
     // ここから本番　=====
 
     // 基本
-    // [100, "liner"],
-    // [120, "liner", [null, SCREEN_HEIGHT-60]],
-    // [120, "liner"],
-    // [120, "liner", [null, SCREEN_HEIGHT-60]],
+    [45, "liner", [null, gys(5), null, 45]],
+    [120, "liner", [null, gys(15), null, -45]],
+    [120, "liner", [null, gys(5), null, 45]],
+    [120, "liner", [null, gys(15), null, -45]],
 
-    // 突撃隊：誘導を促す
-    // [90, "assaults", [DEF_X, gys(6)]],
-    // [45, "assaults", [DEF_X, gys(14)]],
-    // [45, "assaults", [DEF_X, gys(6)]],
-    // [45, "assaults", [DEF_X, gys(14)]],
+    // 上下から
+    [120, "liner", [gxs(17), gys(-4), 90]],
+    [100, "liner", [gxs(16), gys(24), -90]],
+    [100, "liner", [gxs(15), gys(-4), 90]],
+    [100, "liner", [gxs(14), gys(24), -90]],
 
-    // // 魚群： 後ろから
-    // [40, "sines", [40, true]],
-    // [20, "sines", [70, true]],
-    // [20, "sines", [100, true]],
+    // uzu
+    [240, "whirls", [gxs(16), gys(5), 160, 80]],
+    [100, "whirls", [gxs(16), gys(15), 200, 80]],
 
-    // [0, "sines", [300, null, SCREEN_HEIGHT/2]],
+    // 追尾
+    [130, "homings", [gxs(24), gys(4)]],
+    [0, "homings", [gxs(24), gys(16)]],
+    [130, "homings", [gxs(24), gys(2)]],
+    [0, "homings", [gxs(24), gys(18)]],
+
+    // 突撃隊
+    [110, "assaults", [DEF_X, gys(6)]],
+    [45, "assaults", [DEF_X, gys(14)]],
+    [45, "assaults", [DEF_X, gys(6)]],
+
+    // kabeで一区切り
+    [120, "kabe", [1, 10]],
+    // [60, "kabe", [2, 2]],
+    // [60, "kabe", [3, 1]],
+
+    // 魚群
+    createSinesPattern(140, gys(2), 30, 3, false),
     // [0, "sines", [70]],
     // [0, "sines", [100]],
     // [0, "sines", [130]],
@@ -135,34 +169,40 @@
     // [0, "sines", [190]],
     // [0, "sines", [220]],
 
-    // // V-atttack
-    // [130, "verticals", [60]],
+    // めっちゃ跳ねる
+    [130, "sines", [0, false, SCREEN_HEIGHT/2]],
+    [0, "sines", [300, false, SCREEN_HEIGHT/2]],
+
+    // 魚群： 挟み撃ち
+    [140, "sines", [40, true]],
+    [20, "sines", [70, true]],
+    [20, "sines", [100, true]],
+
+    // V-atttack
+    // [130, "verticals", [DEF_X, 60]],
+
+    // 最後　演出
+    createPentagramPattern(140, gxs(10), gys(10), 120, 200, 4),
 
     // 最終通路
-    [15, "verticals", [SCREEN_HEIGHT*0.7 | 0, true]], // hardmodeならあり？
-    createCorridorPattern(20, 10, 0, 11),
-    createCorridorPattern(10, 10, 9, 10, true),
-    // createCorridorPattern(10, 10, 1, 7),
+    // [15, "verticals", [SCREEN_HEIGHT*0.7 | 0, true]], // hardmodeならあり？
+    // createCorridorPattern(20, 10, 0, 11),
+    // createCorridorPattern(10, 10, 9, 10, true),
+    // // createCorridorPattern(10, 10, 1, 7),
     // createCorridorPattern(10, 10, 7, 3, true),
     // createCorridorPattern(10, 10, 3, 3),
     // アイワナ式壁
-    [60, "kabe", [2, 1]],
-    [30, "kabe", [3, 1]],
-    [30, "kabe", [4, 1]],
-    [80, "kabe", [5, 2, 9]], // 追い越し初見殺し
-
-    // // ボス前　壁
-    // [400, "mutekiSingle", 120],
-    // [30, "baqula", 120],
-    // [0, "kabe"],
-    // [120, "kabe"],
-    // [120, "kabe"],
+    // [60, "kabe", [2, 1]],
+    // [30, "kabe", [3, 1]],
+    // [30, "kabe", [4, 1]],
+    // [80, "kabe", [5, 2, 9]], // 追い越し初見殺し
 
     // [100, "boss"],
   ];
 
   timeTable.pattern = flatten(pattern);
   global.TIME_TABLE = timeTable;
+
 }(window));
 
 console.table(TIME_TABLE.pattern);
