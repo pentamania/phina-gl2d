@@ -247,6 +247,7 @@ phina.define('MainScene', {
     // enemy children
     self.enemyLayer.children.each(function(enemy) {
       // if (enemy.isAnimating) return;
+      if (enemy.isDestroyed) return;
 
       // enemy vs player
       if (

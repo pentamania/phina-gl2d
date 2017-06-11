@@ -200,7 +200,12 @@
     // [100, "boss"],
   ];
 
-  timeTable.pattern = flatten(pattern);
+  if (BOSS_ONLY) {
+    timeTable.pattern = [[0, "empty"]];
+  } else {
+    timeTable.pattern = flatten(pattern);
+  }
+
   global.TIME_TABLE = timeTable;
 
 }(window));
