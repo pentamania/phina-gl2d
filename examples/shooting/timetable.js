@@ -103,6 +103,8 @@
     // [直前パターンからの待機フレーム, "編隊タイプ", 引数配列, 上書きオプション]
 
     // debug用 =====
+    // [130, "verticals", [DEF_X, gys(4)]],
+    // [0, "verticals", [DEF_NX, gys(16), 0]],
     // createPentagramPattern(140, gxs(10), gys(10), 60, null),
     // createPentagramPattern(140, gxs(10), gys(14), 60, 10),
 
@@ -129,16 +131,16 @@
     // ここから本番　=====
 
     // 基本
-    [45, "liner", [null, gys(5), null, 45]],
-    [120, "liner", [null, gys(15), null, -45]],
-    [120, "liner", [null, gys(5), null, 45]],
-    [120, "liner", [null, gys(15), null, -45]],
+    // [45, "liner", [null, gys(5), null, 45]],
+    // [120, "liner", [null, gys(15), null, -45]],
+    // [120, "liner", [null, gys(5), null, 45]],
+    // [120, "liner", [null, gys(15), null, -45]],
 
     // 上下から
-    [120, "liner", [gxs(17), gys(-4), 90]],
-    [100, "liner", [gxs(16), gys(24), -90]],
-    [100, "liner", [gxs(15), gys(-4), 90]],
-    [100, "liner", [gxs(14), gys(24), -90]],
+    [120, "liner", [gxs(17), gys(15)-gxs(20), 90, -135]],
+    [0, "liner", [gxs(16), gys(5)+gxs(20), -90, 135]],
+    // [100, "liner", [gxs(15), gys(-4), 90]],
+    // [100, "liner", [gxs(14), gys(24), -90]],
 
     // uzu
     [240, "whirls", [gxs(16), gys(5), 160, 80]],
@@ -156,30 +158,24 @@
     [45, "assaults", [DEF_X, gys(6)]],
 
     // kabeで一区切り
-    [120, "kabe", [1, 10]],
-    // [60, "kabe", [2, 2]],
-    // [60, "kabe", [3, 1]],
+    [120, "kabe", [2, 7]],
+    [60, "kabe", [3, 5]],
+    [60, "kabe", [4, 3]],
 
     // 魚群
-    createSinesPattern(140, gys(2), 30, 3, false),
-    // [0, "sines", [70]],
-    // [0, "sines", [100]],
-    // [0, "sines", [130]],
-    // [0, "sines", [160]],
-    // [0, "sines", [190]],
-    // [0, "sines", [220]],
+    createSinesPattern(140, gys(4), 30, 6, false),
 
-    // めっちゃ跳ねる
-    [130, "sines", [0, false, SCREEN_HEIGHT/2]],
-    [0, "sines", [300, false, SCREEN_HEIGHT/2]],
+    // めっちゃ跳ねるsine
+    // [130, "sines", [0, false, SCREEN_HEIGHT/2]],
+    // [0, "sines", [300, false, SCREEN_HEIGHT/2]],
 
     // 魚群： 挟み撃ち
-    [140, "sines", [40, true]],
-    [20, "sines", [70, true]],
-    [20, "sines", [100, true]],
+    createSinesPattern(280, gys(2), 30, 3, false),
+    createSinesPattern(140, gys(12), 30, 3, true),
 
     // V-atttack
-    // [130, "verticals", [DEF_X, 60]],
+    [130, "verticals", [DEF_X, gys(3)]],
+    [0, "verticals", [DEF_NX, gys(14), 0]],
 
     // 最後　演出
     createPentagramPattern(140, gxs(10), gys(10), 120, 200, 4),

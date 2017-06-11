@@ -142,13 +142,8 @@ var ENEMY_TYPES = {
   },
   "whirl": {
     texture: "cucumber",
-    life: 10,
+    life: 20,
     speed: 4,
-    score: 100,
-  },
-  "vTurn": {
-    texture: "cucumber",
-    life: 4,
     score: 100,
   },
   "mine": {
@@ -165,7 +160,7 @@ var ENEMY_TYPES = {
   },
   "verticalShot": {
     texture: "cucumber",
-    life: 30,
+    life: 10,
     score: 200,
   },
   "muteki": {
