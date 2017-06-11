@@ -30,7 +30,7 @@
   };
 
   /**
-   * [createPentagramPattern description]
+   * [五芒星状にてんかいする]
    * @param  {[type]} initWait  [最初のウェイト]
    * @param  {[type]} centerX   [中心x]
    * @param  {[type]} centerY   [中心y]

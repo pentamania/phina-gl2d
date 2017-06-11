@@ -392,15 +392,19 @@ phina.define('MainScene', {
       // Boss撃破
       this.bossDestroyed(enemy);
     } else {
+
       // 雑魚撃破
       this.generateBlast(enemy.x, enemy.y, 32, "redRect");
       enemy.remove();
       // this._shotExp += 5;
-      for (var i = 0; i < 3; i++) {
-        var r = RAND_INTS.pickup();
-        ScoreItem(enemy.x+r, enemy.y+r).addChildTo(this.itemLayer);
+      // item
+      if (enemy.hasItem) {
+        for (var i = 0; i < 2; i++) {
+          var r = RAND_INTS.pickup();
+          ScoreItem(enemy.x+r, enemy.y+r).addChildTo(this.itemLayer);
+        }
+        PowerUpItem(enemy.x, enemy.y).addChildTo(this.itemLayer);
       }
-      PowerUpItem(enemy.x, enemy.y).addChildTo(this.itemLayer);
     }
 
     if (enemy.score != null) this._score += enemy.score;

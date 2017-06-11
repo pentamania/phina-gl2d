@@ -6,6 +6,7 @@ phina.define('EnemyAbstract', {
   superClass: 'AbstractObjClass',
 
   canAttack: true,
+  hasItem: true,
 
   init: function(typeName, isSpecialType) {
     var data = ENEMY_TYPES[typeName];
@@ -537,7 +538,8 @@ phina.namespace(function() {
       // ミサイル定期発射
       if (this.age%90 === 0) {
         (2).times(function(i, n) {
-          HomingGuy(this.x+16, this.y, 6, -45 + i*90).addChildTo(BulletConfig.enemyLayer);
+          var hm = HomingGuy(this.x+16, this.y, 6, -45 + i*90).addChildTo(BulletConfig.enemyLayer);
+          hm.hasItem = false;
         }.bind(this))
       }
 
