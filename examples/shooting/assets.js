@@ -117,6 +117,19 @@
   // img.fillHeart(r, r, r-lw)
   am.set('image', 'rightHeart', img);
 
+  // teki: yajirushi
+  w = 36;
+  r = w * 0.4;
+  lw = 10;
+  var color = "#125A69";
+  img = phina.graphics.Canvas().setSize(w+lw*2, r*2);
+  img.strokeStyle = color;
+  img.fillStyle = color;
+  img.lineWidth = lw;
+  //x0, y0, x1, y1, arrowRadius
+  img.drawArrow(0, r, w-r*0.5, r, r)
+  am.set('image', 'rightArrow', img);
+
   // red △
   r = 12;
   lw = r/3;

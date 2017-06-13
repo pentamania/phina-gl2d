@@ -131,7 +131,7 @@ var ENEMY_TYPES = {
     radius: 12,
   },
   "sine": {
-    texture: "cucumber",
+    texture: "rightArrow",
     life: 10,
     score: 100,
   },

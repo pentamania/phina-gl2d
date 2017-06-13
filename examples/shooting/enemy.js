@@ -276,6 +276,8 @@ phina.define('SineGuy', {
     this.fluctRadius = fluctRadius || 30; // 波半径
     this.frequency = frequency || 4; // 周波数、高いほどうねうねする
     if (vectorAngle != null) this.setVectorAngle(vectorAngle);
+    this.rotation = vectorAngle || 0;
+
     this.destroyable = false;
   },
 
@@ -291,6 +293,8 @@ phina.define('SineGuy', {
     if (this.x < - SCREEN_WIDTH * 0.3 || SCREEN_WIDTH * 1.4 < this.x) this.destroyable = true;
     // if (this.age === 100) this.fireBullet();
     // if (this.age > 1000) this.destroyable = true;
+
+    // if (this.age%4 === 0) this.rotation = this.vec.toDegree();
   }
 
 });

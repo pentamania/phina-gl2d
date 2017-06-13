@@ -103,6 +103,7 @@
     // [直前パターンからの待機フレーム, "編隊タイプ", 引数配列, 上書きオプション]
 
     // debug用 =====
+    // [130, "sines", [100, true, 30]],
     // [130, "verticals", [DEF_X, gys(4)]],
     // [0, "verticals", [DEF_NX, gys(16), 0]],
     // createPentagramPattern(140, gxs(10), gys(10), 60, null),
