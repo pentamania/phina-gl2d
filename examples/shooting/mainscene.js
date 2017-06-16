@@ -360,7 +360,7 @@ phina.define('MainScene', {
 
       // 無敵ではダメージは通らない
       if (enemy.invinsible !== 0) return;
-      enemy.life -= (enemy.isSuperArmor) ? 1 : shot.power;
+      enemy.life -= (enemy.isSuperArmor) ? 0 : shot.power;
     }
   },
 
@@ -457,7 +457,7 @@ phina.define('MainScene', {
 
       self.generateBlast(enemy.x, enemy.y, 32, "redRect");
       enemy.isAnimating = true;
-      enemy.animation.gotoAndPlay('dead');
+      // enemy.animation.gotoAndPlay('dead');
     })
     .wait(1600)
     .call(function(){

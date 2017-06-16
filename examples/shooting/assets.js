@@ -143,6 +143,38 @@
   .strokePolygon(0, 0, r-lw, 3);
   am.set('image', 'redTriangle', img);
 
+  // togetoge boss
+  r = 54;
+  lw = 2;
+  var edgeNum = 9; // 角数
+  var bodyRad = 36; // 本体サイズ
+  var togeR = (r - bodyRad) * 0.7;
+  var degUnit = 360/edgeNum;
+  img = phina.graphics.Canvas().setSize(r*2, r*2);
+  img.strokeStyle = "#1B6314";
+  img.fillStyle = "#C6F1D6";
+  img.lineWidth = lw;
+  img.fillPolygon(r, r, bodyRad-lw, edgeNum).stroke();
+
+  // toge部分
+  img.save();
+  img.transformCenter().rotate((degUnit*0.5).toRadian());
+  edgeNum.times(function(i) {
+    // var deg = i * degUnit;
+    // img.transformCenter().rotate((30 + deg).toRadian());
+    img.rotate(degUnit.toRadian());
+    img.fillPolygon(0, -bodyRad*1.2, togeR-lw, 3).stroke();
+  });
+  img.restore();
+
+  // eye
+  img.strokeStyle = "#2C402A";
+  img.fillStyle = "#fff";
+  img.fillCircle(r, r, 12).stroke();
+  img.fillStyle = "#333";
+  img.fillCircle(r, r, 7);
+
+  am.set('image', 'boss', img);
 
   // effect ==============================
   r = 8;

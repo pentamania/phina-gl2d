@@ -489,7 +489,7 @@ phina.namespace(function() {
 
     init: function() {
       this.superInit('boss', true);
-      this.animation = FrameAnimation('boss').attachTo(this).gotoAndPlay('fly');
+      // this.animation = FrameAnimation('boss').attachTo(this).gotoAndPlay('fly');
 
       this.setPosition(SCREEN_WIDTH * 1.5, SCREEN_HEIGHT / 2);
       this.isAnimating = true;
@@ -500,7 +500,7 @@ phina.namespace(function() {
       // 子機
       this.orbits = [];
       MAX_ORBIT_NUM.times(function(i, num) {
-        var orbit = OrbitGuy(this, 60, i * 360/num |0);
+        var orbit = OrbitGuy(this, this.radius*1.6, i * 360/num |0);
         orbit.canAttack = false;
         this.orbits.push(orbit);
       }.bind(this));
@@ -654,13 +654,13 @@ phina.namespace(function() {
 
       this.isAnimating = true;
       this.isSuperArmor = true;
-      var gap = [-80, -40, 0, 40, 80].pickup();
+      var gap = [-100, -60, -40].pickup();
       // this.invinsible = Infinity;
       var tgt = this.target;
       this.tweener.clear()
       .wait(500)
       .by({x: 60}, 500, 'easeOutQuad') //予備動作
-      .to({x: tgt.x-gap, y:tgt.y}, 500, 'easeOutQuad')
+      .to({x: tgt.x+gap, y:tgt.y}, 500, 'easeOutQuad')
       .wait(1000)
       .call(function() {
         this.resetPosition();

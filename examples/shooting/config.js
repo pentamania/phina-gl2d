@@ -46,7 +46,7 @@ var BulletConfig = {
       "mikapiyo": assetPath+"mikapiyo.png",
       "meropiyo": assetPath+"meropiyo.png",
       "nasupiyo": assetPath+"nasupiyo.png",
-      "boss": assetPath+"karasu_ss.png",
+      // "boss": assetPath+"karasu_ss.png",
       "bg": assetPath+"background.png",
     },
 
@@ -181,7 +181,9 @@ var ENEMY_TYPES = {
   },
   "boss": {
     texture: "boss",
+    radius: 36,
     life: 2800,
+    // life: 100, // for debug
     score: 10000,
   }
 };
