@@ -15,6 +15,7 @@ var ITEM_SEARCH_RANGE = 80;
 var BOSS_AGE_OF_DEATH = 5300; // 90sec = 90000ms / 17 = about 5300 frame
 // var BOSS_AGE_OF_DEATH = 300;
 var ENEMY_INIT_INVINSIBLE_FRAME = 40;
+var ENEMY_WAVE_START_INDEX = 40; // debug用
 
 var USE_WEBGL;
 var DEBUG_MODE;

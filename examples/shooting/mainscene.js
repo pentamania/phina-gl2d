@@ -160,6 +160,8 @@ phina.define('MainScene', {
 
     // debug
     if (DEBUG_MODE) {
+      this.enemyLauncher._pointer = ENEMY_WAVE_START_INDEX; // debug用
+
       Label({
         fill: "#46D292",
         fontSize: 12,

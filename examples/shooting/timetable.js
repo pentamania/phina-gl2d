@@ -89,6 +89,21 @@
     return arr;
   };
 
+  /**
+   * TODO: 円周追尾
+   */
+  var createCorridorPattern = function(initWait, cx, cy, divNum) {
+    var arr = [];
+
+    (divNum).times(function(i, n) {
+      wait = (i === 0) ? initWait : 0;
+      arr.push([wait, "homings", []]);
+    });
+
+    return arr;
+  };
+
+
   // 位置の簡略化
   var gx = phina.util.Grid(SCREEN_WIDTH, 20);
   var gxs = function(n) { return gx.span(n); };
@@ -132,13 +147,13 @@
     // ここから本番　=====
 
     // 基本
-    // [45, "liner", [null, gys(5), null, 45]],
-    // [120, "liner", [null, gys(15), null, -45]],
-    // [120, "liner", [null, gys(5), null, 45]],
-    // [120, "liner", [null, gys(15), null, -45]],
+    [45, "liner", [null, gys(5), null, 45]],
+    [120, "liner", [null, gys(15), null, -45]],
+    [120, "liner", [null, gys(5), null, 45]],
+    [120, "liner", [null, gys(15), null, -45]],
 
     // 上下から
-    [120, "liner", [gxs(17), gys(15)-gxs(20), 90, -135]],
+    [90, "liner", [gxs(17), gys(15)-gxs(20), 90, -135]],
     [0, "liner", [gxs(16), gys(5)+gxs(20), -90, 135]],
     // [100, "liner", [gxs(15), gys(-4), 90]],
     // [100, "liner", [gxs(14), gys(24), -90]],
@@ -163,20 +178,83 @@
     [60, "kabe", [3, 5]],
     [60, "kabe", [4, 3]],
 
-    // 魚群
-    createSinesPattern(140, gys(4), 30, 6, false),
+    // 2nd wave =====
 
-    // めっちゃ跳ねるsine
-    // [130, "sines", [0, false, SCREEN_HEIGHT/2]],
-    // [0, "sines", [300, false, SCREEN_HEIGHT/2]],
+    // 魚群
+    createSinesPattern(140, gys(5), 30, 6, false),
 
     // 魚群： 挟み撃ち
-    createSinesPattern(280, gys(2), 30, 3, false),
-    createSinesPattern(140, gys(12), 30, 3, true),
+    createSinesPattern(380, gys(4), 30, 3, false),
+    createSinesPattern(0, gys(13), 30, 3, true),
+
+    //
+    [145, "liner", [null, gys(5), null, 45]],
+    [120, "liner", [null, gys(15), null, -45]],
+
+    // めっちゃ跳ねるsine
+    [200, "sines", [0, false, SCREEN_HEIGHT*0.3]],
+    [0, "sines", [300, false, SCREEN_HEIGHT*0.3]],
+    [120, "sines", [300, false, SCREEN_HEIGHT/2]],
+    [0, "sines", [300, false, SCREEN_HEIGHT/2]],
 
     // V-atttack
-    [130, "verticals", [DEF_X, gys(3)]],
-    [0, "verticals", [DEF_NX, gys(14), 0]],
+    [300, "verticals", [DEF_X, gys(4)]],
+    [0, "verticals", [DEF_NX, gys(16), 0]],
+    // 交差: 右下
+    [30, "verticals", [gx.span(17), gy.span(-2), 90]],
+    [0, "verticals", [DEF_NX, gy.span(16), 0]],
+
+    // // mine
+    // [120, "mine", [gxs(6), gys(5), 8]],
+    // [20, "mine", [gys(9), gys(10), 8]],
+    // [20, "mine", [gxs(6), gys(15), 8]],
+
+    // V-atttack
+    [300, "verticals", [DEF_X, gys(4)]],
+    [0, "verticals", [DEF_NX, gys(16), 0]],
+
+    // kabeで一区切り
+    [180, "kabe", [2, 7]],
+    [60, "kabe", [3, 5]],
+    [60, "kabe", [4, 3]],
+
+    // 3rd wave =====
+
+    // 突撃隊
+    [300, "assaults", [DEF_X, gys(18)]],
+    [45, "assaults", [DEF_X, gys(16)]],
+    [45, "assaults", [DEF_X, gys(14)]],
+    [45, "assaults", [DEF_X, gys(12)]],
+    [45, "assaults", [DEF_X, gys(10)]],
+
+    // mine
+    [120, "mine", [gxs(15), gys(5), 8]],
+    [0, "mine", [gxs(18), gys(10), 8]],
+    [0, "mine", [gxs(5), gys(15), 8]],
+
+    [50, "mine", [gxs(9), gys(10), 12]],
+    [0, "mine", [gxs(14), gys(10), 12]],
+    [0, "mine", [gxs(9), gys(15), 12]],
+
+    [50, "mine", [gxs(16), gys(5), 16]],
+    [0, "mine", [gxs(4), gys(10), 16]],
+    [0, "mine", [gxs(16), gys(15), 16]],
+
+    [50, "mine", [gxs(8), gys(5), 16]],
+    [0, "mine", [gxs(2), gys(10), 16]],
+    [0, "mine", [gxs(12), gys(15), 16]],
+
+    // totugetitai 2方向
+
+    // 一区切り
+    [160, "kabe", [3, 5]],
+    [60, "kabe", [4, 3]],
+    [60, "kabe", [5, 1]],
+
+    [200, "flower", [gxs(14), gys(5), 45, 140], {count: 4, interval: 20}],
+
+    [240, "whirls", [gxs(4), gys(5), 10, 100]],
+    [100, "whirls", [gxs(4), gys(15), -10, 100]],
 
     // 最後　演出
     createPentagramPattern(140, gxs(10), gys(10), 120, 200, 4),
