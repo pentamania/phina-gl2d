@@ -196,7 +196,17 @@ phina.define('MainScene', {
       // self.gameStart();
     }
 
-  },
+    // プレイヤーの動きに応じてビット追従
+    player.on('playerMoved', function() {
+      if (self.playerBits.length) {
+        // Log(player.y);
+        self.playerBits.forEach(function(bit) {
+          bit.pushPaths(player.position.clone());
+       }.bind(this));
+      }
+    });
+
+  }, // init
 
   update: function(app) {
     // if (!this.isStarted) return;
@@ -328,19 +338,35 @@ phina.define('MainScene', {
 
     // player action
     if (!player.isAnimating) {
-      // move
+      // move: tap
       if (p.getPointing()) {
-        player.position.add(p.deltaPosition.mul(SENSIBILITY));
+        if (p.deltaPosition.x != 0 || p.deltaPosition.y != 0) {
+          player.position.add(p.deltaPosition.mul(SENSIBILITY));
+          player.flare('playerMoved');
+        }
       }
-      if (kb.getKey('up')) player.y -= player.moveSpeed;
-      if (kb.getKey('down')) player.y += player.moveSpeed;
-      if (kb.getKey('left')) player.x -= player.moveSpeed;
-      if (kb.getKey('right')) player.x += player.moveSpeed;
+
+      // move: keyboard
+      if (kb.getKey('up')) {
+        player.flare('playerMoved');
+        player.y -= player.moveSpeed;
+      }
+      if (kb.getKey('down')) {
+        player.flare('playerMoved');
+        player.y += player.moveSpeed;
+      }
+      if (kb.getKey('left')) {
+        player.flare('playerMoved');
+        player.x -= player.moveSpeed;
+      }
+      if (kb.getKey('right')) {
+        player.flare('playerMoved');
+        player.x += player.moveSpeed;
+      }
 
       // shot
       if (frame%4 === 0) {
         if (kb.getKey('z') || p.getPointing()) self.playerShotFire();
-        // self.playerShotFire();
 
         // ブーストエフェクト
         this.objectPools["boostEffect"].pick(function(chip) {
@@ -376,6 +402,7 @@ phina.define('MainScene', {
 
   playerDestroyed: function() {
     var player = this.player;
+    var self = this;
     this.generateBlast(player.x, player.y, 32, "redRect");
     this.remainLife--;
 
@@ -384,7 +411,11 @@ phina.define('MainScene', {
         // this.gameover();
         this.showResult();
       } else {
-        player.respawn();
+        player.respawn(function(){
+          self.playerBits.forEach(function(bit){
+            bit.clearPath().position.set(player.position);
+          })
+        });
         this.bombGauge.refill();
       }
     }.bind(this));
@@ -584,6 +615,8 @@ phina.define('MainScene', {
     var col = (index/2 | 0) + 1;
     var yUnit = (index%2 === 0) ? -PLAYER_BIT_INTERVAL : PLAYER_BIT_INTERVAL;
     var bit = PlayerBit(-PLAYER_BIT_INTERVAL*col, yUnit*col, this.player).addChildTo(this.friendLayer);
+    bit.delay = (index+1) * 12;
+
     this.playerBits.push(bit);
   },
 

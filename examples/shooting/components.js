@@ -34,7 +34,7 @@ phina.define('Player', {
     .call(cb.bind(this));
   },
 
-  respawn: function() {
+  respawn: function(cb) {
     this.setPosition(-100, 100);
     this.anim.gotoAndPlay('fly');
 
@@ -43,6 +43,7 @@ phina.define('Player', {
     .call(function() {
       this.invinsible = 180;
       this.isAnimating = false;
+      if (cb) cb();
     }.bind(this))
   },
 
@@ -125,7 +126,7 @@ phina.define('Shot', {
 phina.namespace(function() {
   var ROTATE_UNIT_RAD = 16 * Math.DEG_TO_RAD;
   var V2 = phina.geom.Vector2;
-  var AGE_LIMIT = 350;9
+  var AGE_LIMIT = 350;
 
   phina.define('HomingShot', {
     superClass: 'AbstractObjClass',
@@ -139,7 +140,7 @@ phina.namespace(function() {
       this.speed = speed || 13;
       this.power = HOMING_SHOT_POWER;
       this.vec = V2(this.speed, 0);
-      this.type = "homing";
+      // this.type = "homing";
       this.radius = 6;
       this.alpha = 0.7;
     },
@@ -188,29 +189,53 @@ phina.namespace(function() {
       // this.superInit('redTriangle');
       this.superInit('tomapiyo_blue', 64, 64);
       this.setScale(0.4, 0.4);
-      this.anim = FrameAnimation('tomapiyo').attachTo(this)
+      this.anim = FrameAnimation('tomapiyo')
+      .attachTo(this)
       .gotoAndPlay('fly');
       // this.frameIndex = 1;
-
-      this.relativePosition = Vector2(x, y);
-      this.mainBody = mainBody;
       this.alpha = 0.7;
-      this.setPosition(mainBody.x + x, mainBody.y + y);
+
+      // シンプルな追従型
+      // this.relativePosition = Vector2(x, y);
+      // this.mainBody = mainBody;
+      // this.setPosition(mainBody.x + x, mainBody.y + y);
+
+      // グラディウス型
+      this._trackPaths = [];
+      this.delay = 10;
+      this.setPosition(mainBody.x, mainBody.y);
     },
 
     update: function() {
-      var mainBody = this.mainBody;
-      var rel = this.relativePosition;
+      // var mainBody = this.mainBody;
+      // var rel = this.relativePosition;
 
       // 滑るように本体に追従させる場合
       // ターゲット位置をセット -> その位置ー自分の差分　の数%をを自分位置に加算
-      var dest = {x: mainBody.x + rel.x, y: mainBody.y + rel.y};
       // var delta = {x: dest.x - this.x, y: dest.y - this.y};
       // this.setPosition(this.x + delta.x*0.15, this.y + delta.y*0.15);
 
-      this.setPosition(dest.x, dest.y);
+      // 本体から既定位置にセットする場合
+      // var dest = {x: mainBody.x + rel.x, y: mainBody.y + rel.y};
+      // this.setPosition(dest.x, dest.y);
 
-      // this.rotation += 10;
+    },
+
+    pushPaths: function(vector) {
+      this._trackPaths.push(vector);
+      var len = this._trackPaths.length;
+
+      if (len > this.delay) {
+        // throw this._trackPaths;
+        var current = this._trackPaths.shift();
+        this.position.set(current.x, current.y);
+      }
+      return this;
+    },
+
+    clearPath: function() {
+      this._trackPaths = [];
+      return this;
     }
   });
 
@@ -573,7 +598,7 @@ phina.define("BombGauge", {
 });
 
 /**
- * ScoreItem
+ * Score Item
  */
 phina.define('ScoreItem', {
   superClass: 'AbstractObjClass',
