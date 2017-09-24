@@ -1,48 +1,54 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <title>Sample shooting game</title>
-  <link href="https://fonts.googleapis.com/css?family=Aldrich" rel="stylesheet">
-  <style type="text/css">
-    body {
-      background: limegreen;
-    }
-  </style>
+  <title>Toma Revenge</title>
+  <!-- <link href="https://fonts.googleapis.com/css?family=Aldrich" rel="stylesheet"> -->
+  <link href="style.css" rel="stylesheet">
 </head>
 <body>
-  <script src='../../assets/lib/phina.js'></script>
-  <!-- <script src='http://cdn.rawgit.com/phi-jp/phina.js/v0.2.0/build/phina.js'></script> -->
-  <script type="text/javascript" src="../../build/phina-gl2d.js"></script>
+  <div class="wrapper">
+    <h1 class="u-center t-lightbrown">Toma Revenge - phina-gl2d sample game</h1>
+
+    <iframe class='screen u-center u-mb' src="content.html"></iframe>
+
+    <div class="u-center u-mb">
+      <a href="content.html" class="p-button" target="_blank">全画面表示で遊ぶ</a>
+    </div>
+
+    <section class="u-center t-brown container u-mb">
+      <h2 class="u-center t-lightbrown">がいよう</h2>
+      <p class="u-mb">
+        オーソドックスなシューティングゲームです。<br>
+        ゲームライブラリphina.js及びそのプラグインphina-gl2d.jsを使って作られています。
+        <ul>
+          <li><a href="http://phinajs.com/" target=_blank"">phina.jsについて</a></li>
+          <li><a href="https://github.com/pentamania/phina-gl2d" target="_blank">phina-gl2dについて</a></li>
+        </ul>
+      </p>
+
+      <h2 class="u-center t-lightbrown">あそびかた</h2>
+      <p class="u-mb">
+        ボスを倒すか、残機がなくなったらゲームオーバー。隠し要素は（多分）ないです。
+        <ul class="list">
+          <li>PC： 方向キーで移動、ｚキーでショット、xキーでボム</li>
+          <li>スマホ・タブレット・マウス： タップで移動＆ショット、右下の「B」ボタンでボム</li>
+          <li>ボムには全体攻撃＋一定時間無敵の効果がありますが、画面下のゲージが満タンでないと使えません。</li>
+        </ul>
+      </p>
+
+      <h3 class="u-center t-lightbrown">ストーリー（読まなくても特に問題はない）</h3>
+      <p class="u-mb">
+        突如襲来した侵略者：Graphics。<br>
+        その圧倒的な物量を前に、画面上に同時に3発しか弾の出せないトマピヨたちは為す術無く、<br>
+        拠点である近所の公園を奪われつつあった。<br>
+        追い詰められたトマピヨたちは封印されしG.L.システム（中古品）の使用を決断、解放された超弾幕をもって一大反抗作戦に出る。<br>
+        今、彼らの反逆が始まる…?
+      </p>
+    </section>
+
+  </div>
 
   <script type="text/javascript">
-    'use strict';
-    phina.globalize();
-  </script>
-
-  <script src="config.js"></script>
-  <script src="assets.js"></script>
-  <script src="abstract.js"></script>
-  <script src="components.js"></script>
-  <script src="enemy.js"></script>
-  <script src="UILayer.js"></script>
-  <script src="mainscene.js"></script>
-  <script src="timetable.js"></script>
-
-  <script type="text/javascript">
-    phina.main(function() {
-      var app = GameApp({
-        width: SCREEN_WIDTH,
-        height: SCREEN_HEIGHT,
-        assets: ASSETS,
-        backgroundColor: 'gray',
-        startLabel: 'main',
-        fps: 60,
-      });
-
-      if (DEBUG_MODE) app.enableStats();
-      app.run();
-    });
-
   </script>
 </body>
 </html>
