@@ -106,15 +106,15 @@ Wave data例
 phina.define('EnemyLauncher', {
   superClass: "phina.util.EventDispatcher",
 
-  _tasks: [],
-  _waveTable: null,
-  _pointer: 0,
-  _waitSum: 0,
-  age: 0,
-
   init: function(tableArray) {
-    this.superInit();
     if (!ENEMY_PATTERNS) throw Error("ENEMY_PATTERNSが定義されていません");
+    this.superInit();
+    this._tasks = [];
+    this._waveTable = null;
+    this._pointer = 0;
+    this._waitSum = 0;
+    this.age = 0;
+
     if (tableArray) this.setTable(tableArray);
   },
 
