@@ -26,6 +26,7 @@ phina.define('MainScene', {
     var rootLayer = this.rootLayer = (USE_WEBGL) ? GLLayer(options) : DisplayElement(options);
     rootLayer.addChildTo(this);
     this.backgroundLayer = DisplayElement(options).addChildTo(rootLayer);
+    this.playerBitLayer = DisplayElement(options).addChildTo(rootLayer);
     player.addChildTo(rootLayer);
     this.enemyLayer = DisplayElement(options).addChildTo(rootLayer);
     this.effectLayer = DisplayElement(options).addChildTo(rootLayer);
@@ -81,7 +82,7 @@ phina.define('MainScene', {
       })
     });
 
-    // filter適用
+    // filter適用: 事前に行う？
     var AM = AssetManager;
     var filtered = AM.get('image', 'tomapiyo').clone().filter(AM.get('filter', 'blueFilter'));
     AM.set('image', 'tomapiyo_blue', filtered);
@@ -135,10 +136,11 @@ phina.define('MainScene', {
     });
 
     // 自機オプション
-    this.playerBits = [];
+    // this.playerBits = [];
     (this._shotLevel).times(function() {
       self.addPlayerBit();
-    })
+    });
+    this.playerBitLayer.visible = false;
 
     // 敵出現関係
     // this._enemyPointer = 0;
@@ -148,12 +150,13 @@ phina.define('MainScene', {
     this.enemyLauncher.on('waveend', function() {
       self.bossAppearance();
     });
+    // Log(this.enemyLauncher)
 
     // UI update
     this.on('enterframe', function(e) {
       this.UILayer.scoreLabel.text = "￥ "+this._score;
       this.UILayer.remainLifeLabel.text = " x " + Math.max(0, this.remainLife);
-    })
+    });
 
     // イベント管理用
     this.tweener = Tweener().attachTo(this);
@@ -198,9 +201,9 @@ phina.define('MainScene', {
 
     // プレイヤーの動きに応じてビット追従
     player.on('playerMoved', function() {
-      if (self.playerBits.length) {
-        // Log(player.y);
-        self.playerBits.forEach(function(bit) {
+      var bits = self.playerBitLayer.children;
+      if (bits.length > 0) {
+        bits.forEach(function(bit) {
           bit.pushPaths(player.position.clone());
        }.bind(this));
       }
@@ -247,14 +250,14 @@ phina.define('MainScene', {
     }
 
     // shot level up
-    if (
-      self._shotLevel < MAX_SHOT_LEVEL
-      && self._shotExp > SHOT_POWERUP_BORDER * (self._shotLevel+1)
-    ) {
-      self._shotLevel++;
-      self.addPlayerBit();
-      Log('level up!')
-    }
+    // if (
+    //   self._shotLevel < MAX_SHOT_LEVEL
+    //   && self._shotExp > SHOT_POWERUP_BORDER * (self._shotLevel+1)
+    // ) {
+    //   self._shotLevel++;
+    //   self.addPlayerBit();
+    //   Log('level up!')
+    // }
 
     // enemy children
     self.enemyLayer.children.each(function(enemy) {
@@ -316,6 +319,7 @@ phina.define('MainScene', {
     // item action
     var tempChildren = this.itemLayer.children.slice();
     tempChildren.each(function(item) {
+      // TODO: x距離 , y距離が離れすぎていたらreturn
       // player位置をサーチ・吸引させる
       if (player.position.distance(item.position) < ITEM_SEARCH_RANGE) {
         item.target = player;
@@ -338,6 +342,8 @@ phina.define('MainScene', {
 
     // player action
     if (!player.isAnimating) {
+      this.playerBitLayer.visible = true;
+
       // move: tap
       if (p.getPointing()) {
         if (p.deltaPosition.x != 0 || p.deltaPosition.y != 0) {
@@ -373,6 +379,8 @@ phina.define('MainScene', {
           chip.spawn(player.x-5, player.y);
         });
       }
+    } else {
+      this.playerBitLayer.visible = false;
     }
 
   },
@@ -400,25 +408,34 @@ phina.define('MainScene', {
     }
   },
 
-  playerDestroyed: function() {
-    var player = this.player;
-    var self = this;
-    this.generateBlast(player.x, player.y, 32, "redRect");
-    this.remainLife--;
+  resetBitPosition: function(pos) {
+    pos = pos || this.player.position;
+    this.playerBitLayer.children.forEach(function(bit) {
+      bit.clearPath().position.set(pos.x, pos.y);
+    });
+  },
 
-    player.destroyed(function(){
-      if (this.remainLife < 0) {
-        // this.gameover();
-        this.showResult();
+  playerDestroyed: function() {
+    var self = this;
+    var player = this.player;
+
+    // self.flare('playerDestroyed');
+    self.generateBlast(player.x, player.y, 32, "redRect");
+    self.remainLife--;
+
+    player.destroyed(function() {
+      if (self.remainLife < 0) {
+        // game over...
+        self.showResult();
       } else {
+        // 自機復活
         player.respawn(function(){
-          self.playerBits.forEach(function(bit){
-            bit.clearPath().position.set(player.position);
-          })
+          self.resetBitPosition();
+          // self.flare('playerRespawned');
         });
-        this.bombGauge.refill();
+        self.bombGauge.refill();
       }
-    }.bind(this));
+    });
   },
 
   enemyDestroyed: function (enemy) {
@@ -523,7 +540,7 @@ phina.define('MainScene', {
     var self = this;
     var player = this.player;
 
-    // プレイヤーアニメーション -> スクロール開始
+    // プレイヤーキャラアニメーション -> スクロール開始 -> UI表示＆ゲーム開始
     player.anim.gotoAndPlay('fly');
     player.tweener.clear()
     .by({y: -40}, 1600, 'easeOutElastic')
@@ -538,9 +555,11 @@ phina.define('MainScene', {
     .call(function() {
       player.isAnimating = false;
       self.UILayer.setVisible(true);
+      self.resetBitPosition();
     })
     ;
 
+    // スクロールのスローダウン
     this.tweener.clear()
     .to({scrollSpeed: SCROLL_SPEED * 5}, 1000, "easeInQuad")
     .to({scrollSpeed: SCROLL_SPEED}, 5000)
@@ -568,14 +587,14 @@ phina.define('MainScene', {
 
   playerShotFire: function () {
     var player = this.player;
-    var fireNway = function(n) {
-      for (var i=0; i < n; i++) {
-        var angle = - SHOT_ANGLE_UNIT * ((n - 1) * 0.5) + i * SHOT_ANGLE_UNIT;
-        this.objectPools['playerShot'].pick(function(shot) {
-          shot.spawn(player.x, player.y-2, angle);
-        });
-      }
-    }.bind(this);
+    // var fireNway = function(n) {
+    //   for (var i=0; i < n; i++) {
+    //     var angle = - SHOT_ANGLE_UNIT * ((n - 1) * 0.5) + i * SHOT_ANGLE_UNIT;
+    //     this.objectPools['playerShot'].pick(function(shot) {
+    //       shot.spawn(player.x, player.y-2, angle);
+    //     });
+    //   }
+    // }.bind(this);
 
     // スパイラルショット
     for (var i = 0; i < 2; i++) {
@@ -602,22 +621,23 @@ phina.define('MainScene', {
     //   default: fireNway(1); break;
     // }
 
-    // homing shot
-    if (this.playerBits.length) {
-      this.playerBits.forEach(function(bit){
+    // bit shot
+    var bits = this.playerBitLayer.children;
+    if (bits.length > 0) {
+      bits.forEach(function(bit) {
         HomingShot(bit.x, bit.y).addChildTo(this.shotLayer);
      }.bind(this));
     }
   },
 
   addPlayerBit: function() {
-    var index = this.playerBits.length;
+    // var index = this.playerBits.length;
+    var index = this.playerBitLayer.children.length;
     var col = (index/2 | 0) + 1;
     var yUnit = (index%2 === 0) ? -PLAYER_BIT_INTERVAL : PLAYER_BIT_INTERVAL;
-    var bit = PlayerBit(-PLAYER_BIT_INTERVAL*col, yUnit*col, this.player).addChildTo(this.friendLayer);
+    var bit = PlayerBit(-PLAYER_BIT_INTERVAL*col, yUnit*col, this.player)
+    .addChildTo(this.playerBitLayer);
     bit.delay = (index+1) * 12;
-
-    this.playerBits.push(bit);
   },
 
   // ボム （C.A.S.）
