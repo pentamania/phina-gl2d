@@ -256,6 +256,7 @@
 var ENEMY_PATTERNS = {
   targetLayer: null, // 追加対象
 
+  // 何もしない
   "empty": {
     count: 1,
     interval: 1,
