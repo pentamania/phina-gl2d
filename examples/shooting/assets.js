@@ -43,29 +43,42 @@
   .strokeRect(0, 0, w, h)
   am.set('image', 'redCard', img);
 
-  // 天アイテム
-  shape = phina.display.Label({
-    text: "金",
-    fontSize: 14,
-    fontFamily: "Meirio",
-    fill: "#E7EE29",
-    stroke: "#gold",
-  });
-  am.set('image', 'scoreItem', drawShape(shape))
-
+  // スコアアイテム
   r = 14;
   shape = phina.ui.Button({
-    text: "P",
+    text: "￥",
     textAlign: 'center',
     width: r,
     height: r,
-    fontSize: r,
-    cornerRadius: 2,
+    fontSize: r*0.8,
+    cornerRadius: 0,
     fontFamily: "Meirio",
-    fill: "#F82B2B",
-    stroke: "transparent",
+    fill: "#7DC520",
+    stroke: "#18540A",
   });
-  am.set('image', 'powerItem', drawShape(shape))
+  // shape = phina.display.Label({
+  //   text: "金",
+  //   fontSize: 14,
+  //   fontFamily: "Meirio",
+  //   fill: "#E7EE29",
+  //   stroke: "black",
+  // });
+  am.set('image', 'scoreItem', drawShape(shape))
+
+  // パワーアップアイテム
+  // r = 14;
+  // shape = phina.ui.Button({
+  //   text: "P",
+  //   textAlign: 'center',
+  //   width: r,
+  //   height: r,
+  //   fontSize: r,
+  //   cornerRadius: 2,
+  //   fontFamily: "Meirio",
+  //   fill: "#F82B2B",
+  //   stroke: "transparent",
+  // });
+  // am.set('image', 'powerItem', drawShape(shape))
 
   // 敵 =========
 

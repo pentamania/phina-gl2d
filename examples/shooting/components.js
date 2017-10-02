@@ -611,6 +611,7 @@ phina.define('ScoreItem', {
     this.radius = 32;
     this.vec = Vector2(2, 0);
     this.position.set(x, y);
+    this.alpha = 0.7;
   },
 
   update: function () {

@@ -319,11 +319,18 @@ phina.define('MainScene', {
     // item action
     var tempChildren = this.itemLayer.children.slice();
     tempChildren.each(function(item) {
-      // TODO: x距離 , y距離が離れすぎていたらreturn
+
       // player位置をサーチ・吸引させる
-      if (player.position.distance(item.position) < ITEM_SEARCH_RANGE) {
-        item.target = player;
+      if (!item.target) {
+        var iPos = item.position;
+      // if (player.position.distance(item.position) < ITEM_SEARCH_RANGE) {
+        if (Math.abs(player.position.x - iPos.x) < ITEM_SEARCH_RANGE) {
+          if (Math.abs(player.position.y - iPos.y) < ITEM_SEARCH_RANGE) {
+            item.target = player;
+          }
+        }
       }
+      // }
 
       // vs player hittest
       if (!player.isAnimating && item.hitTestCircle(player.x, player.y)) {
@@ -447,14 +454,15 @@ phina.define('MainScene', {
       // 雑魚撃破
       this.generateBlast(enemy.x, enemy.y, 32, "redRect");
       enemy.remove();
-      // this._shotExp += 5;
+
       // item
       if (enemy.hasItem) {
-        for (var i = 0; i < 2; i++) {
-          var r = RAND_INTS.pickup();
-          ScoreItem(enemy.x+r, enemy.y+r).addChildTo(this.itemLayer);
+        for (var i = 0; i < 6; i++) {
+          var r_x = RAND_INTS.pickup();
+          var r_y = RAND_INTS.pickup();
+          ScoreItem(enemy.x+r_x, enemy.y+r_y).addChildTo(this.itemLayer);
         }
-        PowerUpItem(enemy.x, enemy.y).addChildTo(this.itemLayer);
+        // PowerUpItem(enemy.x, enemy.y).addChildTo(this.itemLayer);
       }
     }
 
