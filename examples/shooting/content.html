@@ -1,14 +1,11 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <title>Sample shooting game</title>
-  <style type="text/css">
-    body {
-      background: limegreen;
-    }
-  </style>
+  <title>phina-gl2d Sample shooting game</title>
+
+  <link href="style.css" rel="stylesheet">
 </head>
-<body>
+<body class="t-red">
   <script src='../../assets/lib/phina.js'></script>
   <!-- <script src='http://cdn.rawgit.com/phi-jp/phina.js/v0.2.0/build/phina.js'></script> -->
   <script type="text/javascript" src="../../build/phina-gl2d.js"></script>
@@ -28,6 +25,8 @@
   <script src="timetable.js"></script>
 
   <script type="text/javascript">
+    document.title = GAME_TITLE;
+
     phina.main(function() {
       var app = GameApp({
         width: SCREEN_WIDTH,

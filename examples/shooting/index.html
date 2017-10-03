@@ -1,54 +1,76 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <title>Toma Revenge</title>
-  <!-- <link href="https://fonts.googleapis.com/css?family=Aldrich" rel="stylesheet"> -->
+  <title>phina-gl2d Sample shooting game</title>
+  <link href="https://fonts.googleapis.com/css?family=Aldrich" rel="stylesheet">
   <link href="style.css" rel="stylesheet">
 </head>
-<body>
+<body class="t-red">
   <div class="wrapper">
-    <h1 class="u-center t-lightbrown">Toma Revenge - phina-gl2d sample game</h1>
-
-    <iframe class='screen u-center u-mb' src="content.html"></iframe>
+    <header class="u-center t-green u-mb">
+      <h1 id="game-title"></h1>
+    </header>
 
     <div class="u-center u-mb">
       <a href="content.html" class="p-button" target="_blank">全画面表示で遊ぶ</a>
     </div>
 
-    <section class="u-center t-brown container u-mb">
-      <h2 class="u-center t-lightbrown">がいよう</h2>
-      <p class="u-mb">
-        オーソドックスなシューティングゲームです。<br>
-        ゲームライブラリphina.js及びそのプラグインphina-gl2d.jsを使って作られています。
-        <ul>
-          <li><a href="http://phinajs.com/" target=_blank"">phina.jsについて</a></li>
-          <li><a href="https://github.com/pentamania/phina-gl2d" target="_blank">phina-gl2dについて</a></li>
-        </ul>
-      </p>
+    <iframe id='gameScreen' class='screen u-center u-mb' src="content.html"></iframe>
 
-      <h2 class="u-center t-lightbrown">あそびかた</h2>
-      <p class="u-mb">
-        ボスを倒すか、残機がなくなったらゲームオーバー。隠し要素は（多分）ないです。
-        <ul class="list">
-          <li>PC： 方向キーで移動、ｚキーでショット、xキーでボム</li>
-          <li>スマホ・タブレット・マウス： タップで移動＆ショット、右下の「B」ボタンでボム</li>
-          <li>ボムには全体攻撃＋一定時間無敵の効果がありますが、画面下のゲージが満タンでないと使えません。</li>
-        </ul>
-      </p>
+    <main class="t-brown u-fullWidth">
+      <div class="inner u-center container">
 
-      <h3 class="u-center t-lightbrown">ストーリー（読まなくても特に問題はない）</h3>
-      <p class="u-mb">
-        突如襲来した侵略者：Graphics。<br>
-        その圧倒的な物量を前に、画面上に同時に3発しか弾の出せないトマピヨたちは為す術無く、<br>
-        拠点である近所の公園を奪われつつあった。<br>
-        追い詰められたトマピヨたちは封印されしG.L.システム（中古品）の使用を決断、解放された超弾幕をもって一大反抗作戦に出る。<br>
-        今、彼らの反逆が始まる…?
-      </p>
-    </section>
+        <h2 class="">概要</h2>
+        <div class="u-mb">
+          オーソドックスな横スクロールシューティングゲームです。<br>
+          ゲームライブラリphina.js及びそのプラグインphina-gl2d.jsを使って作られています。
+          <ul>
+            <li><a href="http://phinajs.com/" target="_blank" rel="noopener noreferrer">phina.jsについて</a></li>
+            <li><a href="https://github.com/pentamania/phina-gl2d" target="_blank" rel="noopener noreferrer">phina-gl2dについて</a></li>
+          </ul>
+        </div>
 
+        <h2 class="">遊び方</h2>
+        <div class="u-mb">
+          トマト弾を撃って敵を倒します。<br>
+          最後に待ち構えるボスを倒すか、残機がなくなってしまったらGAMEOVER。
+          <ul class="list">
+            <li>PC： 方向キーで移動、ｚキーでショット、xキーでボム</li>
+            <li>スマホ・タブレット・マウス： タップで移動＆ショット、右下の「B」ボタンでボム</li>
+            <li>ボムには全体攻撃＋一定時間無敵の効果がありますが、画面下のゲージが満タンでないと使えません。</li>
+          </ul>
+        </div>
+
+        <h3 class="">ストーリー</h3>
+        <div class="u-mb">
+          突如襲来した侵略者：Graphics。<br>
+          その圧倒的な物量を前に、画面上に同時に3発しか弾の出せないトマピヨたちは為す術無く、<br>
+          拠点である近所の公園を奪われつつあった。<br>
+          追い詰められたトマピヨたちは封印されしG.L.システム（押し入れの奥に眠ってた）の使用を決断、解放された超弾幕をもって一大反抗作戦に出る。<br>
+          今、彼らの反逆が始まる…?
+        </div>
+      </div>
+    </main>
+
+    <footer class="u-center">製作 by <a href="https://github.com/pentamania" target="_blank" rel="noopener noreferrer">pentamania</a></footer>
   </div>
 
+  <script src="config.js"></script>
   <script type="text/javascript">
+    // タイトルの動的変更
+    var titleDOM = document.getElementById('game-title');
+    titleDOM.innerText = GAME_TITLE;
+    document.title = GAME_TITLE;
+
+    // リサイズ
+    var aspectRate = SCREEN_HEIGHT / SCREEN_WIDTH;
+    var resizeFunc = function () {
+      gameScreen.width = window.innerWidth * 0.8;
+      gameScreen.height = gameScreen.width * aspectRate;
+    };
+    resizeFunc();
+    window.addEventListener('resize', resizeFunc, false);
+
   </script>
 </body>
 </html>

@@ -1,55 +1,5 @@
     * {
       box-sizing: border-box;
-      -webkit-padding-start: 0px;
-    }
-    html, body {
-      font-family: '源ノ角ゴシック', 'meirio', 'sans-serif';
-      background: limegreen;
-      padding: 0;
-      margin: 0;
-    }
-    h1, h2, h3{
-      font-size: 1.4rem;
-      width: 100%;
-      padding: 1rem;
-      margin: 0;
-    }
-
-    iframe.screen {
-      width: 75vw;
-      height: 60vh;
-      border: none;
-      margin: 10px auto;
-    }
-    .container {
-      width: 75vw;
-      overflow: hidden;
-    }
-    .container p {
-      padding: 10px;
-    }
-    .p-button{
-      border: 2px solid gray;
-      background: white;
-      color: gray;
-      padding: 0.5rem;
-    }
-    .t-brown {
-      background: #F3C289;
-      color: #622814;
-      border: 2px dotted #622814;
-    }
-    .t-lightbrown {
-      background: #F6B247;
-      color: #622814
-    }
-    .u-center {
-      display: block;
-      margin: 0 auto;
-      text-align: center;
-    }
-    .u-mb {
-      margin-bottom: 1rem;
     }
     ul {
       list-style: none;
@@ -59,4 +9,70 @@
       -webkit-margin-before: 0px;
       -webkit-margin-after: 0px;
     }
+    html, body {
+      font-family: '源ノ角ゴシック', 'meirio', 'sans-serif';
+      padding: 0;
+      margin: 0;
+    }
 
+    h1, h2, h3 {
+      font-size: 1.1rem;
+      width: 100%;
+      padding: 0.6rem;
+      margin: 0;
+      border-bottom: 2px solid #8D5015;
+    }
+    h1 {
+      font-size: 1.3rem;
+    }
+
+    iframe.screen {
+      /*width: 75vw;*/
+      /*height: 60vh;*/
+      /*max-height: 60vh;*/
+      border: none;
+    }
+
+    header, footer{
+      font-family: 'Aldrich', '源ノ角ゴシック', 'meirio', 'sans-serif';
+      padding: 1rem;
+      font-size: 0.9rem;
+    }
+
+    .container {
+      width: 75vw;
+      overflow: hidden;
+    }
+    .container div {
+      padding: 5px;
+    }
+
+    .p-button {
+      border: 2px solid gray;
+      background: white;
+      color: gray;
+      padding: 0.5rem;
+    }
+    .t-red {
+      background: #e54f31;
+    }
+    .t-brown {
+      background: #faf1b9;
+      color: #622814;
+    }
+    .t-green {
+      background: #1dc822;
+      color: #622814
+    }
+
+    .u-fullWidth {
+      width: 100%;
+    }
+    .u-center {
+      display: block;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .u-mb {
+      margin-bottom: 1rem;
+    }
