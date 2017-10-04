@@ -639,13 +639,13 @@ phina.define('MainScene', {
   },
 
   addPlayerBit: function() {
-    // var index = this.playerBits.length;
     var index = this.playerBitLayer.children.length;
-    var col = (index/2 | 0) + 1;
-    var yUnit = (index%2 === 0) ? -PLAYER_BIT_INTERVAL : PLAYER_BIT_INTERVAL;
-    var bit = PlayerBit(-PLAYER_BIT_INTERVAL*col, yUnit*col, this.player)
+    // var col = (index/2 | 0) + 1;
+    // var yUnit = (index%2 === 0) ? -PLAYER_BIT_INTERVAL : PLAYER_BIT_INTERVAL;
+    // var bit = PlayerBit(-PLAYER_BIT_INTERVAL*col, yUnit*col, this.player)
+    var bit = PlayerBit(this.player)
     .addChildTo(this.playerBitLayer);
-    bit.delay = (index+1) * 12;
+    bit.delay = (index+1) * BIT_DELAY_INTERVAL;
   },
 
   // ボム （C.A.S.）

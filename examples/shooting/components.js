@@ -185,8 +185,8 @@ phina.namespace(function() {
   phina.define('PlayerBit', {
     superClass: 'AbstractObjClass',
 
-    init: function(x, y, mainBody) {
-      // this.superInit('redTriangle');
+    // init: function(x, y, mainBody) {
+    init: function(mainBody) {
       this.superInit('tomapiyo_blue', 64, 64);
       this.setScale(0.4, 0.4);
       this.anim = FrameAnimation('tomapiyo')
