@@ -49,7 +49,8 @@ GLLayerクラスはSpriteクラス以外描画されないことを除けば、�
 逆に全てのスプライトが別テクスチャ由来だと通常のCanvas2Dよりもパフォーマンスが劣ってしまう場合があります。  
 （この辺は最適化して影響を最小限にしたい…）
 
-## Example
+## Examples
+- [シューティングゲーム](https://pentamania.github.io/phina-gl2d/examples/shooting/)
 - [パフォーマンステスト](https://pentamania.github.io/phina-gl2d/examples/benchmark/)
 （参考：[Canvas2Dの場合](https://pentamania.github.io/phina-gl2d/examples/benchmark/index.html?webgl=false)）
 
