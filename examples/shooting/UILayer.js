@@ -213,19 +213,27 @@ phina.define('ResultLayer', {
   },
 
   setResult: function(score) {
-    // TODO: tweenerで　移動
-    this.scoreLabel.text = "SCORE\n" + score;
+    // TODO: tweenerで表示させる？
+    this.scoreLabel.text = "点\n" + score;
+
+    // ツイートURL先を（無理やり）index.htmlにする
+    var href = phina.global.location.href;
+    var filename = href.match(".+/(.+?)\.[a-z]+([\?#;].*)?$")[1];
+    var indexPath = href.replace(filename, "index");
+
     this.shareButton.onclick = function() {
       var message = GAME_TITLE;
-      var hashtags = ['phina.js', 'phina-gl2d'];
-      var text = '{0} Score: {1}\n'.format(score, message);
-        var url = phina.social.Twitter.createURL({
-          text: text,
-          hashtags: hashtags,
-          // url: params.url,
-        });
-        window.open(url, 'share window', 'width=480, height=320');
+      var hashtags = ['phina_js', 'phina-gl2d'];
+      var text = '{0} 点: {1} \n'.format(message, score);
+      var url = phina.social.Twitter.createURL({
+        text: text,
+        hashtags: hashtags,
+        url: indexPath,
+      });
+      window.open(url, 'share window', 'width=480, height=320');
     }
+
     return this;
   },
+
 });
