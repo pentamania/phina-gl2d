@@ -46,10 +46,10 @@ if (phina) {
   // var ENEMY_WAVE_START_INDEX = 105;
 
   /* プレイヤーショット関係 */
-  var PLAYER_START_LEVEL = 3; // 初期パワーアップ状態： ->オプション数
-  var BIT_DELAY_INTERVAL = 12;
+  var PLAYER_START_LEVEL = 4; // 初期パワーアップ状態： ->オプション数
+  var BIT_DELAY_INTERVAL = 13;
   // var PLAYER_BIT_INTERVAL = 20;
-  var SHOT_POWER = 4;
+  var SHOT_POWER = 2;
   var HOMING_SHOT_POWER = 2;
   var BOMB_POWER = 100;
   // var SHOT_POWERUP_BORDER = 100;
