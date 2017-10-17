@@ -63,12 +63,17 @@
     document.title = GAME_TITLE;
 
     // リサイズ
-    var aspectRate = SCREEN_HEIGHT / SCREEN_WIDTH;
-    var resizeFunc = function () {
-      gameScreen.width = window.innerWidth * 0.8;
-      gameScreen.height = gameScreen.width * aspectRate;
+    var MAX_WIDTH = 630;
+    var ASPECT_RATIO = SCREEN_HEIGHT / SCREEN_WIDTH;
+    var resizeFunc = function() {
+      if (window.innerWidth < MAX_WIDTH) {
+        gameScreen.width = window.innerWidth * 0.8;
+      } else {
+        gameScreen.width = MAX_WIDTH * 0.8;
+      }
+      gameScreen.height = gameScreen.width * ASPECT_RATIO;
     };
-    resizeFunc();
+    resizeFunc(); // 初回実行
     window.addEventListener('resize', resizeFunc, false);
 
   </script>
