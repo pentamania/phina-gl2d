@@ -9,10 +9,7 @@ phina.namespace(function() {
     superClass: "phina.display.Layer",
 
     renderChildBySelf: true,
-    gl: null,
     resolution: 1.0,
-    domElement: null,
-    renderer: null,
 
     init: function(param) {
       this.superInit(param);
@@ -29,7 +26,6 @@ phina.namespace(function() {
       var sw = this.domElement.width = this.width * this.resolution | 0;
       var sh = this.domElement.height = this.height * this.resolution | 0;
 
-      // 基本設定
       gl.disable(gl.DEPTH_TEST);
       // gl.enable(gl.DEPTH_TEST);
       // gl.depthFunc(gl.LEQUAL);
@@ -43,17 +39,10 @@ phina.namespace(function() {
       gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA); // 重なったときのブレンドモード：透過
       gl.clearColor(0.0, 0.0, 0.0, 0.0);
 
-      // カメラ
-      this.camera = phina.gl2d.Camera()
-      .setPosition(sw * 0.5, sh * 0.5, 1)
-      .lookAt(sw * 0.5, sh * 0.5, 0)
-      .ortho(-sw * 0.5, sw * 0.5, -sh * 0.5, sh * 0.5, 0, 1)
-      .calcVpMatrix();
-
       // this.rootRenderTarget = phigl.Framebuffer(gl, sw, sh).bind();
 
       var renderer = this.renderer = phina.gl2d.SpriteRenderer(gl);
-      renderer.uniforms.vpMatrix.value = this.camera.uniformValues().vpMatrix;
+      renderer.uniforms.vpMatrix.value = phina.gl2d.Util.getVPMatrix(sw, sh);
     },
 
     draw: function(canvas) {
