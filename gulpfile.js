@@ -32,7 +32,6 @@ const pkg = require("./package.json");
 const gulp = require("gulp");
 const banner = require("gulp-banner");
 const concat = require("gulp-concat");
-// const sourcemaps = require("gulp-sourcemaps");
 const uglify = require("gulp-uglify");
 const rename = require("gulp-rename");
 
@@ -47,24 +46,21 @@ const compressOption = {
 const concatJS = function(minify) {
   const baseTask = () => {
     return gulp.src(SRC_FILES)
-    // .pipe(plumber())
-    // .pipe(sourcemaps.init())
-    .pipe(concat(pkg.name))
-    // .pipe(sourcemaps.write("./"))
-    .pipe(banner(BANNER, { pkg: pkg }))
+      .pipe(concat(pkg.name))
+      .pipe(banner(BANNER, { pkg: pkg }))
     ;
   };
 
   if (minify) {
     baseTask()
-    .pipe(rename({
-      extname: ".min.js"
-    }))
-    .pipe(uglify(compressOption))
-    .pipe(gulp.dest("./build"));
+      .pipe(rename({
+        extname: ".min.js"
+      }))
+      .pipe(uglify(compressOption))
+      .pipe(gulp.dest("./build"));
   } else {
     baseTask()
-    .pipe(gulp.dest("./build"));
+      .pipe(gulp.dest("./build"));
   }
 };
 
@@ -76,7 +72,7 @@ gulp.task("uglify", function() {
   concatJS(true);
 });
 
-gulp.task("watch", function() {
+gulp.task("watch", ["concat"], function() {
   gulp.watch("./src/**/*.*", ["concat"]);
 });
 

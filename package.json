@@ -8,7 +8,7 @@
   },
   "scripts": {
     "build": "gulp",
-    "watch": "gulp watch"
+    "dev": "gulp watch"
   },
   "keywords": [
     "phina.js"
