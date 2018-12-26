@@ -1,5 +1,5 @@
 {
-  "name": "phina-gl2d.js",
+  "name": "phina-gl2d",
   "version": "0.1.0",
   "description": "phina.js simple sprite rendering plugin using  webGL",
   "main": "index.js",
