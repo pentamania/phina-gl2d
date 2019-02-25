@@ -2,13 +2,16 @@
   "name": "phina-gl2d",
   "version": "0.1.0",
   "description": "phina.js simple sprite rendering plugin using  webGL",
-  "main": "index.js",
+  "main": "dist/phina-gl2d.js",
+  "files": [
+    "dist/"
+  ],
   "directories": {
     "example": "examples"
   },
   "scripts": {
-    "build": "gulp",
-    "dev": "gulp watch"
+    "dev": "webpack -w",
+    "build": "webpack & cross-env NODE_ENV=production webpack"
   },
   "keywords": [
     "phina.js"
@@ -16,10 +19,8 @@
   "author": "pentamania",
   "license": "MIT",
   "devDependencies": {
-    "gulp": "^3.9.1",
-    "gulp-banner": "^0.1.3",
-    "gulp-concat": "^2.6.1",
-    "gulp-rename": "^1.2.2",
-    "gulp-uglify": "^2.0.1"
+    "cross-env": "5.2.0",
+    "webpack": "4.20.2",
+    "webpack-cli": "3.1.2"
   }
 }
