@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "lib": ["es5", "es6", "dom"],
+    "target": "es5",
+    "baseUrl": ".",
+    "paths": {
+      "phina.js": [
+        "node_modules/phina.js.d.ts"
+      ]
+    }
+  }
+}

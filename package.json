@@ -1,5 +1,6 @@
 {
   "name": "phina-gl2d",
+  "libName": "phina-gl2d",
   "version": "0.1.0",
   "description": "phina.js simple sprite rendering plugin using  webGL",
   "main": "dist/phina-gl2d.js",
@@ -10,8 +11,8 @@
     "example": "examples"
   },
   "scripts": {
-    "dev": "webpack -w",
-    "build": "webpack & cross-env NODE_ENV=production webpack"
+    "dev": "rollup -c -w",
+    "build": "rimraf dist && rollup -c"
   },
   "keywords": [
     "phina.js"
@@ -19,8 +20,14 @@
   "author": "pentamania",
   "license": "MIT",
   "devDependencies": {
-    "cross-env": "5.2.0",
-    "webpack": "4.20.2",
-    "webpack-cli": "3.1.2"
+    "rimraf": "^2.6.3",
+    "rollup": "^1.8.0",
+    "rollup-plugin-typescript": "^1.0.1",
+    "rollup-plugin-uglify": "^6.0.2",
+    "tslib": "^1.9.3",
+    "typescript": "^3.4.1"
+  },
+  "dependencies": {
+    "phina.js.d.ts": "github:negiwine/phina.js.d.ts"
   }
 }
