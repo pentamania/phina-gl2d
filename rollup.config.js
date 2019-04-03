@@ -1,12 +1,21 @@
 import typescript from 'rollup-plugin-typescript'
 import { uglify } from 'rollup-plugin-uglify'
-import { libName } from './package.json'
+import licensePlugin from 'rollup-plugin-license';
+import { libName, name, version, author, license as LICENSE_TYPE } from './package.json';
+
+/* license banner */
+const banner = `/*!
+ * ${ name } v${version}
+ * ${LICENSE_TYPE} Licensed
+ *
+ * Copyright (C) ${author}
+ */`;
 
 /* options */
 const inputFile = 'src/index.ts';
 
 /* plugin setting */
-const plugins = [
+const commonPlugins = [
   typescript()
 ];
 
@@ -21,7 +30,9 @@ export default [
       },
     },
     external: ['phina.js'],
-    plugins: plugins,
+    plugins: commonPlugins.concat([
+      licensePlugin({ banner: banner })
+    ]),
   },
   {
     input: inputFile,
@@ -33,6 +44,9 @@ export default [
       },
     },
     external: ['phina.js'],
-    plugins: plugins.concat([uglify()]),
+    plugins: commonPlugins.concat([
+      uglify(),
+      licensePlugin({ banner: banner })
+    ]),
   },
 ]
