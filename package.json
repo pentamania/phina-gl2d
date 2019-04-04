@@ -1,7 +1,7 @@
 {
   "name": "phina-gl2d",
   "libName": "phina-gl2d",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "phina.js simple sprite rendering plugin using  webGL",
   "main": "dist/phina-gl2d.js",
   "files": [
