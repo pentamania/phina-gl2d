@@ -1,15 +1,12 @@
-# phina-gl2d
+phina-gl2d
+===
+
 SpriteクラスをwebGL描画するphina.js用簡易プラグインです。
 
-webGLを使うことにより、描画パフォーマンスが向上します。  
-どれくらいパフォーマンスがよくなるかはGPUやコード・条件次第ですが、古いオンボードやモバイルでも既定のCanvas2Dと比較して2倍程度は良くなると思います。  
-**ただしiOS端末ではあまり効果が期待できないかもしれません。**
+[サンプルシューティングゲーム](https://github.com/pentamania/toma-shooting)
 
-[サンプル](https://github.com/pentamania/toma-shooting)
-
-## 使い方
+## Usage
 phina.gl2d.GLLayerクラスのインスタンスを生成し、そこにSpriteインスタンスを追加するだけでOKです。  
-GLLayerクラスはSpriteクラス以外描画されないことを除けば、通常のLayerクラスと使い方はほぼ変わりません。  
 
 ```html
 <!DOCTYPE html>
@@ -19,8 +16,8 @@ GLLayerクラスはSpriteクラス以外描画されないことを除けば、�
   <title>phina.gl2d sample</title>
 </head>
 <body>
-  <script src='http://cdn.rawgit.com/phi-jp/phina.js/v0.2.0/build/phina.js'></script>
-  <script src="path/to/phina-gl2d.min.js" type="text/javascript"></script>
+  <script src='path/to/phina.js'></script>
+  <script src="path/to/phina-gl2d.js"></script>
 
   <script type="text/javascript">
     phina.define("MainScene", {
@@ -45,25 +42,14 @@ GLLayerクラスはSpriteクラス以外描画されないことを除けば、�
       app.run();
     });
   </script>
+</body>
+</html>
 ```
 
-### メモ
+### Note
 同じテクスチャ由来のSpriteクラスはバッジ処理してドローコールを節約するよう設計されています。  
 なので画像を一枚にまとめ（スプライトシート化）、スプライトが全て同じテクスチャ由来となるよう調整すると、最もパフォーマンスがよくなります。
 
-逆に全てのスプライトが別テクスチャ由来だと通常のCanvas2Dよりもパフォーマンスが劣ってしまう場合があります。  
-
-## サンプル
-- [シューティング](https://pentamania.github.io/toma-shooting/)
-- [パフォーマンステスト](https://pentamania.github.io/phina-gl2d/examples/benchmark/)
-（参考：[Canvas2Dの場合](https://pentamania.github.io/phina-gl2d/examples/benchmark/index.html?webgl=false)）
-
-## インスパイア元
-[pixi.js](http://www.pixijs.com/)
-
-## ライセンス
-当プラグインのライセンスはMITです。  
-また、以下のライブラリを使用しています。
-
-- [phigl.js (MIT)](https://github.com/daishihmr/phigl.js)
-- [min.matrix.js (License Free)](https://github.com/doxas/minMatrix.js)
+## Inspired by
+- [pixi.js](http://www.pixijs.com/)
+- [phigl.js](https://github.com/daishihmr/phigl.js)
